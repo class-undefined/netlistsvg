@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 import ELK = require('elkjs');
 import * as onml from 'onml'

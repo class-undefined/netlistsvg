@@ -152,19 +152,19 @@ var Cell = /** @class */ (function () {
         this.inputPorts.forEach(function (port) {
             var isLateral = port.keyIn(lateralPids);
             if (isLateral || (template[1]['s:type'] === 'generic' && genericsLaterals)) {
-                FlatModule_1.addToDefaultDict(lateralsByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(lateralsByNet, port.valString(), port);
             }
             else {
-                FlatModule_1.addToDefaultDict(ridersByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(ridersByNet, port.valString(), port);
             }
         });
         this.outputPorts.forEach(function (port) {
             var isLateral = port.keyIn(lateralPids);
             if (isLateral || (template[1]['s:type'] === 'generic' && genericsLaterals)) {
-                FlatModule_1.addToDefaultDict(lateralsByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(lateralsByNet, port.valString(), port);
             }
             else {
-                FlatModule_1.addToDefaultDict(driversByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(driversByNet, port.valString(), port);
             }
         });
     };
@@ -430,7 +430,7 @@ function getBits(signals, indicesString) {
     }
 }
 
-},{"./FlatModule":2,"./Port":3,"./Skin":4,"./YosysModel":5,"clone":76,"lodash":83,"onml":85}],2:[function(require,module,exports){
+},{"./FlatModule":2,"./Port":3,"./Skin":4,"./YosysModel":5,"clone":77,"lodash":84,"onml":86}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeDups = exports.addToDefaultDict = exports.arrayToBitstring = exports.FlatModule = void 0;
@@ -621,7 +621,7 @@ function removeDups(inStrs) {
 }
 exports.removeDups = removeDups;
 
-},{"./Cell":1,"./Skin":4,"lodash":83}],3:[function(require,module,exports){
+},{"./Cell":1,"./Skin":4,"lodash":84}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Port = void 0;
@@ -754,7 +754,7 @@ var Port = /** @class */ (function () {
 }());
 exports.Port = Port;
 
-},{"./Cell":1,"lodash":83}],4:[function(require,module,exports){
+},{"./Cell":1,"lodash":84}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Skin = void 0;
@@ -886,7 +886,7 @@ var Skin;
 })(Skin = exports.Skin || (exports.Skin = {}));
 exports.default = Skin;
 
-},{"lodash":83,"onml":85}],5:[function(require,module,exports){
+},{"lodash":84,"onml":86}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Yosys;
@@ -930,12 +930,14 @@ exports.default = Yosys;
 
 },{}],6:[function(require,module,exports){
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.removeDummyEdges = void 0;
@@ -1053,8 +1055,9 @@ function drawModule(g, module) {
             }
         },
     });
-    var elements = __spreadArrays([styles], nodes, lines);
-    var ret = __spreadArrays(['svg', svgAttrs], elements);
+    var elements = __spreadArray(__spreadArray([styles], nodes, true), lines, true);
+    // @ts-ignore
+    var ret = __spreadArray(['svg', svgAttrs], elements, true);
     return onml.s(ret);
 }
 exports.default = drawModule;
@@ -1183,7 +1186,7 @@ function removeDummyEdges(g) {
 }
 exports.removeDummyEdges = removeDummyEdges;
 
-},{"./Skin":4,"./elkGraph":7,"lodash":83,"onml":85}],7:[function(require,module,exports){
+},{"./Skin":4,"./elkGraph":7,"lodash":84,"onml":86}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildElkGraph = exports.ElkModel = void 0;
@@ -1332,8 +1335,10 @@ function route(sourcePorts, targetPorts, edges, numWires) {
             };
             ElkModel.wireNameLookup[id] = targetPort.wire.netName;
             if (sourcePort.parentNode.type !== '$dff') {
-                edge.layoutOptions = { 'org.eclipse.elk.layered.priority.direction': 10,
-                    'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
+                edge.layoutOptions = {
+                    'org.eclipse.elk.layered.priority.direction': 10,
+                    'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1)
+                };
             }
             else {
                 edge.layoutOptions = { 'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
@@ -1345,13 +1350,15 @@ function route(sourcePorts, targetPorts, edges, numWires) {
     edges.push.apply(edges, newEdges);
 }
 
-},{"lodash":83}],8:[function(require,module,exports){
+},{"lodash":84}],8:[function(require,module,exports){
 (function (global){(function (){
-'use strict';
+"use strict";
+// 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.render = exports.dumpLayout = void 0;
 var ELK = (typeof window !== "undefined" ? window['ELK'] : typeof global !== "undefined" ? global['ELK'] : null);
 var onml = require("onml");
+// import * as ELK from 'elkjs'
 var FlatModule_1 = require("./FlatModule");
 var Skin_1 = require("./Skin");
 var elkGraph_1 = require("./elkGraph");
@@ -1374,7 +1381,7 @@ function createFlatModule(skinData, yosysNetlist) {
 }
 function dumpLayout(skinData, yosysNetlist, prelayout, done) {
     var flatModule = createFlatModule(skinData, yosysNetlist);
-    var kgraph = elkGraph_1.buildElkGraph(flatModule);
+    var kgraph = (0, elkGraph_1.buildElkGraph)(flatModule);
     if (prelayout) {
         done(null, JSON.stringify(kgraph, null, 2));
         return;
@@ -1390,20 +1397,20 @@ function dumpLayout(skinData, yosysNetlist, prelayout, done) {
 exports.dumpLayout = dumpLayout;
 function render(skinData, yosysNetlist, done, elkData) {
     var flatModule = createFlatModule(skinData, yosysNetlist);
-    var kgraph = elkGraph_1.buildElkGraph(flatModule);
+    var kgraph = (0, elkGraph_1.buildElkGraph)(flatModule);
     var layoutProps = Skin_1.default.getProperties();
     var promise;
     // if we already have a layout then use it
     if (elkData) {
         promise = new Promise(function (resolve) {
-            drawModule_1.default(elkData, flatModule);
+            (0, drawModule_1.default)(elkData, flatModule);
             resolve();
         });
     }
     else {
         // otherwise use ELK to generate the layout
         promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine })
-            .then(function (g) { return drawModule_1.default(g, flatModule); })
+            .then(function (g) { return (0, drawModule_1.default)(g, flatModule); })
             // tslint:disable-next-line:no-console
             .catch(function (e) { console.error(e); });
     }
@@ -1421,7 +1428,7 @@ function render(skinData, yosysNetlist, done, elkData) {
 exports.render = render;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./FlatModule":2,"./Skin":4,"./drawModule":6,"./elkGraph":7,"onml":85}],9:[function(require,module,exports){
+},{"./FlatModule":2,"./Skin":4,"./drawModule":6,"./elkGraph":7,"onml":86}],9:[function(require,module,exports){
 (function (Buffer){(function (){
 const lib = require('../built');
 
@@ -1430,7 +1437,7 @@ const Ajv = require('ajv');
 var ajv = new Ajv({allErrors: true});
 require('ajv-errors')(ajv);
 
-const digital = "<svg  xmlns=\"http://www.w3.org/2000/svg\"\n  xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n  xmlns:s=\"https://github.com/nturley/netlistsvg\"\n  width=\"800\" height=\"300\">\n  <s:properties>\n    <s:layoutEngine\n      org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers=\"35\"\n      org.eclipse.elk.spacing.nodeNode= \"35\"\n      org.eclipse.elk.layered.layering.strategy= \"LONGEST_PATH\"\n    />\n    <s:low_priority_alias val=\"$dff\" />\n  </s:properties>\n<style>\nsvg {\n  stroke:#000;\n  fill:none;\n}\ntext {\n  fill:#000;\n  stroke:none;\n  font-size:10px;\n  font-weight: bold;\n  font-family: \"Courier New\", monospace;\n}\nline {\n    stroke-linecap: round;\n}\n.nodelabel {\n  text-anchor: middle;\n}\n.inputPortLabel {\n  text-anchor: end;\n}\n.splitjoinBody {\n  fill:#000;\n}\n</style>\n  <g s:type=\"mux\" transform=\"translate(50, 50)\" s:width=\"20\" s:height=\"40\">\n    <s:alias val=\"$pmux\"/>\n    <s:alias val=\"$mux\"/>\n    <s:alias val=\"$_MUX_\"/>\n\n    <path d=\"M0,0 L20,10 L20,30 L0,40 Z\" class=\"$cell_id\"/>\n\n    <text x=\"5\" y=\"32\" class=\"nodelabel $cell_id\" s:attribute=\"\">1</text>\n    <text x=\"5\" y=\"13\" class=\"nodelabel $cell_id\" s:attribute=\"\">0</text>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"30\" s:pid=\"B\"/>\n    <g s:x=\"10\" s:y=\"35\" s:pid=\"S\"/>\n    <g s:x=\"20\" s:y=\"20\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"mux-bus\" transform=\"translate(100, 50)\" s:width=\"24\" s:height=\"40\">\n    <s:alias val=\"$pmux-bus\"/>\n    <s:alias val=\"$mux-bus\"/>\n    <s:alias val=\"$_MUX_-bus\"/>\n\n    <path d=\"M0,0 L20,10 L20,30 L0,40 Z\" class=\"$cell_id\"/>\n    <path d=\"M4,2 L4,0 L22,9 L22,31 L4,40 L4,38\" class=\"$cell_id\"/>\n    <path d=\"M8,2 L8,0 L24,8 L24,32 L8,40 L8,38\" class=\"$cell_id\"/>\n\n    <text x=\"5\" y=\"32\" class=\"nodelabel $cell_id\" s:attribute=\"\">1</text>\n    <text x=\"5\" y=\"13\" class=\"nodelabel $cell_id\" s:attribute=\"\">0</text>\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"B\"/>\n    <g s:x=\"12\" s:y=\"38\" s:pid=\"S\"/>\n    <g s:x=\"24.5\" s:y=\"20\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"tribuf\" transform=\"translate(450, 50)\" s:width=\"15\" s:height=\"30\">\n    <s:alias val=\"$tribuf\"/>\n    <s:alias val=\"$_TRIBUF_\"/>\n\n    <s:alias val=\"tribuf-bus\"/>\n    <s:alias val=\"$tribuf-bus\"/>\n    <s:alias val=\"$_TRIBUF_-bus\"/>\n\n    <path d=\"M0,0 L25,15 L0,30 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"15\" s:pid=\"A\"/>\n    <g s:x=\"11\" s:y=\"6\" s:pid=\"EN\"/>\n    <g s:x=\"25\" s:y=\"15\" s:pid=\"Y\"/>\n  </g>\n\n  <!-- and -->\n  <g s:type=\"and\" transform=\"translate(150,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$and\"/>\n    <s:alias val=\"$logic_and\"/>\n    <s:alias val=\"$_AND_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"nand\" transform=\"translate(150,100)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$nand\"/>\n    <s:alias val=\"$logic_nand\"/>\n    <s:alias val=\"$_NAND_\"/>\n    <s:alias val=\"$_ANDNOT_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n    <circle cx=\"34\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"36\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <!-- or -->\n  <g s:type=\"or\" transform=\"translate(250,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$or\"/>\n    <s:alias val=\"$logic_or\"/>\n    <s:alias val=\"$_OR_\"/>\n\n    <path d=\"M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"reduce_nor\" transform=\"translate(250, 100)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$nor\"/>\n    <s:alias val=\"$reduce_nor\"/>\n    <s:alias val=\"$_NOR_\"/>\n    <s:alias val=\"$_ORNOT_\"/>\n\n    <path d=\"M0,25 L0,25 L15,25 A15 12.5 0 0 0 15,0 L0,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n    <circle cx=\"34\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"36\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <!--xor -->\n  <g s:type=\"reduce_xor\" transform=\"translate(350, 50)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$xor\"/>\n    <s:alias val=\"$reduce_xor\"/>\n    <s:alias val=\"$_XOR_\"/>\n\n    <path d=\"M3,0 A30 25 0 0 1 3,25 A30 25 0 0 0 33,12.5 A30 25 0 0 0 3,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"33\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"reduce_nxor\" transform=\"translate(350, 100)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$xnor\"/>\n    <s:alias val=\"$reduce_xnor\"/>\n    <s:alias val=\"$_XNOR_\"/>\n\n    <path d=\"M3,0 A30 25 0 0 1 3,25 A30 25 0 0 0 33,12.5 A30 25 0 0 0 3,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n    <circle cx=\"36\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"38\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <!--buffer -->\n  <g s:type=\"not\" transform=\"translate(450,100)\" s:width=\"30\" s:height=\"20\">\n    <s:alias val=\"$_NOT_\"/>\n    <s:alias val=\"$not\"/>\n    <s:alias val=\"$logic_not\"/>\n\n    <path d=\"M0,0 L0,20 L20,10 Z\" class=\"$cell_id\"/>\n    <circle cx=\"24\" cy=\"10\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"27\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"add\" transform=\"translate(50, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$add\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"12.5\" x2=\"12.5\" y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"sub\" transform=\"translate(150,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$sub\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"eq\" transform=\"translate(250,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$eq\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"10\" y2=\"10\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"15\" y2=\"15\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"dff\" transform=\"translate(350,150)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dff\"/>\n    <s:alias val=\"$_DFF_\"/>\n    <s:alias val=\"$_DFF_P_\"/>\n\n    <s:alias val=\"dff-bus\"/>\n    <s:alias val=\"$dff-bus\"/>\n    <s:alias val=\"$_DFF_-bus\"/>\n    <s:alias val=\"$_DFF_P_-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n\n    <g s:x=\"31\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"D\"/>\n  </g>\n\n  <g s:type=\"dffn\" transform=\"translate(450,150)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$_DFF_N_\"/>\n\n    <s:alias val=\"dffn-bus\"/>\n    <s:alias val=\"$_DFF_N_-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n    <circle cx=\"-3\" cy=\"30\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n  </g>\n\n  <g s:type=\"lt\" transform=\"translate(50,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$lt\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"12\"  y2=\"7\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"le\" transform=\"translate(150,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$le\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"11\"  y2=\"6\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"11\" y2=\"16\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"14\" y2=\"19\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"ge\" transform=\"translate(250,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$ge\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\"  y1=\"6\" y2=\"11\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"16\" y2=\"11\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"19\" y2=\"14\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"gt\" transform=\"translate(350,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$gt\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\"  y1=\"7\" y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"inputExt\" transform=\"translate(50,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">input</text>\n    <s:alias val=\"$_inputExt_\"/>\n    <path d=\"M0,0 L0,20 L15,20 L30,10 L15,0 Z\" class=\"$cell_id\"/>\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"constant\" transform=\"translate(150,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">constant</text>\n\n    <s:alias val=\"$_constant_\"/>\n    <rect width=\"30\" height=\"20\" class=\"$cell_id\"/>\n\n    <g s:x=\"31\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"outputExt\" transform=\"translate(250,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">output</text>\n    <s:alias val=\"$_outputExt_\"/>\n    <path d=\"M30,0 L30,20 L15,20 L0,10 L15,0 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"A\"/>\n  </g>\n\n  <g s:type=\"split\" transform=\"translate(350,250)\" s:width=\"5\" s:height=\"40\">\n    <rect width=\"5\" height=\"40\" class=\"splitjoinBody\" s:generic=\"body\"/>\n    <s:alias val=\"$_split_\"/>\n\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"in\"/>\n    <g transform=\"translate(5, 10)\" s:x=\"4\" s:y=\"10\" s:pid=\"out0\">\n      <text x=\"5\" y=\"-4\">hi:lo</text>\n    </g>\n    <g transform=\"translate(5, 30)\" s:x=\"4\" s:y=\"30\" s:pid=\"out1\">\n      <text x=\"5\" y=\"-4\">hi:lo</text>\n    </g>\n  </g>\n\n  <g s:type=\"join\" transform=\"translate(450,250)\" s:width=\"4\" s:height=\"40\">\n    <rect width=\"5\" height=\"40\" class=\"splitjoinBody\" s:generic=\"body\"/>\n    <s:alias val=\"$_join_\"/>\n    <g s:x=\"5\" s:y=\"20\"  s:pid=\"out\"/>\n    <g transform=\"translate(0, 10)\" s:x=\"0\" s:y=\"10\" s:pid=\"in0\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel\">hi:lo</text>\n    </g>\n    <g transform=\"translate(0, 30)\" s:x=\"0\" s:y=\"30\" s:pid=\"in1\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel\">hi:lo</text>\n    </g>\n  </g>\n\n  <g s:type=\"generic\" transform=\"translate(550,250)\" s:width=\"30\" s:height=\"40\">\n\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">generic</text>\n    <rect width=\"30\" height=\"40\" s:generic=\"body\" class=\"$cell_id\"/>\n\n    <g transform=\"translate(30, 10)\" s:x=\"30\" s:y=\"10\" s:pid=\"out0\">\n      <text x=\"5\" y=\"-4\" style=\"fill:#000; stroke:none\" class=\"$cell_id\">out0</text>\n    </g>\n    <g transform=\"translate(30, 30)\" s:x=\"30\" s:y=\"30\" s:pid=\"out1\">\n      <text x=\"5\" y=\"-4\" style=\"fill:#000;stroke:none\" class=\"$cell_id\">out1</text>\n    </g>\n    <g transform=\"translate(0, 10)\" s:x=\"0\" s:y=\"10\" s:pid=\"in0\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in0</text>\n    </g>\n    <g transform=\"translate(0, 30)\" s:x=\"0\" s:y=\"30\" s:pid=\"in1\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in1</text>\n    </g>\n  </g>\n\n</svg>\n";
+const digital = "<svg  xmlns=\"http://www.w3.org/2000/svg\"\n  xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n  xmlns:s=\"https://github.com/nturley/netlistsvg\"\n  width=\"800\" height=\"500\">\n  <s:properties>\n    <s:layoutEngine\n      org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers=\"35\"\n      org.eclipse.elk.spacing.nodeNode= \"35\"\n      org.eclipse.elk.layered.layering.strategy= \"LONGEST_PATH\"\n    />\n    <s:low_priority_alias val=\"$dff\" />\n  </s:properties>\n<style>\nsvg {\n  stroke:#000;\n  fill:none;\n}\ntext {\n  fill:#000;\n  stroke:none;\n  font-size:10px;\n  font-weight: bold;\n  font-family: \"Courier New\", monospace;\n}\nline {\n    stroke-linecap: round;\n}\n.nodelabel {\n  text-anchor: middle;\n}\n.inputPortLabel {\n  text-anchor: end;\n}\n.splitjoinBody {\n  fill:#000;\n}\n</style>\n\n  <g s:type=\"mux\" transform=\"translate(50, 50)\" s:width=\"20\" s:height=\"40\">\n    <s:alias val=\"$pmux\"/>\n    <s:alias val=\"$mux\"/>\n    <s:alias val=\"$_MUX_\"/>\n\n    <path d=\"M0,0 L20,10 L20,30 L0,40 Z\" class=\"$cell_id\"/>\n\n    <text x=\"5\" y=\"32\" class=\"nodelabel $cell_id\" s:attribute=\"\">1</text>\n    <text x=\"5\" y=\"13\" class=\"nodelabel $cell_id\" s:attribute=\"\">0</text>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"30\" s:pid=\"B\"/>\n    <g s:x=\"10\" s:y=\"35\" s:pid=\"S\"/>\n    <g s:x=\"20\" s:y=\"20\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"mux-bus\" transform=\"translate(100, 50)\" s:width=\"24\" s:height=\"40\">\n    <s:alias val=\"$pmux-bus\"/>\n    <s:alias val=\"$mux-bus\"/>\n    <s:alias val=\"$_MUX_-bus\"/>\n\n    <path d=\"M0,0 L20,10 L20,30 L0,40 Z\" class=\"$cell_id\"/>\n    <path d=\"M4,2 L4,0 L22,9 L22,31 L4,40 L4,38\" class=\"$cell_id\"/>\n    <path d=\"M8,2 L8,0 L24,8 L24,32 L8,40 L8,38\" class=\"$cell_id\"/>\n\n    <text x=\"5\" y=\"32\" class=\"nodelabel $cell_id\" s:attribute=\"\">1</text>\n    <text x=\"5\" y=\"13\" class=\"nodelabel $cell_id\" s:attribute=\"\">0</text>\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"B\"/>\n    <g s:x=\"12\" s:y=\"38\" s:pid=\"S\"/>\n    <g s:x=\"24.5\" s:y=\"20\" s:pid=\"Y\"/>\n  </g>\n\n  <!-- and -->\n  <g s:type=\"and\" transform=\"translate(150,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$and\"/>\n    <s:alias val=\"$logic_and\"/>\n    <s:alias val=\"$_AND_\"/>\n    <s:alias val=\"$reduce_and\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"nand\" transform=\"translate(150,100)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$nand\"/>\n    <s:alias val=\"$logic_nand\"/>\n    <s:alias val=\"$_NAND_\"/>\n    <s:alias val=\"$_ANDNOT_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n    <circle cx=\"34\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"36\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"andnot\" transform=\"translate(200,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$_ANDNOT_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n    <circle cx=\"-3\" cy=\"20\" r=\"3\"/>\n\n    <g s:x=\"0\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"-6\" s:y=\"20\" s:pid=\"B\"/>\n    <!-- <path d=\"M -10,20 L -6,20\"/> -->\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <!-- or -->\n  <g s:type=\"or\" transform=\"translate(250,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$or\"/>\n    <s:alias val=\"$logic_or\"/>\n    <s:alias val=\"$_OR_\"/>\n    <s:alias val=\"$reduce_or\"/>\n    <s:alias val=\"$reduce_bool\"/>\n\n    <path d=\"M0,0 A30 25 0 0 1 0,25 A30 25 0 0 0 30,12.5 A30 25 0 0 0 0,0\" class=\"$cell_id\"/>\n \n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"reduce_nor\" transform=\"translate(250, 100)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$nor\"/>\n    <s:alias val=\"$reduce_nor\"/>\n    <s:alias val=\"$_NOR_\"/>\n    <s:alias val=\"$_ORNOT_\"/>\n\n    <path d=\"M0,0 A30 25 0 0 1 0,25 A30 25 0 0 0 30,12.5 A30 25 0 0 0 0,0\" class=\"$cell_id\"/>\n    <circle cx=\"33\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"36\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"ornot\" transform=\"translate(300,50)\" s:width=\"30\" s:height=\"25\">\n    <s:alias val=\"$_ORNOT_\"/>\n\n    <path d=\"M0,0 A30 25 0 0 1 0,25 A30 25 0 0 0 30,12.5 A30 25 0 0 0 0,0\" class=\"$cell_id\"/>\n    <circle cx=\"-1\" cy=\"20\" r=\"3\"/>\n \n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"-4\" s:y=\"20\" s:pid=\"B\"/>\n    <!-- <path d=\"M -8,20 L -4,20\"/> -->\n    <g s:x=\"30\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <!--xor -->\n  <g s:type=\"reduce_xor\" transform=\"translate(350, 50)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$xor\"/>\n    <s:alias val=\"$reduce_xor\"/>\n    <s:alias val=\"$_XOR_\"/>\n\n    <path d=\"M3,0 A30 25 0 0 1 3,25 A30 25 0 0 0 33,12.5 A30 25 0 0 0 3,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"33\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"reduce_nxor\" transform=\"translate(350, 100)\" s:width=\"33\" s:height=\"25\">\n    <s:alias val=\"$xnor\"/>\n    <s:alias val=\"$reduce_xnor\"/>\n    <s:alias val=\"$_XNOR_\"/>\n\n    <path d=\"M3,0 A30 25 0 0 1 3,25 A30 25 0 0 0 33,12.5 A30 25 0 0 0 3,0\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25\" class=\"$cell_id\"/>\n    <circle cx=\"36\" cy=\"12.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"38\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"tribuf\" transform=\"translate(550, 50)\" s:width=\"15\" s:height=\"30\">\n    <s:alias val=\"$tribuf\"/>\n    <s:alias val=\"$_TRIBUF_\"/>\n\n    <s:alias val=\"tribuf-bus\"/>\n    <s:alias val=\"$tribuf-bus\"/>\n    <s:alias val=\"$_TRIBUF_-bus\"/>\n\n    <path d=\"M0,0 L25,15 L0,30 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"15\" s:pid=\"A\"/>\n    <g s:x=\"11\" s:y=\"6\" s:pid=\"EN\"/>\n    <g s:x=\"25\" s:y=\"15\" s:pid=\"Y\"/>\n    <!-- <path d=\"M -5,15 L 0,15\" /> -->\n    <!-- <path d=\"M 11,0 L 11,6\" /> -->\n    <!-- <path d=\"M 30,15 L 25,15\" /> -->\n  </g>\n\n  <!--buffer -->\n  <g s:type=\"not\" transform=\"translate(450,100)\" s:width=\"30\" s:height=\"20\">\n    <s:alias val=\"$_NOT_\"/>\n    <s:alias val=\"$not\"/>\n    <s:alias val=\"$logic_not\"/>\n\n    <path d=\"M0,0 L0,20 L20,10 Z\" class=\"$cell_id\"/>\n    <circle cx=\"24\" cy=\"10\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"27\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n  <g s:type=\"buf\" transform=\"translate(450,50)\" s:width=\"30\" s:height=\"20\">\n    <s:alias val=\"$_BUF_\"/>\n\n    <path d=\"M0,0 L0,20 L20,10 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"A\"/>\n    <g s:x=\"20\" s:y=\"10\" s:pid=\"Y\"/>\n    <!-- <path d=\"M -5,10 L 0,10\"/> -->\n    <!-- <path d=\"M 25,10 L 20,10\"/> -->\n  </g>\n\n  <g s:type=\"add\" transform=\"translate(50, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$add\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"12.5\" x2=\"12.5\" y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"pos\" transform=\"translate(100, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$pos\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"12.5\" x2=\"12.5\" y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"-1\" s:y=\"12.5\" s:pid=\"A\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"sub\" transform=\"translate(150,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$sub\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"neg\" transform=\"translate(200,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$neg\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"12.5\" y2=\"12.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"12.5\" s:pid=\"A\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"eq\" transform=\"translate(250,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$eq\"/>\n    <s:alias val=\"$eqx\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"10\" y2=\"10\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"15\" y2=\"15\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"mul\" transform=\"translate(300, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$mul\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\"  x2=\"17.5\" y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n    <line x1=\"17.5\" x2=\"7.5\"  y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"div\" transform=\"translate(350, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$div\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"15\" x2=\"10\"  y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"mod\" transform=\"translate(400, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$mod\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"15\" x2=\"10\"  y1=\"7.5\" y2=\"17.5\" class=\"$cell_id\"/>\n    <circle r=\"2\" cx=\"8\" cy=\"9\" class=\"$cell_id\"/>\n    <circle r=\"2\" cx=\"17\" cy=\"16\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"pow\" transform=\"translate(450, 150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$pow\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"10\" x2=\"12.5\"  y1=\"12\" y2=\"6\" class=\"$cell_id\"/>\n    <line x1=\"15\" x2=\"12.5\"  y1=\"12\" y2=\"6\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"26\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"ne\" transform=\"translate(500,150)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$ne\"/>\n    <s:alias val=\"$nex\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"10\" y2=\"10\" class=\"$cell_id\"/>\n    <line x1=\"7.5\" x2=\"17.5\" y1=\"15\" y2=\"15\" class=\"$cell_id\"/>\n    <line x1=\"9\" x2=\"16\" y1=\"18\" y2=\"7\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"lt\" transform=\"translate(50,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$lt\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"12\"  y2=\"7\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"le\" transform=\"translate(100,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$le\"/>\n\n    <circle r=\"12.5\" cx=\"12.5\" cy=\"12.5\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"11\"  y2=\"6\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"11\" y2=\"16\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"17\" y1=\"14\" y2=\"19\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"ge\" transform=\"translate(150,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$ge\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\"  y1=\"6\" y2=\"11\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"16\" y2=\"11\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"19\" y2=\"14\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"gt\" transform=\"translate(200,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$gt\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\"  y1=\"7\" y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"19\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"shr\" transform=\"translate(250,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$shr\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"13\"  y1=\"7\"  y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"8\" x2=\"13\"  y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"14\" x2=\"19\" y1=\"7\"  y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"14\" x2=\"19\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"shl\" transform=\"translate(300,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$shl\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"11\"  y1=\"12\" y2=\"7\"  class=\"$cell_id\"/>\n    <line x1=\"6\" x2=\"11\"  y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n    <line x1=\"12\" x2=\"17\" y1=\"12\" y2=\"7\"  class=\"$cell_id\"/>\n    <line x1=\"12\" x2=\"17\" y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"sshr\" transform=\"translate(350,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$sshr\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"5\"  x2=\"10\" y1=\"7\"  y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"5\"  x2=\"10\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"11\" x2=\"16\" y1=\"7\"  y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"11\" x2=\"16\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"17\" x2=\"22\" y1=\"7\"  y2=\"12\" class=\"$cell_id\"/>\n    <line x1=\"17\" x2=\"22\" y1=\"17\" y2=\"12\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"sshl\" transform=\"translate(400,200)\" s:width=\"25\" s:height=\"25\">\n    <s:alias val=\"$sshl\"/>\n\n    <circle r=\"12\" cx=\"12\" cy=\"12\" class=\"$cell_id\"/>\n    <line x1=\"3\"  x2=\"8\"   y1=\"12\" y2=\"7\"  class=\"$cell_id\"/>\n    <line x1=\"3\"  x2=\"8\"   y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n    <line x1=\"9\"  x2=\"14\" y1=\"12\" y2=\"7\"  class=\"$cell_id\"/>\n    <line x1=\"9\"  x2=\"14\" y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n    <line x1=\"15\" x2=\"20\" y1=\"12\" y2=\"7\"  class=\"$cell_id\"/>\n    <line x1=\"15\" x2=\"20\" y1=\"12\" y2=\"17\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\" s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\" s:pid=\"B\"/>\n    <g s:x=\"25\" s:y=\"12.5\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"inputExt\" transform=\"translate(50,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">input</text>\n    <s:alias val=\"$_inputExt_\"/>\n    <path d=\"M0,0 L0,20 L15,20 L30,10 L15,0 Z\" class=\"$cell_id\"/>\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"constant\" transform=\"translate(150,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">constant</text>\n\n    <s:alias val=\"$_constant_\"/>\n    <rect width=\"30\" height=\"20\" class=\"$cell_id\"/>\n\n    <g s:x=\"31\" s:y=\"10\" s:pid=\"Y\"/>\n  </g>\n\n  <g s:type=\"outputExt\" transform=\"translate(250,250)\" s:width=\"30\" s:height=\"20\">\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">output</text>\n    <s:alias val=\"$_outputExt_\"/>\n    <path d=\"M30,0 L30,20 L15,20 L0,10 L15,0 Z\" class=\"$cell_id\"/>\n\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"A\"/>\n  </g>\n\n  <g s:type=\"split\" transform=\"translate(350,250)\" s:width=\"5\" s:height=\"40\">\n    <rect width=\"5\" height=\"40\" class=\"splitjoinBody\" s:generic=\"body\"/>\n    <s:alias val=\"$_split_\"/>\n\n    <g s:x=\"0\" s:y=\"20\" s:pid=\"in\"/>\n    <g transform=\"translate(5, 10)\" s:x=\"4\" s:y=\"10\" s:pid=\"out0\">\n      <text x=\"5\" y=\"-4\">hi:lo</text>\n    </g>\n    <g transform=\"translate(5, 30)\" s:x=\"4\" s:y=\"30\" s:pid=\"out1\">\n      <text x=\"5\" y=\"-4\">hi:lo</text>\n    </g>\n  </g>\n\n  <g s:type=\"join\" transform=\"translate(450,250)\" s:width=\"4\" s:height=\"40\">\n    <rect width=\"5\" height=\"40\" class=\"splitjoinBody\" s:generic=\"body\"/>\n    <s:alias val=\"$_join_\"/>\n    <g s:x=\"5\" s:y=\"20\"  s:pid=\"out\"/>\n    <g transform=\"translate(0, 10)\" s:x=\"0\" s:y=\"10\" s:pid=\"in0\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel\">hi:lo</text>\n    </g>\n    <g transform=\"translate(0, 30)\" s:x=\"0\" s:y=\"30\" s:pid=\"in1\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel\">hi:lo</text>\n    </g>\n  </g>\n\n  <g s:type=\"dff\" transform=\"translate(50,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dff\"/>\n    <s:alias val=\"$_DFF_\"/>\n    <s:alias val=\"$_DFF_P_\"/>\n\n    <s:alias val=\"$adff\"/>\n    <s:alias val=\"$_DFF_\"/>\n    <s:alias val=\"$_DFF_P_\"/>\n\n    <s:alias val=\"$sdff\"/>\n    <s:alias val=\"$_DFF_\"/>\n    <s:alias val=\"$_DFF_P_\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n\n    <g s:x=\"31\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"15\" s:y=\"40\" s:pid=\"ARST\"/>\n    <g s:x=\"15\" s:y=\"40\" s:pid=\"SRST\"/>\n  </g>\n\n  <g s:type=\"dff-bus\" transform=\"translate(100,300)\" s:width=\"34\" s:height=\"44\">\n    <s:alias val=\"$dff-bus\"/>\n    <s:alias val=\"$_DFF_-bus\"/>\n    <s:alias val=\"$_DFF_P_-bus\"/>\n\n    <s:alias val=\"adff-bus\"/>\n    <s:alias val=\"$adff-bus\"/>\n    <s:alias val=\"$_DFF_-bus\"/>\n    <s:alias val=\"$_DFF_P_-bus\"/>\n\n    <s:alias val=\"sdff-bus\"/>\n    <s:alias val=\"$sdff-bus\"/>\n    <s:alias val=\"$_DFF_-bus\"/>\n    <s:alias val=\"$_DFF_P_-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n    <path d=\"M30,2 L32,2 L32,42 L2,42 L2,40\" class=\"$cell_id\"/>\n    <path d=\"M32,4 L34,4 L34,44 L4,44 L4,42\" class=\"$cell_id\"/>\n\n    <g s:x=\"35\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"-1\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"17\" s:y=\"44\" s:pid=\"ARST\"/>\n    <g s:x=\"17\" s:y=\"44\" s:pid=\"SRST\"/>\n  </g>\n\n  <g s:type=\"dffn\" transform=\"translate(150,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dffn\"/>\n    <s:alias val=\"$_DFF_N_\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n    <circle cx=\"-3\" cy=\"30\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n  </g>\n\n  <g s:type=\"dffn-bus\" transform=\"translate(200,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dffn-bus\"/>\n    <s:alias val=\"$_DFF_N_-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n    <path d=\"M0,35 L5,30 L0,25\" class=\"$cell_id\"/>\n    <circle cx=\"-3\" cy=\"30\" r=\"3\" class=\"$cell_id\"/>\n    <path d=\"M30,2 L32,2 L32,42 L2,42 L2,40\" class=\"$cell_id\"/>\n    <path d=\"M32,4 L34,4 L34,44 L4,44 L4,42\" class=\"$cell_id\"/>\n\n    <g s:x=\"35\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"CLK\"/>\n    <g s:x=\"-6\" s:y=\"30\" s:pid=\"C\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n  </g>\n\n  <g s:type=\"dlatch\" transform=\"translate(250,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dlatch\"/>\n    <s:alias val=\"$_DLATCH_\"/>\n    <s:alias val=\"adlatch\"/>\n    <s:alias val=\"$adlatch\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n\n    <path d=\"M 1,35 H 4 V 25 h 5 v 10 h 3\" class=\"$cell_id\"/>\n\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"EN\"/>\n    <g s:x=\"15\" s:y=\"40\" s:pid=\"ARST\"/>\n  </g>\n\n  <g s:type=\"dlatch-bus\" transform=\"translate(300,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dlatch-bus\"/>\n    <s:alias val=\"$_DLATCH_-bus\"/>\n    <s:alias val=\"adlatch-bus\"/>\n    <s:alias val=\"$adlatch-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n\n    <path d=\"M 1,35 H 4 V 25 h 5 v 10 h 3\" class=\"$cell_id\"/>\n    <path d=\"M30,2 L32,2 L32,42 L2,42 L2,40\" class=\"$cell_id\"/>\n    <path d=\"M32,4 L34,4 L34,44 L4,44 L4,42\" class=\"$cell_id\"/>\n\n    <g s:x=\"35\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"EN\"/>\n    <g s:x=\"17\" s:y=\"44\" s:pid=\"ARST\"/>\n  </g>\n\n  <g s:type=\"dlatchn\" transform=\"translate(350,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dlatchn\"/>\n    <s:alias val=\"$_DLATCH_N_\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n\n    <path d=\"M 1,25 H 4 V 35 H 9 V 25 h 3\" class=\"$cell_id\"/>\n\n    <g s:x=\"30\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"EN\"/>\n  </g>\n\n  <g s:type=\"dlatchn-bus\" transform=\"translate(400,300)\" s:width=\"30\" s:height=\"40\">\n    <s:alias val=\"$dlatchn-bus\"/>\n    <s:alias val=\"$_DLATCH_N_-bus\"/>\n\n    <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" class=\"$cell_id\"/>\n\n    <path d=\"M 1,25 H 4 V 35 H 9 V 25 h 3\" class=\"$cell_id\"/>\n    <path d=\"M30,2 L32,2 L32,42 L2,42 L2,40\" class=\"$cell_id\"/>\n    <path d=\"M32,4 L34,4 L34,44 L4,44 L4,42\" class=\"$cell_id\"/>\n\n    <g s:x=\"35\" s:y=\"10\" s:pid=\"Q\"/>\n    <g s:x=\"0\" s:y=\"10\" s:pid=\"D\"/>\n    <g s:x=\"-1\" s:y=\"30\" s:pid=\"EN\"/>\n  </g>\n\n  <g s:type=\"_AOI3_\" transform=\"translate(50, 400)\" s:width=\"66\" s:height=\"40\">\n    <s:alias val=\"$_AOI3_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n    <path d=\"M30,13 A30 25 0 0 1 30,38 A30 25 0 0 0 60,25.5 A30 25 0 0 0 30,13\" class=\"$cell_id\"/>\n    <circle cx=\"63\" cy=\"25.5\" r=\"3\" class=\"$cell_id\"/>\n    <path d=\"M0,32 L33,32\" />\n    <g s:x=\"0\" s:y=\"5\"  s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\"  s:pid=\"B\"/>\n    <g s:x=\"0\" s:y=\"32\"  s:pid=\"C\"/>\n    <g s:x=\"66\" s:y=\"25.5\" s:pid=\"Y\"/>\n    <!-- <path d=\"M-5,5 L0,5\"/> -->\n    <!-- <path d=\"M-5,20 L0,20\"/> -->\n    <!-- <path d=\"M-5,32 L0,32\"/> -->\n    <!-- <path d=\"M 70,25.5 L 66,25.5\"/> -->\n  </g>\n\n  <g s:type=\"_OAI3_\" transform=\"translate(150, 400)\" s:width=\"66\" s:height=\"40\">\n    <s:alias val=\"$_OAI3_\"/>\n\n    <path d=\"M30,13 L30,38 L45,38 A15 12.5 0 0 0 45,13 Z\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25 A30 25 0 0 0 30,12.5 A30 25 0 0 0 0,0\" class=\"$cell_id\"/>\n    <circle cx=\"63\" cy=\"25.5\" r=\"3\" class=\"$cell_id\"/>\n    <path d=\"M0,32 L30,32\" />\n\n    <g s:x=\"2\" s:y=\"5\"  s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\"  s:pid=\"B\"/>\n    <g s:x=\"0\" s:y=\"32\"  s:pid=\"C\"/>\n    <g s:x=\"66\" s:y=\"25.5\" s:pid=\"Y\"/>\n    <!-- <path d=\"M-5,5 L2,5\"/> -->\n    <!-- <path d=\"M-5,20 L2,20\"/> -->\n    <!-- <path d=\"M-5,32 L0,32\"/> -->\n    <!-- <path d=\"M 70,25.5 L 66,25.5\"/> -->\n  </g>\n\n  <!-- AOI4 -->\n\n  <g s:type=\"_AOI4_\" transform=\"translate(250, 400)\" s:width=\"66\" s:height=\"40\">\n    <s:alias val=\"$_AOI4_\"/>\n\n    <path d=\"M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z\" class=\"$cell_id\"/>\n    <path d=\"M0,25 L0,50 L15,50 A15 12.5 0 0 0 15,25 Z\" class=\"$cell_id\"/>\n    <path d=\"M30,12.5 A30 25 0 0 1 30,37.5 A30 25 0 0 0 60,25.5 A30 25 0 0 0 30,12.5\" class=\"$cell_id\"/>\n    <circle cx=\"63\" cy=\"25.5\" r=\"3\" class=\"$cell_id\"/>\n    <g s:x=\"0\" s:y=\"5\"  s:pid=\"A\"/>\n    <g s:x=\"0\" s:y=\"20\"  s:pid=\"B\"/>\n    <g s:x=\"0\" s:y=\"30\"  s:pid=\"C\"/>\n    <g s:x=\"0\" s:y=\"45\"  s:pid=\"D\"/>\n    <g s:x=\"66\" s:y=\"25.5\" s:pid=\"Y\"/>\n    <!-- <path d=\"M-5,5 L0,5\"/> -->\n    <!-- <path d=\"M-5,20 L0,20\"/> -->\n    <!-- <path d=\"M-5,30 L0,30\"/> -->\n    <!-- <path d=\"M-5,45 L0,45\"/> -->\n    <!-- <path d=\"M 70,25.5 L 66,25.5\"/> -->\n  </g>\n\n  <!-- OAI4 -->\n\n  <g s:type=\"_OAI4_\" transform=\"translate(350, 400)\" s:width=\"66\" s:height=\"40\">\n    <s:alias val=\"$_OAI4_\"/>\n\n    <path d=\"M30,13 L30,38 L45,38 A15 12.5 0 0 0 45,13 Z\" class=\"$cell_id\"/>\n    <path d=\"M0,0 A30 25 0 0 1 0,25 A30 25 0 0 0 30,12.5 A30 25 0 0 0 0,0\" class=\"$cell_id\"/>\n    <path d=\"M0,25 A30 25 0 0 1 0,50 A30 25 0 0 0 30,37.5 A30 25 0 0 0 0,25\" class=\"$cell_id\"/>\n    <circle cx=\"63\" cy=\"25.5\" r=\"3\" class=\"$cell_id\"/>\n\n    <g s:x=\"2\" s:y=\"5\"  s:pid=\"A\"/>\n    <g s:x=\"2\" s:y=\"20\"  s:pid=\"B\"/>\n    <g s:x=\"2\" s:y=\"30\"  s:pid=\"C\"/>\n    <g s:x=\"2\" s:y=\"45\"  s:pid=\"D\"/>\n    <g s:x=\"66\" s:y=\"25.5\" s:pid=\"Y\"/>\n    <!-- <path d=\"M-5,5 L2,5\"/> -->\n    <!-- <path d=\"M-5,20 L2,20\"/> -->\n    <!-- <path d=\"M-5,30 L2,30\"/> -->\n    <!-- <path d=\"M-5,45 L2,45\"/> -->\n    <!-- <path d=\"M 70,25.5 L 66,25.5\"/> -->\n  </g>\n\n  <g s:type=\"generic\" transform=\"translate(550,250)\" s:width=\"30\" s:height=\"40\">\n\n    <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">generic</text>\n    <rect width=\"30\" height=\"40\" s:generic=\"body\" class=\"$cell_id\"/>\n\n    <g transform=\"translate(30, 10)\" s:x=\"30\" s:y=\"10\" s:pid=\"out0\">\n      <text x=\"5\" y=\"-4\" style=\"fill:#000; stroke:none\" class=\"$cell_id\">out0</text>\n    </g>\n    <g transform=\"translate(30, 30)\" s:x=\"30\" s:y=\"30\" s:pid=\"out1\">\n      <text x=\"5\" y=\"-4\" style=\"fill:#000;stroke:none\" class=\"$cell_id\">out1</text>\n    </g>\n    <g transform=\"translate(0, 10)\" s:x=\"0\" s:y=\"10\" s:pid=\"in0\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in0</text>\n    </g>\n    <g transform=\"translate(0, 30)\" s:x=\"0\" s:y=\"30\" s:pid=\"in1\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in1</text>\n    </g>\n  </g>\n\n</svg>\n";
 const analog = "<svg xmlns=\"http://www.w3.org/2000/svg\"\n     xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n     xmlns:s=\"https://github.com/nturley/netlistsvg\">\n  <s:properties\n    constants=\"false\"\n    splitsAndJoins=\"false\"\n    genericsLaterals=\"true\">\n    <s:layoutEngine\n        org.eclipse.elk.layered.spacing.nodeNodeBetweenLayers=\"5\"\n        org.eclipse.elk.layered.compaction.postCompaction.strategy=\"4\"\n        org.eclipse.elk.spacing.nodeNode= \"35\"\n        org.eclipse.elk.direction=\"DOWN\"/>\n  </s:properties>\n<style>\nsvg {\n  stroke: #000;\n  fill: none;\n}\ntext {\n  fill: #000;\n  stroke: none;\n  font-size: 10px;\n  font-weight: bold;\n  font-family: \"Courier New\", monospace;\n}\n.nodelabel {\n  text-anchor: middle;\n}\n.inputPortLabel {\n  text-anchor: end;\n}\n.splitjoinBody {\n  fill: #000;\n}\n.symbol {\n  stroke-linejoin: round;\n  stroke-linecap: round;\n  stroke-width: 2;\n}\n.detail {\n  stroke-linejoin: round;\n  stroke-linecap: round;\n  fill: #000;\n}\n</style>\n\n<!-- power -->\n<g s:type=\"vcc\" s:width=\"20\" s:height=\"30\" transform=\"translate(5,20)\">\n  <s:alias val=\"vcc\" />\n  <text x=\"10\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"name\">name</text>\n  <path d=\"M0,0 H20 L10,15 Z M10,15 V30\" class=\"$cell_id\"/>\n  <g s:x=\"10\" s:y=\"30\" s:pid=\"A\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"vee\" s:width=\"20\" s:height=\"30\" transform=\"translate(40,35)\">\n\t  <s:alias val=\"vee\" />\n\t  <text x=\"10\" y=\"10\" class=\"nodelabel $cell_id\" s:attribute=\"name\">name</text>\n\t  <path d=\"M0,0 H20 L10,-15 Z M10,-15 V-30\" class=\"$cell_id\"/>\n\t  <g s:x=\"10\" s:y=\"-30\" s:pid=\"A\" s:position=\"top\"/>\n\t</g>\n\n<g s:type=\"gnd\" s:width=\"20\" s:height=\"30\" transform=\"translate(80,35)\">\n  <s:alias val=\"gnd\"/>\n  <text x=\"30\" y=\"20\" class=\"nodelabel $cell_id\" s:attribute=\"name\">name</text>\n  <path d=\"M0,0 H20 M3,5 H17 M7,10 H13 M10,0 V-15\" class=\"$cell_id\"/>\n  <g s:x=\"10\" s:y=\"-15\" s:pid=\"A\" s:position=\"top\"/>\n</g>\n<!-- power -->\n\n<!-- signal -->\n<g s:type=\"inputExt\" s:width=\"30\" s:height=\"20\" transform=\"translate(5,70)\">\n  <text x=\"15\" y=\"-4\" class=\"$cell_id\" s:attribute=\"ref\">input</text>\n  <s:alias val=\"$_inputExt_\"/>\n  <path d=\"M0,0 V20 H15 L30,10 15,0 Z\" class=\"$cell_id\"/>\n  <g s:x=\"30\" s:y=\"10\" s:pid=\"Y\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"outputExt\" s:width=\"30\" s:height=\"20\" transform=\"translate(60,70)\">\n  <text x=\"15\" y=\"-4\" class=\"$cell_id\" s:attribute=\"ref\">output</text>\n  <s:alias val=\"$_outputExt_\"/>\n  <path d=\"M30,0 V20 H15 L0,10 15,0 Z\" class=\"$cell_id\"/>\n  <g s:x=\"0\" s:y=\"10\" s:pid=\"A\" s:position=\"left\"/>\n</g>\n<!-- signal -->\n\n<!-- passives -->\n<g s:type=\"resistor_h\" s:width=\"50\" s:height=\"10\" transform=\"translate(5,110)\">\n  <s:alias val=\"r_h\"/>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"-5\" s:attribute=\"ref\">X1</text>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"20\" s:attribute=\"value\">Xk</text>\n  <path d=\"M10,0 H40 V10 H10 Z\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,5 H10 M40,5 H50\" class=\"connect $cell_id\"/>\n  <g s:x=\"0\" s:y=\"5\" s:pid=\"A\" s:position=\"left\"/>\n  <g s:x=\"50\" s:y=\"5\" s:pid=\"B\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"resistor_v\" s:width=\"10\" s:height=\"50\" transform=\"translate(25,130)\">\n  <s:alias val=\"r_v\"/>\n  <text x=\"15\"  y=\"15\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"15\" y=\"30\" s:attribute=\"value\" class=\"$cell_id\" >Xk</text>\n  <path d=\"M0,10 V40 H10 V10 Z\" class=\"symbol $cell_id\"/>\n  <path d=\"M5,0 V10 M5,40 V50\" class=\"connect $cell_id\"/>\n  <g s:x=\"5\" s:y=\"0\" s:pid=\"A\" s:position=\"top\"/>\n  <g s:x=\"5\" s:y=\"50\" s:pid=\"B\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"capacitor_h\" s:width=\"50\" s:height=\"30\" transform=\"translate(60,100)\">\n  <s:alias val=\"c_h\"/>\n  <text x=\"35\" y=\"5\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"35\" y=\"30\" s:attribute=\"value\" class=\"$cell_id\">Xu</text>\n  <path d=\"M20,0 V30 M30,0 V30\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,15 H20 M30,15 H50\" class=\"connect $cell_id\"/>\n  <g s:x=\"0\" s:y=\"15\" s:pid=\"A\" s:position=\"left\"/>\n  <g s:x=\"50\" s:y=\"15\" s:pid=\"B\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"capacitor_v\" s:width=\"30\" s:height=\"50\" transform=\"translate(70,130)\">\n  <s:alias val=\"c_v\"/>\n  <text x=\"25\" y=\"10\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"25\" y=\"45\" s:attribute=\"value\" class=\"$cell_id\">Xu</text>\n  <path d=\"M0,20 H30 M0,30 H30\" class=\"symbol $cell_id\"/>\n  <path d=\"M15,0 V20 M15,30 V50\" class=\"connect $cell_id\"/>\n  <g s:x=\"15\" s:y=\"0\" s:pid=\"A\" s:position=\"top\"/>\n  <g s:x=\"15\" s:y=\"50\" s:pid=\"B\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"inductor_h\" s:width=\"50\" s:height=\"10\" transform=\"translate(115,110)\">\n  <s:alias val=\"l_h\"/>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"-5\" s:attribute=\"ref\">X1</text>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"20\" s:attribute=\"value\">XpF</text>\n  <path d=\"M5,5 A5,5 0 0 1 15,5 A5,5 0 0 1 25,5 A5,5 0 0 1 35,5 A5,5 0 0 1 45,5\" class=\"$cell_id\"/>\n  <path d=\"M0,5 H5 M45,5 H50\" class=\"connect $cell_id\"/>\n  <g s:x=\"0\" s:y=\"5\" s:pid=\"A\" s:position=\"left\"/>\n  <g s:x=\"50\" s:y=\"5\" s:pid=\"B\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"inductor_v\" s:width=\"10\" s:height=\"50\" transform=\"translate(135,130)\">\n  <s:alias val=\"l_v\"/>\n  <text x=\"15\" y=\"15\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"15\" y=\"35\" s:attribute=\"value\" class=\"$cell_id\">XpF</text>\n  <path d=\"M5,5 A5,5 0 0 1 5,15 A5,5 0 0 1 5,25 A5,5 0 0 1 5,35 A5,5 0 0 1 5,45\" class=\"$cell_id\"/>\n  <path d=\"M5,0 V5 M5,45 V50\" class=\"connect $cell_id\"/>\n  <g s:x=\"5\" s:y=\"0\" s:pid=\"A\" s:position=\"top\"/>\n  <g s:x=\"5\" s:y=\"50\" s:pid=\"B\" s:position=\"bottom\"/>\n</g>\n<!-- passives -->\n\n<!-- sources -->\n<g s:type=\"voltage_source\" s:width=\"32\" s:height=\"52\" transform=\"translate(20,180)\">\n  <s:alias val=\"v\"/>\n  <text x=\"35\" y=\"20\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"35\" y=\"35\" s:attribute=\"value\" class=\"$cell_id\">XV</text>\n  <circle cx=\"16\" cy=\"26\" r=\"16\" class=\"symbol $cell_id\"/>\n  <path d=\"M16,10 V42\" class=\"detail $cell_id\"/>\n  <path d=\"M16,0 V10 M16,42 V52\" class=\"connect $cell_id\"/>\n  <g s:x=\"16\" s:y=\"0\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"16\" s:y=\"52\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"current_source\" s:width=\"32\" s:height=\"52\" transform=\"translate(75,180)\">\n  <s:alias val=\"i\"/>\n  <text x=\"35\" y=\"20\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <text x=\"35\" y=\"35\" s:attribute=\"value\" class=\"$cell_id\">XA</text>\n  <circle cx=\"16\" cy=\"26\" r=\"16\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,26 H32\" class=\"detail $cell_id\"/>\n  <path d=\"M16,0 V10 M16,42 V52\" class=\"connect $cell_id\"/>\n  <g s:x=\"16\" s:y=\"0\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"16\" s:y=\"52\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n<!-- sources -->\n\n<!-- diodes -->\n<g s:type=\"diode_h\" s:width=\"50\" s:height=\"20\" transform=\"translate(5,250)\">\n  <s:alias val=\"d_h\"/>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"-5\" s:attribute=\"ref\">X1</text>\n  <path d=\"M15,0 V20 L35,10 Z M35,0 V20\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,10 H15 M35,10 H50\" class=\"connect $cell_id\"/>\n  <g s:x=\"0\" s:y=\"10\" s:pid=\"+\" s:position=\"left\"/>\n  <g s:x=\"50\" s:y=\"10\" s:pid=\"-\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"diode_v\" s:width=\"20\" s:height=\"50\" transform=\"translate(20,280)\">\n  <s:alias val=\"d_v\"/>\n  <text x=\"25\" y=\"25\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <path d=\"M0,15 H20 L10,35 Z M0,35 H20\" class=\"symbol $cell_id\"/>\n  <path d=\"M10,0 V15 M10,35 V50\" class=\"connect $cell_id\"/>\n  <g s:x=\"10\" s:y=\"0\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"10\" s:y=\"50\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"diode_schottky_h\" s:width=\"50\" s:height=\"20\" transform=\"translate(60,250)\">\n  <s:alias val=\"d_sk_h\"/>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"-5\" s:attribute=\"ref\">X1</text>\n  <path d=\"M15,0 V20 L35,10 Z M35,0 V20\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,10 H15 M35,10 H50\" class=\"connect $cell_id\"/>\n  <!-- schottky -->\n  <path d=\"M35,0 H40 M35,20 H30\" class=\"symbol $cell_id\"/>\n  <g s:x=\"0\" s:y=\"10\" s:pid=\"+\" s:position=\"left\"/>\n  <g s:x=\"50\" s:y=\"10\" s:pid=\"-\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"diode_schottky_v\" s:width=\"20\" s:height=\"50\" transform=\"translate(75,280)\">\n  <s:alias val=\"d_sk_v\"/>\n  <text x=\"25\" y=\"25\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <path d=\"M0,15 H20 L10,35 Z M0,35 H20\" class=\"symbol $cell_id\"/>\n  <path d=\"M10,0 V15 M10,35 V50\" class=\"connect $cell_id\"/>\n  <!-- schottky -->\n  <path d=\"M0,35 V40 M20,35 V30\" class=\"symbol $cell_id\"/>\n  <g s:x=\"10\" s:y=\"0\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"10\" s:y=\"50\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"diode_led_h\" s:width=\"50\" s:height=\"20\" transform=\"translate(115,250)\">\n  <s:alias val=\"d_led_h\"/>\n  <text class=\"nodelabel $cell_id\" x=\"10\" y=\"-5\" s:attribute=\"ref\">X1</text>\n  <path d=\"M15,0 V20 L35,10 Z M35,0 V20\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,10 H15 M35,10 H50\" class=\"connect $cell_id\"/>\n  <!-- led -->\n  <path d=\"m20,-5 7,-7\" class=\"detail $cell_id\"/>\n  <path d=\"m24,-12 6,-3 -3,6 z\" class=\"detail $cell_id\"/>\n  <path d=\"m25,0 7,-7\" class=\"detail $cell_id\"/>\n  <path d=\"m29,-7 6,-3 -3,6 z\" class=\"detail $cell_id\"/>\n  <g s:x=\"0\" s:y=\"10\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"50\" s:y=\"10\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"diode_led_v\" s:width=\"20\" s:height=\"50\" transform=\"translate(130,280)\">\n  <s:alias val=\"d_led_v\"/>\n  <text x=\"25\" y=\"25\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <path d=\"M0,15 H20 L10,35 Z M0,35 H20\" class=\"symbol $cell_id\"/>\n  <path d=\"M10,0 V15 M10,35 V50\" class=\"connect $cell_id\"/>\n  <!-- led -->\n  <path d=\"m-5,20 -7,7\" class=\"detail $cell_id\"/>\n  <path d=\"m-12,24 -3,6 6,-3 z\" class=\"detail $cell_id\"/>\n  <path d=\"m0,25 -7,7\" class=\"detail $cell_id\"/>\n  <path d=\"m-7,29 -3,6 6,-3 z\" class=\"detail $cell_id\"/>\n  <g s:x=\"10\" s:y=\"0\" s:pid=\"+\" s:position=\"top\"/>\n  <g s:x=\"10\" s:y=\"50\" s:pid=\"-\" s:position=\"bottom\"/>\n</g>\n<!-- diodes -->\n\n<!-- transistors -->\n<g s:type=\"transistor_npn\" s:width=\"32\" s:height=\"32\" transform=\"translate(15,350)\">\n  <s:alias val=\"q_npn\"/>\n  <text x=\"35\" y=\"20\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <circle r=\"16\" cx=\"16\" cy=\"16\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,16 H12 M12,6 V26\" class=\"detail $cell_id\"/>\n  <path d=\"m12,10 11,-8\" class=\"detail $cell_id\"/>\n  <path d=\"m12,21 11,8\" class=\"detail $cell_id\"/>\n  <!-- npn -->\n  <path d=\"m23,29 -6,-1 3,-5 z\" style=\"fill:#000000\" class=\"$cell_id\"/>\n  <g s:x=\"22\" s:y=\"2\" s:pid=\"C\" s:position=\"top\"/>\n  <g s:x=\"0\" s:y=\"16\" s:pid=\"B\" s:position=\"left\"/>\n  <g s:x=\"23\" s:y=\"29\" s:pid=\"E\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"transistor_pnp\" s:width=\"32\" s:height=\"32\" transform=\"translate(85,350)\">\n  <s:alias val=\"q_pnp\"/>\n  <text x=\"35\" y=\"20\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <circle r=\"16\" cx=\"16\" cy=\"16\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,16 H12 M12,6 V26\" class=\"detail $cell_id\"/>\n  <path d=\"m12,10 11,-8\" class=\"detail $cell_id\"/>\n  <path d=\"m12,21 11,8\" class=\"detail $cell_id\"/>\n  <!-- pnp -->\n  <path d=\"m14,9 6,-1 -3,-5 z\" style=\"fill:#000000\" class=\"$cell_id\"/>\n  <g s:x=\"22\" s:y=\"2\" s:pid=\"C\" s:position=\"top\"/>\n  <g s:x=\"0\" s:y=\"16\" s:pid=\"B\" s:position=\"left\"/>\n  <g s:x=\"23\" s:y=\"29\" s:pid=\"E\" s:position=\"bottom\"/>\n</g>\n<!-- transistors -->\n\n<!-- builtin -->\n<g s:type=\"generic\" s:width=\"30\" s:height=\"40\" transform=\"translate(150, 400)\">\n  <text x=\"15\" y=\"-4\" class=\"nodelabel $cell_id\" s:attribute=\"ref\">generic</text>\n  <rect width=\"30\" height=\"40\" x=\"0\" y=\"0\" s:generic=\"body\" class=\"$cell_id\"/>\n  <g transform=\"translate(30,10)\"\n     s:x=\"30\" s:y=\"10\" s:pid=\"out0\" s:position=\"right\">\n    <text x=\"5\" y=\"-4\" class=\"$cell_id\">out0</text>\n  </g>\n  <g transform=\"translate(30,30)\"\n     s:x=\"30\" s:y=\"30\" s:pid=\"out1\" s:position=\"right\">\n    <text x=\"5\" y=\"-4\" class=\"$cell_id\">out1</text>\n  </g>\n  <g transform=\"translate(0,10)\"\n     s:x=\"0\" s:y=\"10\" s:pid=\"in0\" s:position=\"left\">\n      <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in0</text>\n  </g>\n  <g transform=\"translate(0,30)\"\n     s:x=\"0\" s:y=\"30\" s:pid=\"in1\" s:position=\"left\">\n    <text x=\"-3\" y=\"-4\" class=\"inputPortLabel $cell_id\">in1</text>\n  </g>\n</g>\n<!-- builtin -->\n\n<!-- misc -->\n<g s:type=\"opamp\" s:width=\"60\" s:height=\"40\" transform=\"translate(20,450)\">\n  <s:alias val=\"op\"/>\n  <text x=\"40\" y=\"35\" s:attribute=\"ref\" class=\"$cell_id\">X1</text>\n  <path d=\"M10,0 V40 L50,20 Z\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,10 H10 M0,30 H10 M50,20 H60 M30,0 V10 M30,40 V30\" class=\"connect $cell_id\"/>\n  <path d=\"m15,10 5,0 m-2.5,-2.5 0,5\" class=\"detail $cell_id\"/>\n  <path d=\"m15,30 5,0\" class=\"detail $cell_id\"/>\n  <g s:x=\"0\" s:y=\"10\" s:pid=\"+\" s:position=\"left\"/>\n  <g s:x=\"0\" s:y=\"30\" s:pid=\"-\" s:position=\"left\"/>\n  <g s:x=\"60\" s:y=\"20\" s:pid=\"OUT\" s:position=\"right\"/>\n  <g s:x=\"30\" s:y=\"0\" s:pid=\"VCC\" s:position=\"top\"/>\n  <g s:x=\"30\" s:y=\"40\" s:pid=\"VEE\" s:position=\"bottom\"/>\n</g>\n\n<g s:type=\"xtal\" s:width=\"40\" s:height=\"30\" transform=\"translate(90,450)\">\n  <s:alias val=\"xtal\"/>\n  <text class=\"nodelabel $cell_id\" x=\"20\" y=\"45\" s:attribute=\"ref\">X1</text>\n  <rect x=\"15\" y=\"0\" width=\"10\" height=\"30\" class=\"symbol $cell_id\" />\n  <path d=\"M0,15 H10 M10,5 V25 M30,5 V25 M30,15 H40\" class=\"$cell_id\"/>\n  <g s:x=\"0\" s:y=\"15\" s:pid=\"A\" s:position=\"left\"/>\n  <g s:x=\"40\" s:y=\"15\" s:pid=\"B\" s:position=\"right\"/>\n</g>\n\n<g s:type=\"transformer_1p_1s\" s:width=\"35\" s:height=\"45\" transform=\"translate(140,450)\">\n  <s:alias val=\"transformer_1p_1s\"/>\n  <text class=\"nodelabel $cell_id\" x=\"25\" y=\"55\" s:attribute=\"ref\">X1</text>\n  <path d=\"M10,0 A5,5 0 0 1 10,10 A5,5 0 0 1 10,20 A5,5 0 0 1 10,30 A5,5 0 0 1 10,40\" class=\"$cell_id\"/>\n  <path d=\"M35,0 A5,5 0 0 0 35,10 A5,5 0 0 0 35,20 A5,5 0 0 0 35,30 A5,5 0 0 0 35,40\" class=\"$cell_id\"/>\n  <path d=\"M20,0 V40 M25,0 V40\" class=\"symbol $cell_id\"/>\n  <path d=\"M0,0 H10 M0,40 H10 M35,0 H45 M35,40 H45\" class=\"connect $cell_id\"/>\n  <g s:x=\"0\" s:y=\"0\" s:pid=\"L1.1\" s:position=\"left\"/>\n  <g s:x=\"0\" s:y=\"40\" s:pid=\"L1.2\" s:position=\"left\"/>\n  <g s:x=\"40\" s:y=\"0\" s:pid=\"L2.1\" s:position=\"right\"/>\n  <g s:x=\"40\" s:y=\"40\" s:pid=\"L2.2\" s:position=\"right\"/>\n</g>\n<!-- misc -->\n</svg>\n";
 const exampleDigital = Buffer("ewogICJjcmVhdG9yIjogIllvc3lzIDAuNSsyMjAgKGdpdCBzaGExIDk0ZmJhZmYsIGVtY2MgIC1PcykiLAogICJtb2R1bGVzIjogewogICAgInVwM2Rvd241IjogewogICAgICAicG9ydHMiOiB7CiAgICAgICAgImNsb2NrIjogewogICAgICAgICAgImRpcmVjdGlvbiI6ICJpbnB1dCIsCiAgICAgICAgICAiYml0cyI6IFsgMiBdCiAgICAgICAgfSwKICAgICAgICAiZGF0YV9pbiI6IHsKICAgICAgICAgICJkaXJlY3Rpb24iOiAiaW5wdXQiLAogICAgICAgICAgImJpdHMiOiBbIDMsIDQsIDUsIDYsIDcsIDgsIDksIDEwLCAxMSBdCiAgICAgICAgfSwKICAgICAgICAidXAiOiB7CiAgICAgICAgICAiZGlyZWN0aW9uIjogImlucHV0IiwKICAgICAgICAgICJiaXRzIjogWyAxMiBdCiAgICAgICAgfSwKICAgICAgICAiZG93biI6IHsKICAgICAgICAgICJkaXJlY3Rpb24iOiAiaW5wdXQiLAogICAgICAgICAgImJpdHMiOiBbIDEzIF0KICAgICAgICB9LAogICAgICAgICJjYXJyeV9vdXQiOiB7CiAgICAgICAgICAiZGlyZWN0aW9uIjogIm91dHB1dCIsCiAgICAgICAgICAiYml0cyI6IFsgMTQgXQogICAgICAgIH0sCiAgICAgICAgImJvcnJvd19vdXQiOiB7CiAgICAgICAgICAiZGlyZWN0aW9uIjogIm91dHB1dCIsCiAgICAgICAgICAiYml0cyI6IFsgMTUgXQogICAgICAgIH0sCiAgICAgICAgImNvdW50X291dCI6IHsKICAgICAgICAgICJkaXJlY3Rpb24iOiAib3V0cHV0IiwKICAgICAgICAgICJiaXRzIjogWyAxNiwgMTcsIDE4LCAxOSwgMjAsIDIxLCAyMiwgMjMsIDI0IF0KICAgICAgICB9LAogICAgICAgICJwYXJpdHlfb3V0IjogewogICAgICAgICAgImRpcmVjdGlvbiI6ICJvdXRwdXQiLAogICAgICAgICAgImJpdHMiOiBbIDI1IF0KICAgICAgICB9CiAgICAgIH0sCiAgICAgICJjZWxscyI6IHsKICAgICAgICAiJGFkZCRpbnB1dC52OjE3JDMiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRhZGQiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJBX1NJR05FRCI6IDAsCiAgICAgICAgICAgICJBX1dJRFRIIjogOSwKICAgICAgICAgICAgIkJfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkJfV0lEVEgiOiAyLAogICAgICAgICAgICAiWV9XSURUSCI6IDEwCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjoxNyIKICAgICAgICAgIH0sCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQSI6ICJpbnB1dCIsCiAgICAgICAgICAgICJCIjogImlucHV0IiwKICAgICAgICAgICAgIlkiOiAib3V0cHV0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkEiOiBbIDE2LCAxNywgMTgsIDE5LCAyMCwgMjEsIDIyLCAyMywgMjQgXSwKICAgICAgICAgICAgIkIiOiBbICIxIiwgIjEiIF0sCiAgICAgICAgICAgICJZIjogWyAyNiwgMjcsIDI4LCAyOSwgMzAsIDMxLCAzMiwgMzMsIDM0LCAzNSBdCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJGFuZCRpbnB1dC52OjI4JDUiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRhbmQiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJBX1NJR05FRCI6IDAsCiAgICAgICAgICAgICJBX1dJRFRIIjogMSwKICAgICAgICAgICAgIkJfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkJfV0lEVEgiOiAxLAogICAgICAgICAgICAiWV9XSURUSCI6IDEKICAgICAgICAgIH0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjI4IgogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiWSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFsgMTIgXSwKICAgICAgICAgICAgIkIiOiBbIDM1IF0sCiAgICAgICAgICAgICJZIjogWyAzNiBdCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJGFuZCRpbnB1dC52OjI5JDYiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRhbmQiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJBX1NJR05FRCI6IDAsCiAgICAgICAgICAgICJBX1dJRFRIIjogMSwKICAgICAgICAgICAgIkJfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkJfV0lEVEgiOiAxLAogICAgICAgICAgICAiWV9XSURUSCI6IDEKICAgICAgICAgIH0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjI5IgogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiWSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFsgMTMgXSwKICAgICAgICAgICAgIkIiOiBbIDM3IF0sCiAgICAgICAgICAgICJZIjogWyAzOCBdCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJHByb2NkZmYkNDAiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRkZmYiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJDTEtfUE9MQVJJVFkiOiAxLAogICAgICAgICAgICAiV0lEVEgiOiA5CiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjoxNCIKICAgICAgICAgIH0sCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQ0xLIjogImlucHV0IiwKICAgICAgICAgICAgIkQiOiAiaW5wdXQiLAogICAgICAgICAgICAiUSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQ0xLIjogWyAyIF0sCiAgICAgICAgICAgICJEIjogWyAzOSwgNDAsIDQxLCA0MiwgNDMsIDQ0LCA0NSwgNDYsIDQ3IF0sCiAgICAgICAgICAgICJRIjogWyAxNiwgMTcsIDE4LCAxOSwgMjAsIDIxLCAyMiwgMjMsIDI0IF0KICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICIkcHJvY2RmZiQ0MSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgInR5cGUiOiAiJGRmZiIsCiAgICAgICAgICAicGFyYW1ldGVycyI6IHsKICAgICAgICAgICAgIkNMS19QT0xBUklUWSI6IDEsCiAgICAgICAgICAgICJXSURUSCI6IDEKICAgICAgICAgIH0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJDTEsiOiAiaW5wdXQiLAogICAgICAgICAgICAiRCI6ICJpbnB1dCIsCiAgICAgICAgICAgICJRIjogIm91dHB1dCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJDTEsiOiBbIDIgXSwKICAgICAgICAgICAgIkQiOiBbIDM2IF0sCiAgICAgICAgICAgICJRIjogWyAxNCBdCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJHByb2NkZmYkNDIiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRkZmYiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJDTEtfUE9MQVJJVFkiOiAxLAogICAgICAgICAgICAiV0lEVEgiOiAxCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjoxNCIKICAgICAgICAgIH0sCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQ0xLIjogImlucHV0IiwKICAgICAgICAgICAgIkQiOiAiaW5wdXQiLAogICAgICAgICAgICAiUSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQ0xLIjogWyAyIF0sCiAgICAgICAgICAgICJEIjogWyAzOCBdLAogICAgICAgICAgICAiUSI6IFsgMTUgXQogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRwcm9jZGZmJDQzIjogewogICAgICAgICAgImhpZGVfbmFtZSI6IDEsCiAgICAgICAgICAidHlwZSI6ICIkZGZmIiwKICAgICAgICAgICJwYXJhbWV0ZXJzIjogewogICAgICAgICAgICAiQ0xLX1BPTEFSSVRZIjogMSwKICAgICAgICAgICAgIldJRFRIIjogMQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAic3JjIjogImlucHV0LnY6MTQiCiAgICAgICAgICB9LAogICAgICAgICAgInBvcnRfZGlyZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkNMSyI6ICJpbnB1dCIsCiAgICAgICAgICAgICJEIjogImlucHV0IiwKICAgICAgICAgICAgIlEiOiAib3V0cHV0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkNMSyI6IFsgMiBdLAogICAgICAgICAgICAiRCI6IFsgNDggXSwKICAgICAgICAgICAgIlEiOiBbIDI1IF0KICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICIkcHJvY211eCQzNiI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgInR5cGUiOiAiJHBtdXgiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJTX1dJRFRIIjogMywKICAgICAgICAgICAgIldJRFRIIjogOQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiUyI6ICJpbnB1dCIsCiAgICAgICAgICAgICJZIjogIm91dHB1dCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogWyAxNiwgMTcsIDE4LCAxOSwgMjAsIDIxLCAyMiwgMjMsIDI0IF0sCiAgICAgICAgICAgICJCIjogWyAyNiwgMjcsIDI4LCAyOSwgMzAsIDMxLCAzMiwgMzMsIDM0LCA0OSwgNTAsIDUxLCA1MiwgNTMsIDU0LCA1NSwgNTYsIDU3LCAzLCA0LCA1LCA2LCA3LCA4LCA5LCAxMCwgMTEgXSwKICAgICAgICAgICAgIlMiOiBbIDU4LCA1OSwgNjAgXSwKICAgICAgICAgICAgIlkiOiBbIDM5LCA0MCwgNDEsIDQyLCA0MywgNDQsIDQ1LCA0NiwgNDcgXQogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRwcm9jbXV4JDM3X0NNUDAiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRlcSIsCiAgICAgICAgICAicGFyYW1ldGVycyI6IHsKICAgICAgICAgICAgIkFfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkFfV0lEVEgiOiAyLAogICAgICAgICAgICAiQl9TSUdORUQiOiAwLAogICAgICAgICAgICAiQl9XSURUSCI6IDIsCiAgICAgICAgICAgICJZX1dJRFRIIjogMQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiWSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFsgMTMsIDEyIF0sCiAgICAgICAgICAgICJCIjogWyAiMCIsICIxIiBdLAogICAgICAgICAgICAiWSI6IFsgNTggXQogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRwcm9jbXV4JDM4X0NNUDAiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRlcSIsCiAgICAgICAgICAicGFyYW1ldGVycyI6IHsKICAgICAgICAgICAgIkFfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkFfV0lEVEgiOiAyLAogICAgICAgICAgICAiQl9TSUdORUQiOiAwLAogICAgICAgICAgICAiQl9XSURUSCI6IDIsCiAgICAgICAgICAgICJZX1dJRFRIIjogMQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiWSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFsgMTMsIDEyIF0sCiAgICAgICAgICAgICJCIjogWyAiMSIsICIwIiBdLAogICAgICAgICAgICAiWSI6IFsgNTkgXQogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRwcm9jbXV4JDM5X0NNUDAiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRlcSIsCiAgICAgICAgICAicGFyYW1ldGVycyI6IHsKICAgICAgICAgICAgIkFfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkFfV0lEVEgiOiAyLAogICAgICAgICAgICAiQl9TSUdORUQiOiAwLAogICAgICAgICAgICAiQl9XSURUSCI6IDIsCiAgICAgICAgICAgICJZX1dJRFRIIjogMQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgfSwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IiwKICAgICAgICAgICAgIkIiOiAiaW5wdXQiLAogICAgICAgICAgICAiWSI6ICJvdXRwdXQiCiAgICAgICAgICB9LAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFsgMTMsIDEyIF0sCiAgICAgICAgICAgICJCIjogWyAiMCIsICIwIiBdLAogICAgICAgICAgICAiWSI6IFsgNjAgXQogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRyZWR1Y2VfeG9yJGlucHV0LnY6MjckNCI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgInR5cGUiOiAiJHJlZHVjZV94b3IiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJBX1NJR05FRCI6IDAsCiAgICAgICAgICAgICJBX1dJRFRIIjogOSwKICAgICAgICAgICAgIllfV0lEVEgiOiAxCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjoyNyIKICAgICAgICAgIH0sCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQSI6ICJpbnB1dCIsCiAgICAgICAgICAgICJZIjogIm91dHB1dCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogWyAzOSwgNDAsIDQxLCA0MiwgNDMsIDQ0LCA0NSwgNDYsIDQ3IF0sCiAgICAgICAgICAgICJZIjogWyA0OCBdCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJHN1YiRpbnB1dC52OjE2JDIiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJ0eXBlIjogIiRzdWIiLAogICAgICAgICAgInBhcmFtZXRlcnMiOiB7CiAgICAgICAgICAgICJBX1NJR05FRCI6IDAsCiAgICAgICAgICAgICJBX1dJRFRIIjogOSwKICAgICAgICAgICAgIkJfU0lHTkVEIjogMCwKICAgICAgICAgICAgIkJfV0lEVEgiOiAzLAogICAgICAgICAgICAiWV9XSURUSCI6IDEwCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjoxNiIKICAgICAgICAgIH0sCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQSI6ICJpbnB1dCIsCiAgICAgICAgICAgICJCIjogImlucHV0IiwKICAgICAgICAgICAgIlkiOiAib3V0cHV0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkEiOiBbIDE2LCAxNywgMTgsIDE5LCAyMCwgMjEsIDIyLCAyMywgMjQgXSwKICAgICAgICAgICAgIkIiOiBbICIxIiwgIjAiLCAiMSIgXSwKICAgICAgICAgICAgIlkiOiBbIDQ5LCA1MCwgNTEsIDUyLCA1MywgNTQsIDU1LCA1NiwgNTcsIDM3IF0KICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0sCiAgICAgICJuZXRuYW1lcyI6IHsKICAgICAgICAiJDBcXGJvcnJvd19vdXRbMDowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDM4IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiQwXFxjYXJyeV9vdXRbMDowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDM2IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiQwXFxjbnRfZG5bOTowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDQ5LCA1MCwgNTEsIDUyLCA1MywgNTQsIDU1LCA1NiwgNTcsIDM3IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiQwXFxjbnRfdXBbOTowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDI2LCAyNywgMjgsIDI5LCAzMCwgMzEsIDMyLCAzMywgMzQsIDM1IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiQwXFxjb3VudF9vdXRbODowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDM5LCA0MCwgNDEsIDQyLCA0MywgNDQsIDQ1LCA0NiwgNDcgXSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAic3JjIjogImlucHV0LnY6MTQiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJDBcXHBhcml0eV9vdXRbMDowXSI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDQ4IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjE0IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIiRwcm9jbXV4JDM3X0NNUCI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAxLAogICAgICAgICAgImJpdHMiOiBbIDU4IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICIkcHJvY211eCQzOF9DTVAiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMSwKICAgICAgICAgICJiaXRzIjogWyA1OSBdLAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiJHByb2NtdXgkMzlfQ01QIjogewogICAgICAgICAgImhpZGVfbmFtZSI6IDEsCiAgICAgICAgICAiYml0cyI6IFsgNjAgXSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgImJvcnJvd19vdXQiOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMCwKICAgICAgICAgICJiaXRzIjogWyAxNSBdLAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjo5IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgImNhcnJ5X291dCI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAwLAogICAgICAgICAgImJpdHMiOiBbIDE0IF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjkiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiY2xvY2siOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMCwKICAgICAgICAgICJiaXRzIjogWyAyIF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjYiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiY291bnRfb3V0IjogewogICAgICAgICAgImhpZGVfbmFtZSI6IDAsCiAgICAgICAgICAiYml0cyI6IFsgMTYsIDE3LCAxOCwgMTksIDIwLCAyMSwgMjIsIDIzLCAyNCBdLAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJzcmMiOiAiaW5wdXQudjo4IgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgImRhdGFfaW4iOiB7CiAgICAgICAgICAiaGlkZV9uYW1lIjogMCwKICAgICAgICAgICJiaXRzIjogWyAzLCA0LCA1LCA2LCA3LCA4LCA5LCAxMCwgMTEgXSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAic3JjIjogImlucHV0LnY6NSIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJkb3duIjogewogICAgICAgICAgImhpZGVfbmFtZSI6IDAsCiAgICAgICAgICAiYml0cyI6IFsgMTMgXSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAic3JjIjogImlucHV0LnY6NiIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJwYXJpdHlfb3V0IjogewogICAgICAgICAgImhpZGVfbmFtZSI6IDAsCiAgICAgICAgICAiYml0cyI6IFsgMjUgXSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAic3JjIjogImlucHV0LnY6OSIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJ1cCI6IHsKICAgICAgICAgICJoaWRlX25hbWUiOiAwLAogICAgICAgICAgImJpdHMiOiBbIDEyIF0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInNyYyI6ICJpbnB1dC52OjYiCiAgICAgICAgICB9CiAgICAgICAgfQogICAgICB9CiAgICB9CiAgfQp9","base64");
 const exampleAnalog = Buffer("ewogICJtb2R1bGVzIjogewogICAgInJlc2lzdG9yX2RpdmlkZXIiOiB7CiAgICAgICJwb3J0cyI6IHsKICAgICAgICAiQSI6IHsKICAgICAgICAgICJkaXJlY3Rpb24iOiAiaW5wdXQiLAogICAgICAgICAgImJpdHMiOiBbMl0KICAgICAgICB9LAogICAgICAgICJCIjogewogICAgICAgICAgImRpcmVjdGlvbiI6ICJpbnB1dCIsCiAgICAgICAgICAiYml0cyI6IFszXQogICAgICAgIH0sCiAgICAgICAgIkEgQU5EIEIiOiB7CiAgICAgICAgICAiZGlyZWN0aW9uIjogIm91dHB1dCIsCiAgICAgICAgICAiYml0cyI6IFs0XQogICAgICAgIH0KICAgICAgfSwKICAgICAgImNlbGxzIjogewogICAgICAgICJSMSI6IHsKICAgICAgICAgICJ0eXBlIjogInJfdiIsCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogWzJdLAogICAgICAgICAgICAiQiI6IFs1XQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAidmFsdWUiOiIxMGsiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiUjIiOiB7CiAgICAgICAgICAidHlwZSI6ICJyX3YiLAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFszXSwKICAgICAgICAgICAgIkIiOiBbNV0KICAgICAgICAgIH0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInZhbHVlIjoiMTBrIgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIlExIjogewogICAgICAgICAgInR5cGUiOiAicV9wbnAiLAogICAgICAgICAgInBvcnRfZGlyZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkMiOiAiaW5wdXQiLAogICAgICAgICAgICAiQiI6ICJpbnB1dCIsCiAgICAgICAgICAgICJFIjogIm91dHB1dCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJDIjogWzZdLAogICAgICAgICAgICAiQiI6IFs1XSwKICAgICAgICAgICAgIkUiOiBbN10KICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJSMyI6IHsKICAgICAgICAgICJ0eXBlIjogInJfdiIsCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogWzddLAogICAgICAgICAgICAiQiI6IFs4XQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAidmFsdWUiOiIxMGsiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiUjQiOiB7CiAgICAgICAgICAidHlwZSI6ICJyX3YiLAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFs3XSwKICAgICAgICAgICAgIkIiOiBbOV0KICAgICAgICAgIH0sCiAgICAgICAgICAiYXR0cmlidXRlcyI6IHsKICAgICAgICAgICAgInZhbHVlIjoiMTBrIgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgIlI1IjogewogICAgICAgICAgInR5cGUiOiAicl92IiwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkEiOiBbNF0sCiAgICAgICAgICAgICJCIjogWzEyXQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAidmFsdWUiOiIxMGsiCiAgICAgICAgICB9CiAgICAgICAgfSwKICAgICAgICAiUTIiOiB7CiAgICAgICAgICAidHlwZSI6ICJxX3BucCIsCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQyI6ICJpbnB1dCIsCiAgICAgICAgICAgICJCIjogImlucHV0IiwKICAgICAgICAgICAgIkUiOiAib3V0cHV0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkMiOiBbMTBdLAogICAgICAgICAgICAiQiI6IFs5XSwKICAgICAgICAgICAgIkUiOiBbNF0KICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJ2Y2MiOiB7CiAgICAgICAgICAidHlwZSI6ICJ2Y2MiLAogICAgICAgICAgImNvbm5lY3Rpb25zIjogewogICAgICAgICAgICAiQSI6IFs2XQogICAgICAgICAgfSwKICAgICAgICAgICJhdHRyaWJ1dGVzIjogewogICAgICAgICAgICAibmFtZSI6IlZDQyIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJ2Y2MyIjogewogICAgICAgICAgInR5cGUiOiAidmNjIiwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkEiOiBbMTBdCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJuYW1lIjoiVkNDIgogICAgICAgICAgfQogICAgICAgIH0sCiAgICAgICAgImduZCI6IHsKICAgICAgICAgICJ0eXBlIjogImduZCIsCiAgICAgICAgICAicG9ydF9kaXJlY3Rpb25zIjogewogICAgICAgICAgICAiQSI6ICJpbnB1dCIKICAgICAgICAgIH0sCiAgICAgICAgICAiY29ubmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogWzhdCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJuYW1lIjoiREdORCIKICAgICAgICAgIH0KICAgICAgICB9LAogICAgICAgICJnbmQyIjogewogICAgICAgICAgInR5cGUiOiAiZ25kIiwKICAgICAgICAgICJwb3J0X2RpcmVjdGlvbnMiOiB7CiAgICAgICAgICAgICJBIjogImlucHV0IgogICAgICAgICAgfSwKICAgICAgICAgICJjb25uZWN0aW9ucyI6IHsKICAgICAgICAgICAgIkEiOiBbMTJdCiAgICAgICAgICB9LAogICAgICAgICAgImF0dHJpYnV0ZXMiOiB7CiAgICAgICAgICAgICJuYW1lIjoiREdORCIKICAgICAgICAgIH0KICAgICAgICB9CiAgICAgIH0KICAgIH0KICB9Cn0K","base64");
@@ -1455,7 +1462,7 @@ module.exports = {
 };
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"../built":8,"ajv":11,"ajv-errors":10,"buffer":75,"json5":82}],10:[function(require,module,exports){
+},{"../built":8,"ajv":11,"ajv-errors":10,"buffer":76,"json5":83}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const ajv_1 = require("ajv");
@@ -1734,7 +1741,7 @@ module.exports.default = ajvErrors;
 },{"ajv":11,"ajv/dist/compile/codegen":13,"ajv/dist/compile/codegen/code":12,"ajv/dist/compile/errors":15,"ajv/dist/compile/names":17,"ajv/dist/compile/validate":26}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = void 0;
+exports.MissingRefError = exports.ValidationError = exports.CodeGen = exports.Name = exports.nil = exports.stringify = exports.str = exports._ = exports.KeywordCxt = void 0;
 const core_1 = require("./core");
 const draft7_1 = require("./vocabularies/draft7");
 const discriminator_1 = require("./vocabularies/discriminator");
@@ -1775,11 +1782,15 @@ Object.defineProperty(exports, "stringify", { enumerable: true, get: function ()
 Object.defineProperty(exports, "nil", { enumerable: true, get: function () { return codegen_1.nil; } });
 Object.defineProperty(exports, "Name", { enumerable: true, get: function () { return codegen_1.Name; } });
 Object.defineProperty(exports, "CodeGen", { enumerable: true, get: function () { return codegen_1.CodeGen; } });
+var validation_error_1 = require("./runtime/validation_error");
+Object.defineProperty(exports, "ValidationError", { enumerable: true, get: function () { return validation_error_1.default; } });
+var ref_error_1 = require("./compile/ref_error");
+Object.defineProperty(exports, "MissingRefError", { enumerable: true, get: function () { return ref_error_1.default; } });
 
-},{"./compile/codegen":13,"./compile/validate":26,"./core":29,"./refs/json-schema-draft-07.json":31,"./vocabularies/discriminator":56,"./vocabularies/draft7":58}],12:[function(require,module,exports){
+},{"./compile/codegen":13,"./compile/ref_error":18,"./compile/validate":26,"./core":29,"./refs/json-schema-draft-07.json":31,"./runtime/validation_error":35,"./vocabularies/discriminator":57,"./vocabularies/draft7":59}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.regexpCode = exports.getProperty = exports.safeStringify = exports.stringify = exports.strConcat = exports.addCodeArg = exports.str = exports._ = exports.nil = exports._Code = exports.Name = exports.IDENTIFIER = exports._CodeOrName = void 0;
+exports.regexpCode = exports.getEsmExportName = exports.getProperty = exports.safeStringify = exports.stringify = exports.strConcat = exports.addCodeArg = exports.str = exports._ = exports.nil = exports._Code = exports.Name = exports.IDENTIFIER = exports._CodeOrName = void 0;
 class _CodeOrName {
 }
 exports._CodeOrName = _CodeOrName;
@@ -1919,6 +1930,14 @@ function getProperty(key) {
     return typeof key == "string" && exports.IDENTIFIER.test(key) ? new _Code(`.${key}`) : _ `[${key}]`;
 }
 exports.getProperty = getProperty;
+//Does best effort to format the name properly
+function getEsmExportName(key) {
+    if (typeof key == "string" && exports.IDENTIFIER.test(key)) {
+        return new _Code(`${key}`);
+    }
+    throw new Error(`CodeGen: invalid export name: ${key}, use explicit $id name mapping`);
+}
+exports.getEsmExportName = getEsmExportName;
 function regexpCode(rx) {
     return new _Code(rx.toString());
 }
@@ -2377,7 +2396,7 @@ class CodeGen {
             code.push(key);
             if (key !== value || this.opts.es5) {
                 code.push(":");
-                code_1.addCodeArg(code, value);
+                (0, code_1.addCodeArg)(code, value);
             }
         }
         code.push("}");
@@ -2429,8 +2448,8 @@ class CodeGen {
         const name = this._scope.toName(nameOrPrefix);
         if (this.opts.es5) {
             const arr = iterable instanceof code_1.Name ? iterable : this.var("_arr", iterable);
-            return this.forRange("_i", 0, code_1._ `${arr}.length`, (i) => {
-                this.var(name, code_1._ `${arr}[${i}]`);
+            return this.forRange("_i", 0, (0, code_1._) `${arr}.length`, (i) => {
+                this.var(name, (0, code_1._) `${arr}[${i}]`);
                 forBody(name);
             });
         }
@@ -2440,7 +2459,7 @@ class CodeGen {
     // With option `ownProperties` replaced with a `for-of` loop for object keys
     forIn(nameOrPrefix, obj, forBody, varKind = this.opts.es5 ? scope_1.varKinds.var : scope_1.varKinds.const) {
         if (this.opts.ownProperties) {
-            return this.forOf(nameOrPrefix, code_1._ `Object.keys(${obj})`, forBody);
+            return this.forOf(nameOrPrefix, (0, code_1._) `Object.keys(${obj})`, forBody);
         }
         const name = this._scope.toName(nameOrPrefix);
         return this._for(new ForIter("in", varKind, name, obj), () => forBody(name));
@@ -2600,7 +2619,7 @@ function subtractNames(names, from) {
         names[n] = (names[n] || 0) - (from[n] || 0);
 }
 function not(x) {
-    return typeof x == "boolean" || typeof x == "number" || x === null ? !x : code_1._ `!${par(x)}`;
+    return typeof x == "boolean" || typeof x == "number" || x === null ? !x : (0, code_1._) `!${par(x)}`;
 }
 exports.not = not;
 const andCode = mappend(exports.operators.AND);
@@ -2616,10 +2635,10 @@ function or(...args) {
 }
 exports.or = or;
 function mappend(op) {
-    return (x, y) => (x === code_1.nil ? y : y === code_1.nil ? x : code_1._ `${par(x)} ${op} ${par(y)}`);
+    return (x, y) => (x === code_1.nil ? y : y === code_1.nil ? x : (0, code_1._) `${par(x)} ${op} ${par(y)}`);
 }
 function par(x) {
-    return x instanceof code_1.Name ? x : code_1._ `(${x})`;
+    return x instanceof code_1.Name ? x : (0, code_1._) `(${x})`;
 }
 
 },{"./code":12,"./scope":14}],14:[function(require,module,exports){
@@ -2675,11 +2694,11 @@ class ValueScopeName extends code_1.Name {
     }
     setValue(value, { property, itemIndex }) {
         this.value = value;
-        this.scopePath = code_1._ `.${new code_1.Name(property)}[${itemIndex}]`;
+        this.scopePath = (0, code_1._) `.${new code_1.Name(property)}[${itemIndex}]`;
     }
 }
 exports.ValueScopeName = ValueScopeName;
-const line = code_1._ `\n`;
+const line = (0, code_1._) `\n`;
 class ValueScope extends Scope {
     constructor(opts) {
         super(opts);
@@ -2726,7 +2745,7 @@ class ValueScope extends Scope {
         return this._reduceValues(values, (name) => {
             if (name.scopePath === undefined)
                 throw new Error(`CodeGen: name "${name}" has no value`);
-            return code_1._ `${scopeName}${name.scopePath}`;
+            return (0, code_1._) `${scopeName}${name.scopePath}`;
         });
     }
     scopeCode(values = this._values, usedValues, getCode) {
@@ -2750,10 +2769,10 @@ class ValueScope extends Scope {
                 let c = valueCode(name);
                 if (c) {
                     const def = this.opts.es5 ? exports.varKinds.var : exports.varKinds.const;
-                    code = code_1._ `${code}${def} ${name} = ${c};${this.opts._n}`;
+                    code = (0, code_1._) `${code}${def} ${name} = ${c};${this.opts._n}`;
                 }
                 else if ((c = getCode === null || getCode === void 0 ? void 0 : getCode(name))) {
-                    code = code_1._ `${code}${c}${this.opts._n}`;
+                    code = (0, code_1._) `${code}${c}${this.opts._n}`;
                 }
                 else {
                     throw new ValueError(name);
@@ -2774,12 +2793,12 @@ const codegen_1 = require("./codegen");
 const util_1 = require("./util");
 const names_1 = require("./names");
 exports.keywordError = {
-    message: ({ keyword }) => codegen_1.str `should pass "${keyword}" keyword validation`,
+    message: ({ keyword }) => (0, codegen_1.str) `must pass "${keyword}" keyword validation`,
 };
 exports.keyword$DataError = {
     message: ({ keyword, schemaType }) => schemaType
-        ? codegen_1.str `"${keyword}" keyword must be ${schemaType} ($data)`
-        : codegen_1.str `"${keyword}" keyword is invalid ($data)`,
+        ? (0, codegen_1.str) `"${keyword}" keyword must be ${schemaType} ($data)`
+        : (0, codegen_1.str) `"${keyword}" keyword is invalid ($data)`,
 };
 function reportError(cxt, error = exports.keywordError, errorPaths, overrideAllErrors) {
     const { it } = cxt;
@@ -2789,7 +2808,7 @@ function reportError(cxt, error = exports.keywordError, errorPaths, overrideAllE
         addError(gen, errObj);
     }
     else {
-        returnErrors(it, codegen_1._ `[${errObj}]`);
+        returnErrors(it, (0, codegen_1._) `[${errObj}]`);
     }
 }
 exports.reportError = reportError;
@@ -2805,7 +2824,7 @@ function reportExtraError(cxt, error = exports.keywordError, errorPaths) {
 exports.reportExtraError = reportExtraError;
 function resetErrorsCount(gen, errsCount) {
     gen.assign(names_1.default.errors, errsCount);
-    gen.if(codegen_1._ `${names_1.default.vErrors} !== null`, () => gen.if(errsCount, () => gen.assign(codegen_1._ `${names_1.default.vErrors}.length`, errsCount), () => gen.assign(names_1.default.vErrors, null)));
+    gen.if((0, codegen_1._) `${names_1.default.vErrors} !== null`, () => gen.if(errsCount, () => gen.assign((0, codegen_1._) `${names_1.default.vErrors}.length`, errsCount), () => gen.assign(names_1.default.vErrors, null)));
 }
 exports.resetErrorsCount = resetErrorsCount;
 function extendErrors({ gen, keyword, schemaValue, data, errsCount, it, }) {
@@ -2814,28 +2833,28 @@ function extendErrors({ gen, keyword, schemaValue, data, errsCount, it, }) {
         throw new Error("ajv implementation error");
     const err = gen.name("err");
     gen.forRange("i", errsCount, names_1.default.errors, (i) => {
-        gen.const(err, codegen_1._ `${names_1.default.vErrors}[${i}]`);
-        gen.if(codegen_1._ `${err}.instancePath === undefined`, () => gen.assign(codegen_1._ `${err}.instancePath`, codegen_1.strConcat(names_1.default.instancePath, it.errorPath)));
-        gen.assign(codegen_1._ `${err}.schemaPath`, codegen_1.str `${it.errSchemaPath}/${keyword}`);
+        gen.const(err, (0, codegen_1._) `${names_1.default.vErrors}[${i}]`);
+        gen.if((0, codegen_1._) `${err}.instancePath === undefined`, () => gen.assign((0, codegen_1._) `${err}.instancePath`, (0, codegen_1.strConcat)(names_1.default.instancePath, it.errorPath)));
+        gen.assign((0, codegen_1._) `${err}.schemaPath`, (0, codegen_1.str) `${it.errSchemaPath}/${keyword}`);
         if (it.opts.verbose) {
-            gen.assign(codegen_1._ `${err}.schema`, schemaValue);
-            gen.assign(codegen_1._ `${err}.data`, data);
+            gen.assign((0, codegen_1._) `${err}.schema`, schemaValue);
+            gen.assign((0, codegen_1._) `${err}.data`, data);
         }
     });
 }
 exports.extendErrors = extendErrors;
 function addError(gen, errObj) {
     const err = gen.const("err", errObj);
-    gen.if(codegen_1._ `${names_1.default.vErrors} === null`, () => gen.assign(names_1.default.vErrors, codegen_1._ `[${err}]`), codegen_1._ `${names_1.default.vErrors}.push(${err})`);
-    gen.code(codegen_1._ `${names_1.default.errors}++`);
+    gen.if((0, codegen_1._) `${names_1.default.vErrors} === null`, () => gen.assign(names_1.default.vErrors, (0, codegen_1._) `[${err}]`), (0, codegen_1._) `${names_1.default.vErrors}.push(${err})`);
+    gen.code((0, codegen_1._) `${names_1.default.errors}++`);
 }
 function returnErrors(it, errs) {
     const { gen, validateName, schemaEnv } = it;
     if (schemaEnv.$async) {
-        gen.throw(codegen_1._ `new ${it.ValidationError}(${errs})`);
+        gen.throw((0, codegen_1._) `new ${it.ValidationError}(${errs})`);
     }
     else {
-        gen.assign(codegen_1._ `${validateName}.errors`, errs);
+        gen.assign((0, codegen_1._) `${validateName}.errors`, errs);
         gen.return(false);
     }
 }
@@ -2851,7 +2870,7 @@ const E = {
 function errorObjectCode(cxt, error, errorPaths) {
     const { createErrors } = cxt.it;
     if (createErrors === false)
-        return codegen_1._ `{}`;
+        return (0, codegen_1._) `{}`;
     return errorObject(cxt, error, errorPaths);
 }
 function errorObject(cxt, error, errorPaths = {}) {
@@ -2865,26 +2884,26 @@ function errorObject(cxt, error, errorPaths = {}) {
 }
 function errorInstancePath({ errorPath }, { instancePath }) {
     const instPath = instancePath
-        ? codegen_1.str `${errorPath}${util_1.getErrorPath(instancePath, util_1.Type.Str)}`
+        ? (0, codegen_1.str) `${errorPath}${(0, util_1.getErrorPath)(instancePath, util_1.Type.Str)}`
         : errorPath;
-    return [names_1.default.instancePath, codegen_1.strConcat(names_1.default.instancePath, instPath)];
+    return [names_1.default.instancePath, (0, codegen_1.strConcat)(names_1.default.instancePath, instPath)];
 }
 function errorSchemaPath({ keyword, it: { errSchemaPath } }, { schemaPath, parentSchema }) {
-    let schPath = parentSchema ? errSchemaPath : codegen_1.str `${errSchemaPath}/${keyword}`;
+    let schPath = parentSchema ? errSchemaPath : (0, codegen_1.str) `${errSchemaPath}/${keyword}`;
     if (schemaPath) {
-        schPath = codegen_1.str `${schPath}${util_1.getErrorPath(schemaPath, util_1.Type.Str)}`;
+        schPath = (0, codegen_1.str) `${schPath}${(0, util_1.getErrorPath)(schemaPath, util_1.Type.Str)}`;
     }
     return [E.schemaPath, schPath];
 }
 function extraErrorProps(cxt, { params, message }, keyValues) {
     const { keyword, data, schemaValue, it } = cxt;
     const { opts, propertyName, topSchemaRef, schemaPath } = it;
-    keyValues.push([E.keyword, keyword], [E.params, typeof params == "function" ? params(cxt) : params || codegen_1._ `{}`]);
+    keyValues.push([E.keyword, keyword], [E.params, typeof params == "function" ? params(cxt) : params || (0, codegen_1._) `{}`]);
     if (opts.messages) {
         keyValues.push([E.message, typeof message == "function" ? message(cxt) : message]);
     }
     if (opts.verbose) {
-        keyValues.push([E.schema, schemaValue], [E.parentSchema, codegen_1._ `${topSchemaRef}${schemaPath}`], [names_1.default.data, data]);
+        keyValues.push([E.schema, schemaValue], [E.parentSchema, (0, codegen_1._) `${topSchemaRef}${schemaPath}`], [names_1.default.data, data]);
     }
     if (propertyName)
         keyValues.push([E.propertyName, propertyName]);
@@ -2900,7 +2919,6 @@ const names_1 = require("./names");
 const resolve_1 = require("./resolve");
 const util_1 = require("./util");
 const validate_1 = require("./validate");
-const URI = require("uri-js");
 class SchemaEnv {
     constructor(env) {
         var _a;
@@ -2912,7 +2930,7 @@ class SchemaEnv {
         this.schema = env.schema;
         this.schemaId = env.schemaId;
         this.root = env.root || this;
-        this.baseId = (_a = env.baseId) !== null && _a !== void 0 ? _a : resolve_1.normalizeId(schema === null || schema === void 0 ? void 0 : schema[env.schemaId || "$id"]);
+        this.baseId = (_a = env.baseId) !== null && _a !== void 0 ? _a : (0, resolve_1.normalizeId)(schema === null || schema === void 0 ? void 0 : schema[env.schemaId || "$id"]);
         this.schemaPath = env.schemaPath;
         this.localRefs = env.localRefs;
         this.meta = env.meta;
@@ -2929,7 +2947,7 @@ function compileSchema(sch) {
     const _sch = getCompilingSchema.call(this, sch);
     if (_sch)
         return _sch;
-    const rootId = resolve_1.getFullPath(sch.root.baseId); // TODO if getFullPath removed 1 tests fails
+    const rootId = (0, resolve_1.getFullPath)(this.opts.uriResolver, sch.root.baseId); // TODO if getFullPath removed 1 tests fails
     const { es5, lines } = this.opts.code;
     const { ownProperties } = this.opts;
     const gen = new codegen_1.CodeGen(this.scope, { es5, lines, ownProperties });
@@ -2937,7 +2955,7 @@ function compileSchema(sch) {
     if (sch.$async) {
         _ValidationError = gen.scopeValue("Error", {
             ref: validation_error_1.default,
-            code: codegen_1._ `require("ajv/dist/runtime/validation_error").default`,
+            code: (0, codegen_1._) `require("ajv/dist/runtime/validation_error").default`,
         });
     }
     const validateName = gen.scopeName("validate");
@@ -2954,7 +2972,7 @@ function compileSchema(sch) {
         dataTypes: [],
         definedProperties: new Set(),
         topSchemaRef: gen.scopeValue("schema", this.opts.code.source === true
-            ? { ref: sch.schema, code: codegen_1.stringify(sch.schema) }
+            ? { ref: sch.schema, code: (0, codegen_1.stringify)(sch.schema) }
             : { ref: sch.schema }),
         validateName,
         ValidationError: _ValidationError,
@@ -2964,14 +2982,14 @@ function compileSchema(sch) {
         baseId: sch.baseId || rootId,
         schemaPath: codegen_1.nil,
         errSchemaPath: sch.schemaPath || (this.opts.jtd ? "" : "#"),
-        errorPath: codegen_1._ `""`,
+        errorPath: (0, codegen_1._) `""`,
         opts: this.opts,
         self: this,
     };
     let sourceCode;
     try {
         this._compilations.add(sch);
-        validate_1.validateFunctionCode(schemaCxt);
+        (0, validate_1.validateFunctionCode)(schemaCxt);
         gen.optimize(this.opts.code.optimize);
         // gen.optimize(1)
         const validateCode = gen.toString();
@@ -3000,7 +3018,7 @@ function compileSchema(sch) {
                 dynamicItems: items instanceof codegen_1.Name,
             };
             if (validate.source)
-                validate.source.evaluated = codegen_1.stringify(validate.evaluated);
+                validate.source.evaluated = (0, codegen_1.stringify)(validate.evaluated);
         }
         sch.validate = validate;
         return sch;
@@ -3020,7 +3038,7 @@ function compileSchema(sch) {
 exports.compileSchema = compileSchema;
 function resolveRef(root, baseId, ref) {
     var _a;
-    ref = resolve_1.resolveUrl(baseId, ref);
+    ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, ref);
     const schOrFunc = root.refs[ref];
     if (schOrFunc)
         return schOrFunc;
@@ -3037,7 +3055,7 @@ function resolveRef(root, baseId, ref) {
 }
 exports.resolveRef = resolveRef;
 function inlineOrCompile(sch) {
-    if (resolve_1.inlineRef(sch.schema, this.opts.inlineRefs))
+    if ((0, resolve_1.inlineRef)(sch.schema, this.opts.inlineRefs))
         return sch.schema;
     return sch.validate ? sch : compileSchema.call(this, sch);
 }
@@ -3066,14 +3084,14 @@ ref // reference to resolve
 function resolveSchema(root, // root object with properties schema, refs TODO below SchemaEnv is assigned to it
 ref // reference to resolve
 ) {
-    const p = URI.parse(ref);
-    const refPath = resolve_1._getFullPath(p);
-    let baseId = resolve_1.getFullPath(root.baseId);
+    const p = this.opts.uriResolver.parse(ref);
+    const refPath = (0, resolve_1._getFullPath)(this.opts.uriResolver, p);
+    let baseId = (0, resolve_1.getFullPath)(this.opts.uriResolver, root.baseId, undefined);
     // TODO `Object.keys(root.schema).length > 0` should not be needed - but removing breaks 2 tests
     if (Object.keys(root.schema).length > 0 && refPath === baseId) {
         return getJsonPointer.call(this, p, root);
     }
-    const id = resolve_1.normalizeId(refPath);
+    const id = (0, resolve_1.normalizeId)(refPath);
     const schOrRef = this.refs[id] || this.schemas[id];
     if (typeof schOrRef == "string") {
         const sch = resolveSchema.call(this, root, schOrRef);
@@ -3085,12 +3103,12 @@ ref // reference to resolve
         return;
     if (!schOrRef.validate)
         compileSchema.call(this, schOrRef);
-    if (id === resolve_1.normalizeId(ref)) {
+    if (id === (0, resolve_1.normalizeId)(ref)) {
         const { schema } = schOrRef;
         const { schemaId } = this.opts;
         const schId = schema[schemaId];
         if (schId)
-            baseId = resolve_1.resolveUrl(baseId, schId);
+            baseId = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schId);
         return new SchemaEnv({ schema, schemaId, root, baseId });
     }
     return getJsonPointer.call(this, p, schOrRef);
@@ -3108,20 +3126,21 @@ function getJsonPointer(parsedRef, { baseId, schema, root }) {
     if (((_a = parsedRef.fragment) === null || _a === void 0 ? void 0 : _a[0]) !== "/")
         return;
     for (const part of parsedRef.fragment.slice(1).split("/")) {
-        if (typeof schema == "boolean")
+        if (typeof schema === "boolean")
             return;
-        schema = schema[util_1.unescapeFragment(part)];
-        if (schema === undefined)
+        const partSchema = schema[(0, util_1.unescapeFragment)(part)];
+        if (partSchema === undefined)
             return;
+        schema = partSchema;
         // TODO PREVENT_SCOPE_CHANGE could be defined in keyword def?
-        const schId = typeof schema == "object" && schema[this.opts.schemaId];
+        const schId = typeof schema === "object" && schema[this.opts.schemaId];
         if (!PREVENT_SCOPE_CHANGE.has(part) && schId) {
-            baseId = resolve_1.resolveUrl(baseId, schId);
+            baseId = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schId);
         }
     }
     let env;
-    if (typeof schema != "boolean" && schema.$ref && !util_1.schemaHasRulesButRef(schema, this.RULES)) {
-        const $ref = resolve_1.resolveUrl(baseId, schema.$ref);
+    if (typeof schema != "boolean" && schema.$ref && !(0, util_1.schemaHasRulesButRef)(schema, this.RULES)) {
+        const $ref = (0, resolve_1.resolveUrl)(this.opts.uriResolver, baseId, schema.$ref);
         env = resolveSchema.call(this, root, $ref);
     }
     // even though resolution failed we need to return SchemaEnv to throw exception
@@ -3133,7 +3152,7 @@ function getJsonPointer(parsedRef, { baseId, schema, root }) {
     return undefined;
 }
 
-},{"../runtime/validation_error":34,"./codegen":13,"./names":17,"./resolve":19,"./util":21,"./validate":26,"uri-js":110}],17:[function(require,module,exports){
+},{"../runtime/validation_error":35,"./codegen":13,"./names":17,"./resolve":19,"./util":21,"./validate":26}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("./codegen");
@@ -3167,10 +3186,10 @@ exports.default = names;
 Object.defineProperty(exports, "__esModule", { value: true });
 const resolve_1 = require("./resolve");
 class MissingRefError extends Error {
-    constructor(baseId, ref, msg) {
+    constructor(resolver, baseId, ref, msg) {
         super(msg || `can't resolve reference ${ref} from id ${baseId}`);
-        this.missingRef = resolve_1.resolveUrl(baseId, ref);
-        this.missingSchema = resolve_1.normalizeId(resolve_1.getFullPath(this.missingRef));
+        this.missingRef = (0, resolve_1.resolveUrl)(resolver, baseId, ref);
+        this.missingSchema = (0, resolve_1.normalizeId)((0, resolve_1.getFullPath)(resolver, this.missingRef));
     }
 }
 exports.default = MissingRefError;
@@ -3182,7 +3201,6 @@ exports.getSchemaRefs = exports.resolveUrl = exports.normalizeId = exports._getF
 const util_1 = require("./util");
 const equal = require("fast-deep-equal");
 const traverse = require("json-schema-traverse");
-const URI = require("uri-js");
 // TODO refactor to use keyword definitions
 const SIMPLE_INLINED = new Set([
     "type",
@@ -3240,22 +3258,23 @@ function countKeys(schema) {
         if (SIMPLE_INLINED.has(key))
             continue;
         if (typeof schema[key] == "object") {
-            util_1.eachItem(schema[key], (sch) => (count += countKeys(sch)));
+            (0, util_1.eachItem)(schema[key], (sch) => (count += countKeys(sch)));
         }
         if (count === Infinity)
             return Infinity;
     }
     return count;
 }
-function getFullPath(id = "", normalize) {
+function getFullPath(resolver, id = "", normalize) {
     if (normalize !== false)
         id = normalizeId(id);
-    const p = URI.parse(id);
-    return _getFullPath(p);
+    const p = resolver.parse(id);
+    return _getFullPath(resolver, p);
 }
 exports.getFullPath = getFullPath;
-function _getFullPath(p) {
-    return URI.serialize(p).split("#")[0] + "#";
+function _getFullPath(resolver, p) {
+    const serialized = resolver.serialize(p);
+    return serialized.split("#")[0] + "#";
 }
 exports._getFullPath = _getFullPath;
 const TRAILING_SLASH_HASH = /#\/?$/;
@@ -3263,19 +3282,19 @@ function normalizeId(id) {
     return id ? id.replace(TRAILING_SLASH_HASH, "") : "";
 }
 exports.normalizeId = normalizeId;
-function resolveUrl(baseId, id) {
+function resolveUrl(resolver, baseId, id) {
     id = normalizeId(id);
-    return URI.resolve(baseId, id);
+    return resolver.resolve(baseId, id);
 }
 exports.resolveUrl = resolveUrl;
 const ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
-function getSchemaRefs(schema) {
+function getSchemaRefs(schema, baseId) {
     if (typeof schema == "boolean")
         return {};
-    const { schemaId } = this.opts;
-    const schId = normalizeId(schema[schemaId]);
+    const { schemaId, uriResolver } = this.opts;
+    const schId = normalizeId(schema[schemaId] || baseId);
     const baseIds = { "": schId };
-    const pathPrefix = getFullPath(schId, false);
+    const pathPrefix = getFullPath(uriResolver, schId, false);
     const localRefs = {};
     const schemaRefs = new Set();
     traverse(schema, { allKeys: true }, (sch, jsonPtr, _, parentJsonPtr) => {
@@ -3289,7 +3308,9 @@ function getSchemaRefs(schema) {
         addAnchor.call(this, sch.$dynamicAnchor);
         baseIds[jsonPtr] = baseId;
         function addRef(ref) {
-            ref = normalizeId(baseId ? URI.resolve(baseId, ref) : ref);
+            // eslint-disable-next-line @typescript-eslint/unbound-method
+            const _resolve = this.opts.uriResolver.resolve;
+            ref = normalizeId(baseId ? _resolve(baseId, ref) : ref);
             if (schemaRefs.has(ref))
                 throw ambiguos(ref);
             schemaRefs.add(ref);
@@ -3329,7 +3350,7 @@ function getSchemaRefs(schema) {
 }
 exports.getSchemaRefs = getSchemaRefs;
 
-},{"./util":21,"fast-deep-equal":78,"json-schema-traverse":81,"uri-js":110}],20:[function(require,module,exports){
+},{"./util":21,"fast-deep-equal":79,"json-schema-traverse":82}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getRules = exports.isJSONType = void 0;
@@ -3415,9 +3436,9 @@ function schemaRefOrVal({ topSchemaRef, schemaPath }, schema, keyword, $data) {
         if (typeof schema == "number" || typeof schema == "boolean")
             return schema;
         if (typeof schema == "string")
-            return codegen_1._ `${schema}`;
+            return (0, codegen_1._) `${schema}`;
     }
-    return codegen_1._ `${topSchemaRef}${schemaPath}${codegen_1.getProperty(keyword)}`;
+    return (0, codegen_1._) `${topSchemaRef}${schemaPath}${(0, codegen_1.getProperty)(keyword)}`;
 }
 exports.schemaRefOrVal = schemaRefOrVal;
 function unescapeFragment(str) {
@@ -3462,15 +3483,15 @@ function makeMergeEvaluated({ mergeNames, mergeToName, mergeValues, resultToName
 }
 exports.mergeEvaluated = {
     props: makeMergeEvaluated({
-        mergeNames: (gen, from, to) => gen.if(codegen_1._ `${to} !== true && ${from} !== undefined`, () => {
-            gen.if(codegen_1._ `${from} === true`, () => gen.assign(to, true), () => gen.assign(to, codegen_1._ `${to} || {}`).code(codegen_1._ `Object.assign(${to}, ${from})`));
+        mergeNames: (gen, from, to) => gen.if((0, codegen_1._) `${to} !== true && ${from} !== undefined`, () => {
+            gen.if((0, codegen_1._) `${from} === true`, () => gen.assign(to, true), () => gen.assign(to, (0, codegen_1._) `${to} || {}`).code((0, codegen_1._) `Object.assign(${to}, ${from})`));
         }),
-        mergeToName: (gen, from, to) => gen.if(codegen_1._ `${to} !== true`, () => {
+        mergeToName: (gen, from, to) => gen.if((0, codegen_1._) `${to} !== true`, () => {
             if (from === true) {
                 gen.assign(to, true);
             }
             else {
-                gen.assign(to, codegen_1._ `${to} || {}`);
+                gen.assign(to, (0, codegen_1._) `${to} || {}`);
                 setEvaluated(gen, to, from);
             }
         }),
@@ -3478,8 +3499,8 @@ exports.mergeEvaluated = {
         resultToName: evaluatedPropsToName,
     }),
     items: makeMergeEvaluated({
-        mergeNames: (gen, from, to) => gen.if(codegen_1._ `${to} !== true && ${from} !== undefined`, () => gen.assign(to, codegen_1._ `${from} === true ? true : ${to} > ${from} ? ${to} : ${from}`)),
-        mergeToName: (gen, from, to) => gen.if(codegen_1._ `${to} !== true`, () => gen.assign(to, from === true ? true : codegen_1._ `${to} > ${from} ? ${to} : ${from}`)),
+        mergeNames: (gen, from, to) => gen.if((0, codegen_1._) `${to} !== true && ${from} !== undefined`, () => gen.assign(to, (0, codegen_1._) `${from} === true ? true : ${to} > ${from} ? ${to} : ${from}`)),
+        mergeToName: (gen, from, to) => gen.if((0, codegen_1._) `${to} !== true`, () => gen.assign(to, from === true ? true : (0, codegen_1._) `${to} > ${from} ? ${to} : ${from}`)),
         mergeValues: (from, to) => (from === true ? true : Math.max(from, to)),
         resultToName: (gen, items) => gen.var("items", items),
     }),
@@ -3487,14 +3508,14 @@ exports.mergeEvaluated = {
 function evaluatedPropsToName(gen, ps) {
     if (ps === true)
         return gen.var("props", true);
-    const props = gen.var("props", codegen_1._ `{}`);
+    const props = gen.var("props", (0, codegen_1._) `{}`);
     if (ps !== undefined)
         setEvaluated(gen, props, ps);
     return props;
 }
 exports.evaluatedPropsToName = evaluatedPropsToName;
 function setEvaluated(gen, props, ps) {
-    Object.keys(ps).forEach((p) => gen.assign(codegen_1._ `${props}${codegen_1.getProperty(p)}`, true));
+    Object.keys(ps).forEach((p) => gen.assign((0, codegen_1._) `${props}${(0, codegen_1.getProperty)(p)}`, true));
 }
 exports.setEvaluated = setEvaluated;
 const snippets = {};
@@ -3516,13 +3537,13 @@ function getErrorPath(dataProp, dataPropType, jsPropertySyntax) {
         const isNumber = dataPropType === Type.Num;
         return jsPropertySyntax
             ? isNumber
-                ? codegen_1._ `"[" + ${dataProp} + "]"`
-                : codegen_1._ `"['" + ${dataProp} + "']"`
+                ? (0, codegen_1._) `"[" + ${dataProp} + "]"`
+                : (0, codegen_1._) `"['" + ${dataProp} + "']"`
             : isNumber
-                ? codegen_1._ `"/" + ${dataProp}`
-                : codegen_1._ `"/" + ${dataProp}.replace(/~/g, "~0").replace(/\\//g, "~1")`; // TODO maybe use global escapePointer
+                ? (0, codegen_1._) `"/" + ${dataProp}`
+                : (0, codegen_1._) `"/" + ${dataProp}.replace(/~/g, "~0").replace(/\\//g, "~1")`; // TODO maybe use global escapePointer
     }
-    return jsPropertySyntax ? codegen_1.getProperty(dataProp).toString() : "/" + escapeJsonPointer(dataProp);
+    return jsPropertySyntax ? (0, codegen_1.getProperty)(dataProp).toString() : "/" + escapeJsonPointer(dataProp);
 }
 exports.getErrorPath = getErrorPath;
 function checkStrictMode(it, msg, mode = it.opts.strictSchema) {
@@ -3574,7 +3595,7 @@ function topBoolOrEmptySchema(it) {
         gen.return(names_1.default.data);
     }
     else {
-        gen.assign(codegen_1._ `${validateName}.errors`, null);
+        gen.assign((0, codegen_1._) `${validateName}.errors`, null);
         gen.return(true);
     }
 }
@@ -3603,7 +3624,7 @@ function falseSchemaError(it, overrideAllErrors) {
         params: {},
         it,
     };
-    errors_1.reportError(cxt, boolError, undefined, overrideAllErrors);
+    (0, errors_1.reportError)(cxt, boolError, undefined, overrideAllErrors);
 }
 
 },{"../codegen":13,"../errors":15,"../names":17}],24:[function(require,module,exports){
@@ -3648,7 +3669,7 @@ function coerceAndCheckDataType(it, types) {
     const { gen, data, opts } = it;
     const coerceTo = coerceToTypes(types, opts.coerceTypes);
     const checkTypes = types.length > 0 &&
-        !(coerceTo.length === 0 && types.length === 1 && applicability_1.schemaHasRulesForType(it, types[0]));
+        !(coerceTo.length === 0 && types.length === 1 && (0, applicability_1.schemaHasRulesForType)(it, types[0]));
     if (checkTypes) {
         const wrongType = checkDataTypes(types, data, opts.strictNumbers, DataType.Wrong);
         gen.if(wrongType, () => {
@@ -3669,15 +3690,15 @@ function coerceToTypes(types, coerceTypes) {
 }
 function coerceData(it, types, coerceTo) {
     const { gen, data, opts } = it;
-    const dataType = gen.let("dataType", codegen_1._ `typeof ${data}`);
-    const coerced = gen.let("coerced", codegen_1._ `undefined`);
+    const dataType = gen.let("dataType", (0, codegen_1._) `typeof ${data}`);
+    const coerced = gen.let("coerced", (0, codegen_1._) `undefined`);
     if (opts.coerceTypes === "array") {
-        gen.if(codegen_1._ `${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen
-            .assign(data, codegen_1._ `${data}[0]`)
-            .assign(dataType, codegen_1._ `typeof ${data}`)
+        gen.if((0, codegen_1._) `${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen
+            .assign(data, (0, codegen_1._) `${data}[0]`)
+            .assign(dataType, (0, codegen_1._) `typeof ${data}`)
             .if(checkDataTypes(types, data, opts.strictNumbers), () => gen.assign(coerced, data)));
     }
-    gen.if(codegen_1._ `${coerced} !== undefined`);
+    gen.if((0, codegen_1._) `${coerced} !== undefined`);
     for (const t of coerceTo) {
         if (COERCIBLE.has(t) || (t === "array" && opts.coerceTypes === "array")) {
             coerceSpecificType(t);
@@ -3686,7 +3707,7 @@ function coerceData(it, types, coerceTo) {
     gen.else();
     reportTypeError(it);
     gen.endIf();
-    gen.if(codegen_1._ `${coerced} !== undefined`, () => {
+    gen.if((0, codegen_1._) `${coerced} !== undefined`, () => {
         gen.assign(data, coerced);
         assignParentData(it, coerced);
     });
@@ -3694,70 +3715,70 @@ function coerceData(it, types, coerceTo) {
         switch (t) {
             case "string":
                 gen
-                    .elseIf(codegen_1._ `${dataType} == "number" || ${dataType} == "boolean"`)
-                    .assign(coerced, codegen_1._ `"" + ${data}`)
-                    .elseIf(codegen_1._ `${data} === null`)
-                    .assign(coerced, codegen_1._ `""`);
+                    .elseIf((0, codegen_1._) `${dataType} == "number" || ${dataType} == "boolean"`)
+                    .assign(coerced, (0, codegen_1._) `"" + ${data}`)
+                    .elseIf((0, codegen_1._) `${data} === null`)
+                    .assign(coerced, (0, codegen_1._) `""`);
                 return;
             case "number":
                 gen
-                    .elseIf(codegen_1._ `${dataType} == "boolean" || ${data} === null
+                    .elseIf((0, codegen_1._) `${dataType} == "boolean" || ${data} === null
               || (${dataType} == "string" && ${data} && ${data} == +${data})`)
-                    .assign(coerced, codegen_1._ `+${data}`);
+                    .assign(coerced, (0, codegen_1._) `+${data}`);
                 return;
             case "integer":
                 gen
-                    .elseIf(codegen_1._ `${dataType} === "boolean" || ${data} === null
+                    .elseIf((0, codegen_1._) `${dataType} === "boolean" || ${data} === null
               || (${dataType} === "string" && ${data} && ${data} == +${data} && !(${data} % 1))`)
-                    .assign(coerced, codegen_1._ `+${data}`);
+                    .assign(coerced, (0, codegen_1._) `+${data}`);
                 return;
             case "boolean":
                 gen
-                    .elseIf(codegen_1._ `${data} === "false" || ${data} === 0 || ${data} === null`)
+                    .elseIf((0, codegen_1._) `${data} === "false" || ${data} === 0 || ${data} === null`)
                     .assign(coerced, false)
-                    .elseIf(codegen_1._ `${data} === "true" || ${data} === 1`)
+                    .elseIf((0, codegen_1._) `${data} === "true" || ${data} === 1`)
                     .assign(coerced, true);
                 return;
             case "null":
-                gen.elseIf(codegen_1._ `${data} === "" || ${data} === 0 || ${data} === false`);
+                gen.elseIf((0, codegen_1._) `${data} === "" || ${data} === 0 || ${data} === false`);
                 gen.assign(coerced, null);
                 return;
             case "array":
                 gen
-                    .elseIf(codegen_1._ `${dataType} === "string" || ${dataType} === "number"
+                    .elseIf((0, codegen_1._) `${dataType} === "string" || ${dataType} === "number"
               || ${dataType} === "boolean" || ${data} === null`)
-                    .assign(coerced, codegen_1._ `[${data}]`);
+                    .assign(coerced, (0, codegen_1._) `[${data}]`);
         }
     }
 }
 function assignParentData({ gen, parentData, parentDataProperty }, expr) {
     // TODO use gen.property
-    gen.if(codegen_1._ `${parentData} !== undefined`, () => gen.assign(codegen_1._ `${parentData}[${parentDataProperty}]`, expr));
+    gen.if((0, codegen_1._) `${parentData} !== undefined`, () => gen.assign((0, codegen_1._) `${parentData}[${parentDataProperty}]`, expr));
 }
 function checkDataType(dataType, data, strictNums, correct = DataType.Correct) {
     const EQ = correct === DataType.Correct ? codegen_1.operators.EQ : codegen_1.operators.NEQ;
     let cond;
     switch (dataType) {
         case "null":
-            return codegen_1._ `${data} ${EQ} null`;
+            return (0, codegen_1._) `${data} ${EQ} null`;
         case "array":
-            cond = codegen_1._ `Array.isArray(${data})`;
+            cond = (0, codegen_1._) `Array.isArray(${data})`;
             break;
         case "object":
-            cond = codegen_1._ `${data} && typeof ${data} == "object" && !Array.isArray(${data})`;
+            cond = (0, codegen_1._) `${data} && typeof ${data} == "object" && !Array.isArray(${data})`;
             break;
         case "integer":
-            cond = numCond(codegen_1._ `!(${data} % 1) && !isNaN(${data})`);
+            cond = numCond((0, codegen_1._) `!(${data} % 1) && !isNaN(${data})`);
             break;
         case "number":
             cond = numCond();
             break;
         default:
-            return codegen_1._ `typeof ${data} ${EQ} ${dataType}`;
+            return (0, codegen_1._) `typeof ${data} ${EQ} ${dataType}`;
     }
-    return correct === DataType.Correct ? cond : codegen_1.not(cond);
+    return correct === DataType.Correct ? cond : (0, codegen_1.not)(cond);
     function numCond(_cond = codegen_1.nil) {
-        return codegen_1.and(codegen_1._ `typeof ${data} == "number"`, _cond, strictNums ? codegen_1._ `isFinite(${data})` : codegen_1.nil);
+        return (0, codegen_1.and)((0, codegen_1._) `typeof ${data} == "number"`, _cond, strictNums ? (0, codegen_1._) `isFinite(${data})` : codegen_1.nil);
     }
 }
 exports.checkDataType = checkDataType;
@@ -3766,10 +3787,10 @@ function checkDataTypes(dataTypes, data, strictNums, correct) {
         return checkDataType(dataTypes[0], data, strictNums, correct);
     }
     let cond;
-    const types = util_1.toHash(dataTypes);
+    const types = (0, util_1.toHash)(dataTypes);
     if (types.array && types.object) {
-        const notObj = codegen_1._ `typeof ${data} != "object"`;
-        cond = types.null ? notObj : codegen_1._ `!${data} || ${notObj}`;
+        const notObj = (0, codegen_1._) `typeof ${data} != "object"`;
+        cond = types.null ? notObj : (0, codegen_1._) `!${data} || ${notObj}`;
         delete types.null;
         delete types.array;
         delete types.object;
@@ -3780,22 +3801,22 @@ function checkDataTypes(dataTypes, data, strictNums, correct) {
     if (types.number)
         delete types.integer;
     for (const t in types)
-        cond = codegen_1.and(cond, checkDataType(t, data, strictNums, correct));
+        cond = (0, codegen_1.and)(cond, checkDataType(t, data, strictNums, correct));
     return cond;
 }
 exports.checkDataTypes = checkDataTypes;
 const typeError = {
     message: ({ schema }) => `must be ${schema}`,
-    params: ({ schema, schemaValue }) => typeof schema == "string" ? codegen_1._ `{type: ${schema}}` : codegen_1._ `{type: ${schemaValue}}`,
+    params: ({ schema, schemaValue }) => typeof schema == "string" ? (0, codegen_1._) `{type: ${schema}}` : (0, codegen_1._) `{type: ${schemaValue}}`,
 };
 function reportTypeError(it) {
     const cxt = getTypeErrorContext(it);
-    errors_1.reportError(cxt, typeError);
+    (0, errors_1.reportError)(cxt, typeError);
 }
 exports.reportTypeError = reportTypeError;
 function getTypeErrorContext(it) {
     const { gen, data, schema } = it;
-    const schemaCode = util_1.schemaRefOrVal(it, schema, "type");
+    const schemaCode = (0, util_1.schemaRefOrVal)(it, schema, "type");
     return {
         gen,
         keyword: "type",
@@ -3831,18 +3852,18 @@ function assignDefault(it, prop, defaultValue) {
     const { gen, compositeRule, data, opts } = it;
     if (defaultValue === undefined)
         return;
-    const childData = codegen_1._ `${data}${codegen_1.getProperty(prop)}`;
+    const childData = (0, codegen_1._) `${data}${(0, codegen_1.getProperty)(prop)}`;
     if (compositeRule) {
-        util_1.checkStrictMode(it, `default is ignored for: ${childData}`);
+        (0, util_1.checkStrictMode)(it, `default is ignored for: ${childData}`);
         return;
     }
-    let condition = codegen_1._ `${childData} === undefined`;
+    let condition = (0, codegen_1._) `${childData} === undefined`;
     if (opts.useDefaults === "empty") {
-        condition = codegen_1._ `${condition} || ${childData} === null || ${childData} === ""`;
+        condition = (0, codegen_1._) `${condition} || ${childData} === null || ${childData} === ""`;
     }
     // `${childData} === undefined` +
     // (opts.useDefaults === "empty" ? ` || ${childData} === null || ${childData} === ""` : "")
-    gen.if(condition, codegen_1._ `${childData} = ${codegen_1.stringify(defaultValue)}`);
+    gen.if(condition, (0, codegen_1._) `${childData} = ${(0, codegen_1.stringify)(defaultValue)}`);
 }
 
 },{"../codegen":13,"../util":21}],26:[function(require,module,exports){
@@ -3870,39 +3891,39 @@ function validateFunctionCode(it) {
             return;
         }
     }
-    validateFunction(it, () => boolSchema_1.topBoolOrEmptySchema(it));
+    validateFunction(it, () => (0, boolSchema_1.topBoolOrEmptySchema)(it));
 }
 exports.validateFunctionCode = validateFunctionCode;
 function validateFunction({ gen, validateName, schema, schemaEnv, opts }, body) {
     if (opts.code.es5) {
-        gen.func(validateName, codegen_1._ `${names_1.default.data}, ${names_1.default.valCxt}`, schemaEnv.$async, () => {
-            gen.code(codegen_1._ `"use strict"; ${funcSourceUrl(schema, opts)}`);
+        gen.func(validateName, (0, codegen_1._) `${names_1.default.data}, ${names_1.default.valCxt}`, schemaEnv.$async, () => {
+            gen.code((0, codegen_1._) `"use strict"; ${funcSourceUrl(schema, opts)}`);
             destructureValCxtES5(gen, opts);
             gen.code(body);
         });
     }
     else {
-        gen.func(validateName, codegen_1._ `${names_1.default.data}, ${destructureValCxt(opts)}`, schemaEnv.$async, () => gen.code(funcSourceUrl(schema, opts)).code(body));
+        gen.func(validateName, (0, codegen_1._) `${names_1.default.data}, ${destructureValCxt(opts)}`, schemaEnv.$async, () => gen.code(funcSourceUrl(schema, opts)).code(body));
     }
 }
 function destructureValCxt(opts) {
-    return codegen_1._ `{${names_1.default.instancePath}="", ${names_1.default.parentData}, ${names_1.default.parentDataProperty}, ${names_1.default.rootData}=${names_1.default.data}${opts.dynamicRef ? codegen_1._ `, ${names_1.default.dynamicAnchors}={}` : codegen_1.nil}}={}`;
+    return (0, codegen_1._) `{${names_1.default.instancePath}="", ${names_1.default.parentData}, ${names_1.default.parentDataProperty}, ${names_1.default.rootData}=${names_1.default.data}${opts.dynamicRef ? (0, codegen_1._) `, ${names_1.default.dynamicAnchors}={}` : codegen_1.nil}}={}`;
 }
 function destructureValCxtES5(gen, opts) {
     gen.if(names_1.default.valCxt, () => {
-        gen.var(names_1.default.instancePath, codegen_1._ `${names_1.default.valCxt}.${names_1.default.instancePath}`);
-        gen.var(names_1.default.parentData, codegen_1._ `${names_1.default.valCxt}.${names_1.default.parentData}`);
-        gen.var(names_1.default.parentDataProperty, codegen_1._ `${names_1.default.valCxt}.${names_1.default.parentDataProperty}`);
-        gen.var(names_1.default.rootData, codegen_1._ `${names_1.default.valCxt}.${names_1.default.rootData}`);
+        gen.var(names_1.default.instancePath, (0, codegen_1._) `${names_1.default.valCxt}.${names_1.default.instancePath}`);
+        gen.var(names_1.default.parentData, (0, codegen_1._) `${names_1.default.valCxt}.${names_1.default.parentData}`);
+        gen.var(names_1.default.parentDataProperty, (0, codegen_1._) `${names_1.default.valCxt}.${names_1.default.parentDataProperty}`);
+        gen.var(names_1.default.rootData, (0, codegen_1._) `${names_1.default.valCxt}.${names_1.default.rootData}`);
         if (opts.dynamicRef)
-            gen.var(names_1.default.dynamicAnchors, codegen_1._ `${names_1.default.valCxt}.${names_1.default.dynamicAnchors}`);
+            gen.var(names_1.default.dynamicAnchors, (0, codegen_1._) `${names_1.default.valCxt}.${names_1.default.dynamicAnchors}`);
     }, () => {
-        gen.var(names_1.default.instancePath, codegen_1._ `""`);
-        gen.var(names_1.default.parentData, codegen_1._ `undefined`);
-        gen.var(names_1.default.parentDataProperty, codegen_1._ `undefined`);
+        gen.var(names_1.default.instancePath, (0, codegen_1._) `""`);
+        gen.var(names_1.default.parentData, (0, codegen_1._) `undefined`);
+        gen.var(names_1.default.parentDataProperty, (0, codegen_1._) `undefined`);
         gen.var(names_1.default.rootData, names_1.default.data);
         if (opts.dynamicRef)
-            gen.var(names_1.default.dynamicAnchors, codegen_1._ `{}`);
+            gen.var(names_1.default.dynamicAnchors, (0, codegen_1._) `{}`);
     });
 }
 function topSchemaObjCode(it) {
@@ -3923,13 +3944,13 @@ function topSchemaObjCode(it) {
 function resetEvaluated(it) {
     // TODO maybe some hook to execute it in the end to check whether props/items are Name, as in assignEvaluated
     const { gen, validateName } = it;
-    it.evaluated = gen.const("evaluated", codegen_1._ `${validateName}.evaluated`);
-    gen.if(codegen_1._ `${it.evaluated}.dynamicProps`, () => gen.assign(codegen_1._ `${it.evaluated}.props`, codegen_1._ `undefined`));
-    gen.if(codegen_1._ `${it.evaluated}.dynamicItems`, () => gen.assign(codegen_1._ `${it.evaluated}.items`, codegen_1._ `undefined`));
+    it.evaluated = gen.const("evaluated", (0, codegen_1._) `${validateName}.evaluated`);
+    gen.if((0, codegen_1._) `${it.evaluated}.dynamicProps`, () => gen.assign((0, codegen_1._) `${it.evaluated}.props`, (0, codegen_1._) `undefined`));
+    gen.if((0, codegen_1._) `${it.evaluated}.dynamicItems`, () => gen.assign((0, codegen_1._) `${it.evaluated}.items`, (0, codegen_1._) `undefined`));
 }
 function funcSourceUrl(schema, opts) {
     const schId = typeof schema == "object" && schema[opts.schemaId];
-    return schId && (opts.code.source || opts.code.process) ? codegen_1._ `/*# sourceURL=${schId} */` : codegen_1.nil;
+    return schId && (opts.code.source || opts.code.process) ? (0, codegen_1._) `/*# sourceURL=${schId} */` : codegen_1.nil;
 }
 // schema compilation - this function is used recursively to generate code for sub-schemas
 function subschemaCode(it, valid) {
@@ -3940,7 +3961,7 @@ function subschemaCode(it, valid) {
             return;
         }
     }
-    boolSchema_1.boolOrEmptySchema(it, valid);
+    (0, boolSchema_1.boolOrEmptySchema)(it, valid);
 }
 function schemaCxtHasRules({ schema, self }) {
     if (typeof schema == "boolean")
@@ -3962,35 +3983,35 @@ function subSchemaObjCode(it, valid) {
     const errsCount = gen.const("_errs", names_1.default.errors);
     typeAndKeywords(it, errsCount);
     // TODO var
-    gen.var(valid, codegen_1._ `${errsCount} === ${names_1.default.errors}`);
+    gen.var(valid, (0, codegen_1._) `${errsCount} === ${names_1.default.errors}`);
 }
 function checkKeywords(it) {
-    util_1.checkUnknownRules(it);
+    (0, util_1.checkUnknownRules)(it);
     checkRefsAndKeywords(it);
 }
 function typeAndKeywords(it, errsCount) {
     if (it.opts.jtd)
         return schemaKeywords(it, [], false, errsCount);
-    const types = dataType_1.getSchemaTypes(it.schema);
-    const checkedTypes = dataType_1.coerceAndCheckDataType(it, types);
+    const types = (0, dataType_1.getSchemaTypes)(it.schema);
+    const checkedTypes = (0, dataType_1.coerceAndCheckDataType)(it, types);
     schemaKeywords(it, types, !checkedTypes, errsCount);
 }
 function checkRefsAndKeywords(it) {
     const { schema, errSchemaPath, opts, self } = it;
-    if (schema.$ref && opts.ignoreKeywordsWithRef && util_1.schemaHasRulesButRef(schema, self.RULES)) {
+    if (schema.$ref && opts.ignoreKeywordsWithRef && (0, util_1.schemaHasRulesButRef)(schema, self.RULES)) {
         self.logger.warn(`$ref: keywords ignored in schema at path "${errSchemaPath}"`);
     }
 }
 function checkNoDefault(it) {
     const { schema, opts } = it;
     if (schema.default !== undefined && opts.useDefaults && opts.strictSchema) {
-        util_1.checkStrictMode(it, "default is ignored in the schema root");
+        (0, util_1.checkStrictMode)(it, "default is ignored in the schema root");
     }
 }
 function updateContext(it) {
     const schId = it.schema[it.opts.schemaId];
     if (schId)
-        it.baseId = resolve_1.resolveUrl(it.baseId, schId);
+        it.baseId = (0, resolve_1.resolveUrl)(it.opts.uriResolver, it.baseId, schId);
 }
 function checkAsyncSchema(it) {
     if (it.schema.$async && !it.schemaEnv.$async)
@@ -3999,37 +4020,37 @@ function checkAsyncSchema(it) {
 function commentKeyword({ gen, schemaEnv, schema, errSchemaPath, opts }) {
     const msg = schema.$comment;
     if (opts.$comment === true) {
-        gen.code(codegen_1._ `${names_1.default.self}.logger.log(${msg})`);
+        gen.code((0, codegen_1._) `${names_1.default.self}.logger.log(${msg})`);
     }
     else if (typeof opts.$comment == "function") {
-        const schemaPath = codegen_1.str `${errSchemaPath}/$comment`;
+        const schemaPath = (0, codegen_1.str) `${errSchemaPath}/$comment`;
         const rootName = gen.scopeValue("root", { ref: schemaEnv.root });
-        gen.code(codegen_1._ `${names_1.default.self}.opts.$comment(${msg}, ${schemaPath}, ${rootName}.schema)`);
+        gen.code((0, codegen_1._) `${names_1.default.self}.opts.$comment(${msg}, ${schemaPath}, ${rootName}.schema)`);
     }
 }
 function returnResults(it) {
     const { gen, schemaEnv, validateName, ValidationError, opts } = it;
     if (schemaEnv.$async) {
         // TODO assign unevaluated
-        gen.if(codegen_1._ `${names_1.default.errors} === 0`, () => gen.return(names_1.default.data), () => gen.throw(codegen_1._ `new ${ValidationError}(${names_1.default.vErrors})`));
+        gen.if((0, codegen_1._) `${names_1.default.errors} === 0`, () => gen.return(names_1.default.data), () => gen.throw((0, codegen_1._) `new ${ValidationError}(${names_1.default.vErrors})`));
     }
     else {
-        gen.assign(codegen_1._ `${validateName}.errors`, names_1.default.vErrors);
+        gen.assign((0, codegen_1._) `${validateName}.errors`, names_1.default.vErrors);
         if (opts.unevaluated)
             assignEvaluated(it);
-        gen.return(codegen_1._ `${names_1.default.errors} === 0`);
+        gen.return((0, codegen_1._) `${names_1.default.errors} === 0`);
     }
 }
 function assignEvaluated({ gen, evaluated, props, items }) {
     if (props instanceof codegen_1.Name)
-        gen.assign(codegen_1._ `${evaluated}.props`, props);
+        gen.assign((0, codegen_1._) `${evaluated}.props`, props);
     if (items instanceof codegen_1.Name)
-        gen.assign(codegen_1._ `${evaluated}.items`, items);
+        gen.assign((0, codegen_1._) `${evaluated}.items`, items);
 }
 function schemaKeywords(it, types, typeErrors, errsCount) {
     const { gen, schema, data, allErrors, opts, self } = it;
     const { RULES } = self;
-    if (schema.$ref && (opts.ignoreKeywordsWithRef || !util_1.schemaHasRulesButRef(schema, RULES))) {
+    if (schema.$ref && (opts.ignoreKeywordsWithRef || !(0, util_1.schemaHasRulesButRef)(schema, RULES))) {
         gen.block(() => keywordCode(it, "$ref", RULES.all.$ref.definition)); // TODO typecast
         return;
     }
@@ -4041,14 +4062,14 @@ function schemaKeywords(it, types, typeErrors, errsCount) {
         groupKeywords(RULES.post);
     });
     function groupKeywords(group) {
-        if (!applicability_1.shouldUseGroup(schema, group))
+        if (!(0, applicability_1.shouldUseGroup)(schema, group))
             return;
         if (group.type) {
-            gen.if(dataType_2.checkDataType(group.type, data, opts.strictNumbers));
+            gen.if((0, dataType_2.checkDataType)(group.type, data, opts.strictNumbers));
             iterateKeywords(it, group);
             if (types.length === 1 && types[0] === group.type && typeErrors) {
                 gen.else();
-                dataType_2.reportTypeError(it);
+                (0, dataType_2.reportTypeError)(it);
             }
             gen.endIf();
         }
@@ -4057,16 +4078,16 @@ function schemaKeywords(it, types, typeErrors, errsCount) {
         }
         // TODO make it "ok" call?
         if (!allErrors)
-            gen.if(codegen_1._ `${names_1.default.errors} === ${errsCount || 0}`);
+            gen.if((0, codegen_1._) `${names_1.default.errors} === ${errsCount || 0}`);
     }
 }
 function iterateKeywords(it, group) {
     const { gen, schema, opts: { useDefaults }, } = it;
     if (useDefaults)
-        defaults_1.assignDefaults(it, group.type);
+        (0, defaults_1.assignDefaults)(it, group.type);
     gen.block(() => {
         for (const rule of group.rules) {
-            if (applicability_1.shouldUseRule(schema, rule)) {
+            if ((0, applicability_1.shouldUseRule)(schema, rule)) {
                 keywordCode(it, rule.keyword, rule.definition, group.type);
             }
         }
@@ -4092,7 +4113,7 @@ function checkContextTypes(it, types) {
             strictTypesError(it, `type "${t}" not allowed by context "${it.dataTypes.join(",")}"`);
         }
     });
-    it.dataTypes = it.dataTypes.filter((t) => includesType(types, t));
+    narrowSchemaTypes(it, types);
 }
 function checkMultipleTypes(it, ts) {
     if (ts.length > 1 && !(ts.length === 2 && ts.includes("null"))) {
@@ -4103,7 +4124,7 @@ function checkKeywordTypes(it, ts) {
     const rules = it.self.RULES.all;
     for (const keyword in rules) {
         const rule = rules[keyword];
-        if (typeof rule == "object" && applicability_1.shouldUseRule(it.schema, rule)) {
+        if (typeof rule == "object" && (0, applicability_1.shouldUseRule)(it.schema, rule)) {
             const { type } = rule.definition;
             if (type.length && !type.some((t) => hasApplicableType(ts, t))) {
                 strictTypesError(it, `missing type "${type.join(",")}" for keyword "${keyword}"`);
@@ -4117,21 +4138,31 @@ function hasApplicableType(schTs, kwdT) {
 function includesType(ts, t) {
     return ts.includes(t) || (t === "integer" && ts.includes("number"));
 }
+function narrowSchemaTypes(it, withTypes) {
+    const ts = [];
+    for (const t of it.dataTypes) {
+        if (includesType(withTypes, t))
+            ts.push(t);
+        else if (withTypes.includes("integer") && t === "number")
+            ts.push("integer");
+    }
+    it.dataTypes = ts;
+}
 function strictTypesError(it, msg) {
     const schemaPath = it.schemaEnv.baseId + it.errSchemaPath;
     msg += ` at "${schemaPath}" (strictTypes)`;
-    util_1.checkStrictMode(it, msg, it.opts.strictTypes);
+    (0, util_1.checkStrictMode)(it, msg, it.opts.strictTypes);
 }
 class KeywordCxt {
     constructor(it, def, keyword) {
-        keyword_1.validateKeywordUsage(it, def, keyword);
+        (0, keyword_1.validateKeywordUsage)(it, def, keyword);
         this.gen = it.gen;
         this.allErrors = it.allErrors;
         this.keyword = keyword;
         this.data = it.data;
         this.schema = it.schema[keyword];
         this.$data = def.$data && it.opts.$data && this.schema && this.schema.$data;
-        this.schemaValue = util_1.schemaRefOrVal(it, this.schema, keyword, this.$data);
+        this.schemaValue = (0, util_1.schemaRefOrVal)(it, this.schema, keyword, this.$data);
         this.schemaType = def.schemaType;
         this.parentSchema = it.schema;
         this.params = {};
@@ -4142,7 +4173,7 @@ class KeywordCxt {
         }
         else {
             this.schemaCode = this.schemaValue;
-            if (!keyword_1.validSchemaType(this.schema, def.schemaType, def.allowUndefined)) {
+            if (!(0, keyword_1.validSchemaType)(this.schema, def.schemaType, def.allowUndefined)) {
                 throw new Error(`${keyword} value must be ${JSON.stringify(def.schemaType)}`);
             }
         }
@@ -4151,7 +4182,7 @@ class KeywordCxt {
         }
     }
     result(condition, successAction, failAction) {
-        this.failResult(codegen_1.not(condition), successAction, failAction);
+        this.failResult((0, codegen_1.not)(condition), successAction, failAction);
     }
     failResult(condition, successAction, failAction) {
         this.gen.if(condition);
@@ -4173,7 +4204,7 @@ class KeywordCxt {
         }
     }
     pass(condition, failAction) {
-        this.failResult(codegen_1.not(condition), undefined, failAction);
+        this.failResult((0, codegen_1.not)(condition), undefined, failAction);
     }
     fail(condition) {
         if (condition === undefined) {
@@ -4193,7 +4224,7 @@ class KeywordCxt {
         if (!this.$data)
             return this.fail(condition);
         const { schemaCode } = this;
-        this.fail(codegen_1._ `${schemaCode} !== undefined && (${codegen_1.or(this.invalid$data(), condition)})`);
+        this.fail((0, codegen_1._) `${schemaCode} !== undefined && (${(0, codegen_1.or)(this.invalid$data(), condition)})`);
     }
     error(append, errorParams, errorPaths) {
         if (errorParams) {
@@ -4209,12 +4240,12 @@ class KeywordCxt {
         (append ? errors_1.reportExtraError : errors_1.reportError)(this, this.def.error, errorPaths);
     }
     $dataError() {
-        errors_1.reportError(this, this.def.$dataError || errors_1.keyword$DataError);
+        (0, errors_1.reportError)(this, this.def.$dataError || errors_1.keyword$DataError);
     }
     reset() {
         if (this.errsCount === undefined)
             throw new Error('add "trackErrors" to keyword definition');
-        errors_1.resetErrorsCount(this.gen, this.errsCount);
+        (0, errors_1.resetErrorsCount)(this.gen, this.errsCount);
     }
     ok(cond) {
         if (!this.allErrors)
@@ -4236,7 +4267,7 @@ class KeywordCxt {
         if (!this.$data)
             return;
         const { gen, schemaCode, schemaType, def } = this;
-        gen.if(codegen_1.or(codegen_1._ `${schemaCode} === undefined`, $dataValid));
+        gen.if((0, codegen_1.or)((0, codegen_1._) `${schemaCode} === undefined`, $dataValid));
         if (valid !== codegen_1.nil)
             gen.assign(valid, true);
         if (schemaType.length || def.validateSchema) {
@@ -4249,29 +4280,29 @@ class KeywordCxt {
     }
     invalid$data() {
         const { gen, schemaCode, schemaType, def, it } = this;
-        return codegen_1.or(wrong$DataType(), invalid$DataSchema());
+        return (0, codegen_1.or)(wrong$DataType(), invalid$DataSchema());
         function wrong$DataType() {
             if (schemaType.length) {
                 /* istanbul ignore if */
                 if (!(schemaCode instanceof codegen_1.Name))
                     throw new Error("ajv implementation error");
                 const st = Array.isArray(schemaType) ? schemaType : [schemaType];
-                return codegen_1._ `${dataType_2.checkDataTypes(st, schemaCode, it.opts.strictNumbers, dataType_2.DataType.Wrong)}`;
+                return (0, codegen_1._) `${(0, dataType_2.checkDataTypes)(st, schemaCode, it.opts.strictNumbers, dataType_2.DataType.Wrong)}`;
             }
             return codegen_1.nil;
         }
         function invalid$DataSchema() {
             if (def.validateSchema) {
                 const validateSchemaRef = gen.scopeValue("validate$data", { ref: def.validateSchema }); // TODO value.code for standalone
-                return codegen_1._ `!${validateSchemaRef}(${schemaCode})`;
+                return (0, codegen_1._) `!${validateSchemaRef}(${schemaCode})`;
             }
             return codegen_1.nil;
         }
     }
     subschema(appl, valid) {
-        const subschema = subschema_1.getSubschema(this.it, appl);
-        subschema_1.extendSubschemaData(subschema, this.it, appl);
-        subschema_1.extendSubschemaMode(subschema, appl);
+        const subschema = (0, subschema_1.getSubschema)(this.it, appl);
+        (0, subschema_1.extendSubschemaData)(subschema, this.it, appl);
+        (0, subschema_1.extendSubschemaMode)(subschema, appl);
         const nextContext = { ...this.it, ...subschema, items: undefined, props: undefined };
         subschemaCode(nextContext, valid);
         return nextContext;
@@ -4302,13 +4333,13 @@ function keywordCode(it, keyword, def, ruleType) {
         def.code(cxt, ruleType);
     }
     else if (cxt.$data && def.validate) {
-        keyword_1.funcKeywordCode(cxt, def);
+        (0, keyword_1.funcKeywordCode)(cxt, def);
     }
     else if ("macro" in def) {
-        keyword_1.macroKeywordCode(cxt, def);
+        (0, keyword_1.macroKeywordCode)(cxt, def);
     }
     else if (def.compile || def.validate) {
-        keyword_1.funcKeywordCode(cxt, def);
+        (0, keyword_1.funcKeywordCode)(cxt, def);
     }
 }
 const JSON_POINTER = /^\/(?:[^~]|~0|~1)*$/;
@@ -4345,8 +4376,8 @@ function getData($data, { dataLevel, dataNames, dataPathArr }) {
     const segments = jsonPointer.split("/");
     for (const segment of segments) {
         if (segment) {
-            data = codegen_1._ `${data}${codegen_1.getProperty(util_1.unescapeJsonPointer(segment))}`;
-            expr = codegen_1._ `${expr} && ${data}`;
+            data = (0, codegen_1._) `${data}${(0, codegen_1.getProperty)((0, util_1.unescapeJsonPointer)(segment))}`;
+            expr = (0, codegen_1._) `${expr} && ${data}`;
         }
     }
     return expr;
@@ -4406,37 +4437,37 @@ function funcKeywordCode(cxt, def) {
     }
     function validateAsync() {
         const ruleErrs = gen.let("ruleErrs", null);
-        gen.try(() => assignValid(codegen_1._ `await `), (e) => gen.assign(valid, false).if(codegen_1._ `${e} instanceof ${it.ValidationError}`, () => gen.assign(ruleErrs, codegen_1._ `${e}.errors`), () => gen.throw(e)));
+        gen.try(() => assignValid((0, codegen_1._) `await `), (e) => gen.assign(valid, false).if((0, codegen_1._) `${e} instanceof ${it.ValidationError}`, () => gen.assign(ruleErrs, (0, codegen_1._) `${e}.errors`), () => gen.throw(e)));
         return ruleErrs;
     }
     function validateSync() {
-        const validateErrs = codegen_1._ `${validateRef}.errors`;
+        const validateErrs = (0, codegen_1._) `${validateRef}.errors`;
         gen.assign(validateErrs, null);
         assignValid(codegen_1.nil);
         return validateErrs;
     }
-    function assignValid(_await = def.async ? codegen_1._ `await ` : codegen_1.nil) {
+    function assignValid(_await = def.async ? (0, codegen_1._) `await ` : codegen_1.nil) {
         const passCxt = it.opts.passContext ? names_1.default.this : names_1.default.self;
         const passSchema = !(("compile" in def && !$data) || def.schema === false);
-        gen.assign(valid, codegen_1._ `${_await}${code_1.callValidateCode(cxt, validateRef, passCxt, passSchema)}`, def.modifying);
+        gen.assign(valid, (0, codegen_1._) `${_await}${(0, code_1.callValidateCode)(cxt, validateRef, passCxt, passSchema)}`, def.modifying);
     }
     function reportErrs(errors) {
         var _a;
-        gen.if(codegen_1.not((_a = def.valid) !== null && _a !== void 0 ? _a : valid), errors);
+        gen.if((0, codegen_1.not)((_a = def.valid) !== null && _a !== void 0 ? _a : valid), errors);
     }
 }
 exports.funcKeywordCode = funcKeywordCode;
 function modifyData(cxt) {
     const { gen, data, it } = cxt;
-    gen.if(it.parentData, () => gen.assign(data, codegen_1._ `${it.parentData}[${it.parentDataProperty}]`));
+    gen.if(it.parentData, () => gen.assign(data, (0, codegen_1._) `${it.parentData}[${it.parentDataProperty}]`));
 }
 function addErrs(cxt, errs) {
     const { gen } = cxt;
-    gen.if(codegen_1._ `Array.isArray(${errs})`, () => {
+    gen.if((0, codegen_1._) `Array.isArray(${errs})`, () => {
         gen
-            .assign(names_1.default.vErrors, codegen_1._ `${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`)
-            .assign(names_1.default.errors, codegen_1._ `${names_1.default.vErrors}.length`);
-        errors_1.extendErrors(cxt);
+            .assign(names_1.default.vErrors, (0, codegen_1._) `${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`)
+            .assign(names_1.default.errors, (0, codegen_1._) `${names_1.default.vErrors}.length`);
+        (0, errors_1.extendErrors)(cxt);
     }, () => cxt.error());
 }
 function checkAsyncKeyword({ schemaEnv }, def) {
@@ -4446,7 +4477,7 @@ function checkAsyncKeyword({ schemaEnv }, def) {
 function useKeyword(gen, keyword, result) {
     if (result === undefined)
         throw new Error(`keyword "${keyword}" failed to compile`);
-    return gen.scopeValue("keyword", typeof result == "function" ? { ref: result } : { ref: result, code: codegen_1.stringify(result) });
+    return gen.scopeValue("keyword", typeof result == "function" ? { ref: result } : { ref: result, code: (0, codegen_1.stringify)(result) });
 }
 function validSchemaType(schema, schemaType, allowUndefined = false) {
     // TODO add tests
@@ -4481,7 +4512,7 @@ function validateKeywordUsage({ schema, opts, self, errSchemaPath }, def, keywor
 }
 exports.validateKeywordUsage = validateKeywordUsage;
 
-},{"../../vocabularies/code":52,"../codegen":13,"../errors":15,"../names":17}],28:[function(require,module,exports){
+},{"../../vocabularies/code":53,"../codegen":13,"../errors":15,"../names":17}],28:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extendSubschemaMode = exports.extendSubschemaData = exports.getSubschema = void 0;
@@ -4496,13 +4527,13 @@ function getSubschema(it, { keyword, schemaProp, schema, schemaPath, errSchemaPa
         return schemaProp === undefined
             ? {
                 schema: sch,
-                schemaPath: codegen_1._ `${it.schemaPath}${codegen_1.getProperty(keyword)}`,
+                schemaPath: (0, codegen_1._) `${it.schemaPath}${(0, codegen_1.getProperty)(keyword)}`,
                 errSchemaPath: `${it.errSchemaPath}/${keyword}`,
             }
             : {
                 schema: sch[schemaProp],
-                schemaPath: codegen_1._ `${it.schemaPath}${codegen_1.getProperty(keyword)}${codegen_1.getProperty(schemaProp)}`,
-                errSchemaPath: `${it.errSchemaPath}/${keyword}/${util_1.escapeFragment(schemaProp)}`,
+                schemaPath: (0, codegen_1._) `${it.schemaPath}${(0, codegen_1.getProperty)(keyword)}${(0, codegen_1.getProperty)(schemaProp)}`,
+                errSchemaPath: `${it.errSchemaPath}/${keyword}/${(0, util_1.escapeFragment)(schemaProp)}`,
             };
     }
     if (schema !== undefined) {
@@ -4526,10 +4557,10 @@ function extendSubschemaData(subschema, it, { dataProp, dataPropType: dpType, da
     const { gen } = it;
     if (dataProp !== undefined) {
         const { errorPath, dataPathArr, opts } = it;
-        const nextData = gen.let("data", codegen_1._ `${it.data}${codegen_1.getProperty(dataProp)}`, true);
+        const nextData = gen.let("data", (0, codegen_1._) `${it.data}${(0, codegen_1.getProperty)(dataProp)}`, true);
         dataContextProps(nextData);
-        subschema.errorPath = codegen_1.str `${errorPath}${util_1.getErrorPath(dataProp, dpType, opts.jsPropertySyntax)}`;
-        subschema.parentDataProperty = codegen_1._ `${dataProp}`;
+        subschema.errorPath = (0, codegen_1.str) `${errorPath}${(0, util_1.getErrorPath)(dataProp, dpType, opts.jsPropertySyntax)}`;
+        subschema.parentDataProperty = (0, codegen_1._) `${dataProp}`;
         subschema.dataPathArr = [...dataPathArr, subschema.parentDataProperty];
     }
     if (data !== undefined) {
@@ -4585,6 +4616,9 @@ const resolve_1 = require("./compile/resolve");
 const dataType_1 = require("./compile/validate/dataType");
 const util_1 = require("./compile/util");
 const $dataRefSchema = require("./refs/data.json");
+const uri_1 = require("./runtime/uri");
+const defaultRegExp = (str, flags) => new RegExp(str, flags);
+defaultRegExp.code = "new RegExp";
 const META_IGNORE_OPTIONS = ["removeAdditional", "useDefaults", "coerceTypes"];
 const EXT_SCOPE_NAMES = new Set([
     "validate",
@@ -4626,28 +4660,31 @@ const deprecatedOptions = {
 const MAX_EXPRESSION = 200;
 // eslint-disable-next-line complexity
 function requiredOptions(o) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w, _x, _y, _z, _0;
     const s = o.strict;
     const _optz = (_a = o.code) === null || _a === void 0 ? void 0 : _a.optimize;
     const optimize = _optz === true || _optz === undefined ? 1 : _optz || 0;
+    const regExp = (_c = (_b = o.code) === null || _b === void 0 ? void 0 : _b.regExp) !== null && _c !== void 0 ? _c : defaultRegExp;
+    const uriResolver = (_d = o.uriResolver) !== null && _d !== void 0 ? _d : uri_1.default;
     return {
-        strictSchema: (_c = (_b = o.strictSchema) !== null && _b !== void 0 ? _b : s) !== null && _c !== void 0 ? _c : true,
-        strictNumbers: (_e = (_d = o.strictNumbers) !== null && _d !== void 0 ? _d : s) !== null && _e !== void 0 ? _e : true,
-        strictTypes: (_g = (_f = o.strictTypes) !== null && _f !== void 0 ? _f : s) !== null && _g !== void 0 ? _g : "log",
-        strictTuples: (_j = (_h = o.strictTuples) !== null && _h !== void 0 ? _h : s) !== null && _j !== void 0 ? _j : "log",
-        strictRequired: (_l = (_k = o.strictRequired) !== null && _k !== void 0 ? _k : s) !== null && _l !== void 0 ? _l : false,
-        code: o.code ? { ...o.code, optimize } : { optimize },
-        loopRequired: (_m = o.loopRequired) !== null && _m !== void 0 ? _m : MAX_EXPRESSION,
-        loopEnum: (_o = o.loopEnum) !== null && _o !== void 0 ? _o : MAX_EXPRESSION,
-        meta: (_p = o.meta) !== null && _p !== void 0 ? _p : true,
-        messages: (_q = o.messages) !== null && _q !== void 0 ? _q : true,
-        inlineRefs: (_r = o.inlineRefs) !== null && _r !== void 0 ? _r : true,
-        schemaId: (_s = o.schemaId) !== null && _s !== void 0 ? _s : "$id",
-        addUsedSchema: (_t = o.addUsedSchema) !== null && _t !== void 0 ? _t : true,
-        validateSchema: (_u = o.validateSchema) !== null && _u !== void 0 ? _u : true,
-        validateFormats: (_v = o.validateFormats) !== null && _v !== void 0 ? _v : true,
-        unicodeRegExp: (_w = o.unicodeRegExp) !== null && _w !== void 0 ? _w : true,
-        int32range: (_x = o.int32range) !== null && _x !== void 0 ? _x : true,
+        strictSchema: (_f = (_e = o.strictSchema) !== null && _e !== void 0 ? _e : s) !== null && _f !== void 0 ? _f : true,
+        strictNumbers: (_h = (_g = o.strictNumbers) !== null && _g !== void 0 ? _g : s) !== null && _h !== void 0 ? _h : true,
+        strictTypes: (_k = (_j = o.strictTypes) !== null && _j !== void 0 ? _j : s) !== null && _k !== void 0 ? _k : "log",
+        strictTuples: (_m = (_l = o.strictTuples) !== null && _l !== void 0 ? _l : s) !== null && _m !== void 0 ? _m : "log",
+        strictRequired: (_p = (_o = o.strictRequired) !== null && _o !== void 0 ? _o : s) !== null && _p !== void 0 ? _p : false,
+        code: o.code ? { ...o.code, optimize, regExp } : { optimize, regExp },
+        loopRequired: (_q = o.loopRequired) !== null && _q !== void 0 ? _q : MAX_EXPRESSION,
+        loopEnum: (_r = o.loopEnum) !== null && _r !== void 0 ? _r : MAX_EXPRESSION,
+        meta: (_s = o.meta) !== null && _s !== void 0 ? _s : true,
+        messages: (_t = o.messages) !== null && _t !== void 0 ? _t : true,
+        inlineRefs: (_u = o.inlineRefs) !== null && _u !== void 0 ? _u : true,
+        schemaId: (_v = o.schemaId) !== null && _v !== void 0 ? _v : "$id",
+        addUsedSchema: (_w = o.addUsedSchema) !== null && _w !== void 0 ? _w : true,
+        validateSchema: (_x = o.validateSchema) !== null && _x !== void 0 ? _x : true,
+        validateFormats: (_y = o.validateFormats) !== null && _y !== void 0 ? _y : true,
+        unicodeRegExp: (_z = o.unicodeRegExp) !== null && _z !== void 0 ? _z : true,
+        int32range: (_0 = o.int32range) !== null && _0 !== void 0 ? _0 : true,
+        uriResolver: uriResolver,
     };
 }
 class Ajv {
@@ -4664,7 +4701,7 @@ class Ajv {
         this.logger = getLogger(opts.logger);
         const formatOpt = opts.validateFormats;
         opts.validateFormats = false;
-        this.RULES = rules_1.getRules();
+        this.RULES = (0, rules_1.getRules)();
         checkOptions.call(this, removedOptions, opts, "NOT SUPPORTED");
         checkOptions.call(this, deprecatedOptions, opts, "DEPRECATED", "warn");
         this._metaOpts = getMetaSchemaOptions.call(this);
@@ -4789,7 +4826,7 @@ class Ajv {
                 throw new Error(`schema ${schemaId} must be string`);
             }
         }
-        key = resolve_1.normalizeId(key || id);
+        key = (0, resolve_1.normalizeId)(key || id);
         this._checkUnique(key);
         this.schemas[key] = this._addSchema(schema, _meta, key, _validateSchema, true);
         return this;
@@ -4872,7 +4909,7 @@ class Ajv {
                 this._cache.delete(cacheKey);
                 let id = schemaKeyRef[this.opts.schemaId];
                 if (id) {
-                    id = resolve_1.normalizeId(id);
+                    id = (0, resolve_1.normalizeId)(id);
                     delete this.schemas[id];
                     delete this.refs[id];
                 }
@@ -4910,16 +4947,16 @@ class Ajv {
         }
         checkKeyword.call(this, keyword, def);
         if (!def) {
-            util_1.eachItem(keyword, (kwd) => addRule.call(this, kwd));
+            (0, util_1.eachItem)(keyword, (kwd) => addRule.call(this, kwd));
             return this;
         }
         keywordMetaschema.call(this, def);
         const definition = {
             ...def,
-            type: dataType_1.getJSONTypes(def.type),
-            schemaType: dataType_1.getJSONTypes(def.schemaType),
+            type: (0, dataType_1.getJSONTypes)(def.type),
+            schemaType: (0, dataType_1.getJSONTypes)(def.schemaType),
         };
-        util_1.eachItem(keyword, definition.type.length === 0
+        (0, util_1.eachItem)(keyword, definition.type.length === 0
             ? (k) => addRule.call(this, k, definition)
             : (k) => definition.type.forEach((t) => addRule.call(this, k, definition, t)));
         return this;
@@ -5006,8 +5043,8 @@ class Ajv {
         let sch = this._cache.get(schema);
         if (sch !== undefined)
             return sch;
-        const localRefs = resolve_1.getSchemaRefs.call(this, schema);
-        baseId = resolve_1.normalizeId(id || baseId);
+        baseId = (0, resolve_1.normalizeId)(id || baseId);
+        const localRefs = resolve_1.getSchemaRefs.call(this, schema, baseId);
         sch = new compile_1.SchemaEnv({ schema, schemaId, meta, baseId, localRefs });
         this._cache.set(sch.schema, sch);
         if (addSchema && !baseId.startsWith("#")) {
@@ -5057,7 +5094,7 @@ function checkOptions(checkOpts, options, msg, log = "error") {
     }
 }
 function getSchEnv(keyRef) {
-    keyRef = resolve_1.normalizeId(keyRef); // TODO tests fail without this line
+    keyRef = (0, resolve_1.normalizeId)(keyRef); // TODO tests fail without this line
     return this.schemas[keyRef] || this.refs[keyRef];
 }
 function addInitialSchemas() {
@@ -5109,7 +5146,7 @@ function getLogger(logger) {
 const KEYWORD_NAME = /^[a-z_$][a-z0-9_$:-]*$/i;
 function checkKeyword(keyword, def) {
     const { RULES } = this;
-    util_1.eachItem(keyword, (kwd) => {
+    (0, util_1.eachItem)(keyword, (kwd) => {
         if (RULES.keywords[kwd])
             throw new Error(`Keyword ${kwd} is already defined`);
         if (!KEYWORD_NAME.test(kwd))
@@ -5139,8 +5176,8 @@ function addRule(keyword, definition, dataType) {
         keyword,
         definition: {
             ...definition,
-            type: dataType_1.getJSONTypes(definition.type),
-            schemaType: dataType_1.getJSONTypes(definition.schemaType),
+            type: (0, dataType_1.getJSONTypes)(definition.type),
+            schemaType: (0, dataType_1.getJSONTypes)(definition.schemaType),
         },
     };
     if (definition.before)
@@ -5175,7 +5212,7 @@ function schemaOrData(schema) {
     return { anyOf: [schema, $dataRef] };
 }
 
-},{"./compile":16,"./compile/codegen":13,"./compile/ref_error":18,"./compile/resolve":19,"./compile/rules":20,"./compile/util":21,"./compile/validate":26,"./compile/validate/dataType":24,"./refs/data.json":30,"./runtime/validation_error":34}],30:[function(require,module,exports){
+},{"./compile":16,"./compile/codegen":13,"./compile/ref_error":18,"./compile/resolve":19,"./compile/rules":20,"./compile/util":21,"./compile/validate":26,"./compile/validate/dataType":24,"./refs/data.json":30,"./runtime/uri":34,"./runtime/validation_error":35}],30:[function(require,module,exports){
 module.exports={
   "$id": "https://raw.githubusercontent.com/ajv-validator/ajv/master/lib/refs/data.json#",
   "description": "Meta-schema for $data reference (JSON AnySchema extension proposal)",
@@ -5351,7 +5388,7 @@ const equal = require("fast-deep-equal");
 equal.code = 'require("ajv/dist/runtime/equal").default';
 exports.default = equal;
 
-},{"fast-deep-equal":78}],33:[function(require,module,exports){
+},{"fast-deep-equal":79}],33:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 // https://mathiasbynens.be/notes/javascript-encoding
@@ -5379,6 +5416,13 @@ ucs2length.code = 'require("ajv/dist/runtime/ucs2length").default';
 },{}],34:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const uri = require("uri-js");
+uri.code = 'require("ajv/dist/runtime/uri").default';
+exports.default = uri;
+
+},{"uri-js":111}],35:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class ValidationError extends Error {
     constructor(errors) {
         super("validation failed");
@@ -5388,15 +5432,15 @@ class ValidationError extends Error {
 }
 exports.default = ValidationError;
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateAdditionalItems = void 0;
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
-    message: ({ params: { len } }) => codegen_1.str `must NOT have more than ${len} items`,
-    params: ({ params: { len } }) => codegen_1._ `{limit: ${len}}`,
+    message: ({ params: { len } }) => (0, codegen_1.str) `must NOT have more than ${len} items`,
+    params: ({ params: { len } }) => (0, codegen_1._) `{limit: ${len}}`,
 };
 const def = {
     keyword: "additionalItems",
@@ -5408,7 +5452,7 @@ const def = {
         const { parentSchema, it } = cxt;
         const { items } = parentSchema;
         if (!Array.isArray(items)) {
-            util_1.checkStrictMode(it, '"additionalItems" is ignored when "items" is not an array of schemas');
+            (0, util_1.checkStrictMode)(it, '"additionalItems" is ignored when "items" is not an array of schemas');
             return;
         }
         validateAdditionalItems(cxt, items);
@@ -5417,28 +5461,28 @@ const def = {
 function validateAdditionalItems(cxt, items) {
     const { gen, schema, data, keyword, it } = cxt;
     it.items = true;
-    const len = gen.const("len", codegen_1._ `${data}.length`);
+    const len = gen.const("len", (0, codegen_1._) `${data}.length`);
     if (schema === false) {
         cxt.setParams({ len: items.length });
-        cxt.pass(codegen_1._ `${len} <= ${items.length}`);
+        cxt.pass((0, codegen_1._) `${len} <= ${items.length}`);
     }
-    else if (typeof schema == "object" && !util_1.alwaysValidSchema(it, schema)) {
-        const valid = gen.var("valid", codegen_1._ `${len} <= ${items.length}`); // TODO var
-        gen.if(codegen_1.not(valid), () => validateItems(valid));
+    else if (typeof schema == "object" && !(0, util_1.alwaysValidSchema)(it, schema)) {
+        const valid = gen.var("valid", (0, codegen_1._) `${len} <= ${items.length}`); // TODO var
+        gen.if((0, codegen_1.not)(valid), () => validateItems(valid));
         cxt.ok(valid);
     }
     function validateItems(valid) {
         gen.forRange("i", items.length, len, (i) => {
             cxt.subschema({ keyword, dataProp: i, dataPropType: util_1.Type.Num }, valid);
             if (!it.allErrors)
-                gen.if(codegen_1.not(valid), () => gen.break());
+                gen.if((0, codegen_1.not)(valid), () => gen.break());
         });
     }
 }
 exports.validateAdditionalItems = validateAdditionalItems;
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21}],36:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21}],37:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const code_1 = require("../code");
@@ -5447,7 +5491,7 @@ const names_1 = require("../../compile/names");
 const util_1 = require("../../compile/util");
 const error = {
     message: "must NOT have additional properties",
-    params: ({ params }) => codegen_1._ `{additionalProperty: ${params.additionalProperty}}`,
+    params: ({ params }) => (0, codegen_1._) `{additionalProperty: ${params.additionalProperty}}`,
 };
 const def = {
     keyword: "additionalProperties",
@@ -5463,12 +5507,12 @@ const def = {
             throw new Error("ajv implementation error");
         const { allErrors, opts } = it;
         it.props = true;
-        if (opts.removeAdditional !== "all" && util_1.alwaysValidSchema(it, schema))
+        if (opts.removeAdditional !== "all" && (0, util_1.alwaysValidSchema)(it, schema))
             return;
-        const props = code_1.allSchemaProperties(parentSchema.properties);
-        const patProps = code_1.allSchemaProperties(parentSchema.patternProperties);
+        const props = (0, code_1.allSchemaProperties)(parentSchema.properties);
+        const patProps = (0, code_1.allSchemaProperties)(parentSchema.patternProperties);
         checkAdditionalProperties();
-        cxt.ok(codegen_1._ `${errsCount} === ${names_1.default.errors}`);
+        cxt.ok((0, codegen_1._) `${errsCount} === ${names_1.default.errors}`);
         function checkAdditionalProperties() {
             gen.forIn("key", data, (key) => {
                 if (!props.length && !patProps.length)
@@ -5481,22 +5525,22 @@ const def = {
             let definedProp;
             if (props.length > 8) {
                 // TODO maybe an option instead of hard-coded 8?
-                const propsSchema = util_1.schemaRefOrVal(it, parentSchema.properties, "properties");
-                definedProp = code_1.isOwnProperty(gen, propsSchema, key);
+                const propsSchema = (0, util_1.schemaRefOrVal)(it, parentSchema.properties, "properties");
+                definedProp = (0, code_1.isOwnProperty)(gen, propsSchema, key);
             }
             else if (props.length) {
-                definedProp = codegen_1.or(...props.map((p) => codegen_1._ `${key} === ${p}`));
+                definedProp = (0, codegen_1.or)(...props.map((p) => (0, codegen_1._) `${key} === ${p}`));
             }
             else {
                 definedProp = codegen_1.nil;
             }
             if (patProps.length) {
-                definedProp = codegen_1.or(definedProp, ...patProps.map((p) => codegen_1._ `${code_1.usePattern(cxt, p)}.test(${key})`));
+                definedProp = (0, codegen_1.or)(definedProp, ...patProps.map((p) => (0, codegen_1._) `${(0, code_1.usePattern)(cxt, p)}.test(${key})`));
             }
-            return codegen_1.not(definedProp);
+            return (0, codegen_1.not)(definedProp);
         }
         function deleteAdditional(key) {
-            gen.code(codegen_1._ `delete ${data}[${key}]`);
+            gen.code((0, codegen_1._) `delete ${data}[${key}]`);
         }
         function additionalPropertyCode(key) {
             if (opts.removeAdditional === "all" || (opts.removeAdditional && schema === false)) {
@@ -5510,11 +5554,11 @@ const def = {
                     gen.break();
                 return;
             }
-            if (typeof schema == "object" && !util_1.alwaysValidSchema(it, schema)) {
+            if (typeof schema == "object" && !(0, util_1.alwaysValidSchema)(it, schema)) {
                 const valid = gen.name("valid");
                 if (opts.removeAdditional === "failing") {
                     applyAdditionalSchema(key, valid, false);
-                    gen.if(codegen_1.not(valid), () => {
+                    gen.if((0, codegen_1.not)(valid), () => {
                         cxt.reset();
                         deleteAdditional(key);
                     });
@@ -5522,7 +5566,7 @@ const def = {
                 else {
                     applyAdditionalSchema(key, valid);
                     if (!allErrors)
-                        gen.if(codegen_1.not(valid), () => gen.break());
+                        gen.if((0, codegen_1.not)(valid), () => gen.break());
                 }
             }
         }
@@ -5545,7 +5589,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/names":17,"../../compile/util":21,"../code":52}],37:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/names":17,"../../compile/util":21,"../code":53}],38:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../../compile/util");
@@ -5559,7 +5603,7 @@ const def = {
             throw new Error("ajv implementation error");
         const valid = gen.name("valid");
         schema.forEach((sch, i) => {
-            if (util_1.alwaysValidSchema(it, sch))
+            if ((0, util_1.alwaysValidSchema)(it, sch))
                 return;
             const schCxt = cxt.subschema({ keyword: "allOf", schemaProp: i }, valid);
             cxt.ok(valid);
@@ -5569,7 +5613,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/util":21}],38:[function(require,module,exports){
+},{"../../compile/util":21}],39:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const code_1 = require("../code");
@@ -5582,16 +5626,16 @@ const def = {
 };
 exports.default = def;
 
-},{"../code":52}],39:[function(require,module,exports){
+},{"../code":53}],40:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
     message: ({ params: { min, max } }) => max === undefined
-        ? codegen_1.str `must contain at least ${min} valid item(s)`
-        : codegen_1.str `must contain at least ${min} and no more than ${max} valid item(s)`,
-    params: ({ params: { min, max } }) => max === undefined ? codegen_1._ `{minContains: ${min}}` : codegen_1._ `{minContains: ${min}, maxContains: ${max}}`,
+        ? (0, codegen_1.str) `must contain at least ${min} valid item(s)`
+        : (0, codegen_1.str) `must contain at least ${min} and no more than ${max} valid item(s)`,
+    params: ({ params: { min, max } }) => max === undefined ? (0, codegen_1._) `{minContains: ${min}}` : (0, codegen_1._) `{minContains: ${min}, maxContains: ${max}}`,
 };
 const def = {
     keyword: "contains",
@@ -5612,21 +5656,21 @@ const def = {
         else {
             min = 1;
         }
-        const len = gen.const("len", codegen_1._ `${data}.length`);
+        const len = gen.const("len", (0, codegen_1._) `${data}.length`);
         cxt.setParams({ min, max });
         if (max === undefined && min === 0) {
-            util_1.checkStrictMode(it, `"minContains" == 0 without "maxContains": "contains" keyword ignored`);
+            (0, util_1.checkStrictMode)(it, `"minContains" == 0 without "maxContains": "contains" keyword ignored`);
             return;
         }
         if (max !== undefined && min > max) {
-            util_1.checkStrictMode(it, `"minContains" > "maxContains" is always invalid`);
+            (0, util_1.checkStrictMode)(it, `"minContains" > "maxContains" is always invalid`);
             cxt.fail();
             return;
         }
-        if (util_1.alwaysValidSchema(it, schema)) {
-            let cond = codegen_1._ `${len} >= ${min}`;
+        if ((0, util_1.alwaysValidSchema)(it, schema)) {
+            let cond = (0, codegen_1._) `${len} >= ${min}`;
             if (max !== undefined)
-                cond = codegen_1._ `${cond} && ${len} <= ${max}`;
+                cond = (0, codegen_1._) `${cond} && ${len} <= ${max}`;
             cxt.pass(cond);
             return;
         }
@@ -5635,13 +5679,21 @@ const def = {
         if (max === undefined && min === 1) {
             validateItems(valid, () => gen.if(valid, () => gen.break()));
         }
+        else if (min === 0) {
+            gen.let(valid, true);
+            if (max !== undefined)
+                gen.if((0, codegen_1._) `${data}.length > 0`, validateItemsWithCount);
+        }
         else {
             gen.let(valid, false);
+            validateItemsWithCount();
+        }
+        cxt.result(valid, () => cxt.reset());
+        function validateItemsWithCount() {
             const schValid = gen.name("_valid");
             const count = gen.let("count", 0);
             validateItems(schValid, () => gen.if(schValid, () => checkLimits(count)));
         }
-        cxt.result(valid, () => cxt.reset());
         function validateItems(_valid, block) {
             gen.forRange("i", 0, len, (i) => {
                 cxt.subschema({
@@ -5654,23 +5706,23 @@ const def = {
             });
         }
         function checkLimits(count) {
-            gen.code(codegen_1._ `${count}++`);
+            gen.code((0, codegen_1._) `${count}++`);
             if (max === undefined) {
-                gen.if(codegen_1._ `${count} >= ${min}`, () => gen.assign(valid, true).break());
+                gen.if((0, codegen_1._) `${count} >= ${min}`, () => gen.assign(valid, true).break());
             }
             else {
-                gen.if(codegen_1._ `${count} > ${max}`, () => gen.assign(valid, false).break());
+                gen.if((0, codegen_1._) `${count} > ${max}`, () => gen.assign(valid, false).break());
                 if (min === 1)
                     gen.assign(valid, true);
                 else
-                    gen.if(codegen_1._ `${count} >= ${min}`, () => gen.assign(valid, true));
+                    gen.if((0, codegen_1._) `${count} >= ${min}`, () => gen.assign(valid, true));
             }
         }
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21}],40:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21}],41:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateSchemaDeps = exports.validatePropertyDeps = exports.error = void 0;
@@ -5680,9 +5732,9 @@ const code_1 = require("../code");
 exports.error = {
     message: ({ params: { property, depsCount, deps } }) => {
         const property_ies = depsCount === 1 ? "property" : "properties";
-        return codegen_1.str `must have ${property_ies} ${deps} when property ${property} is present`;
+        return (0, codegen_1.str) `must have ${property_ies} ${deps} when property ${property} is present`;
     },
-    params: ({ params: { property, depsCount, deps, missingProperty } }) => codegen_1._ `{property: ${property},
+    params: ({ params: { property, depsCount, deps, missingProperty } }) => (0, codegen_1._) `{property: ${property},
     missingProperty: ${missingProperty},
     depsCount: ${depsCount},
     deps: ${deps}}`, // TODO change to reference
@@ -5718,7 +5770,7 @@ function validatePropertyDeps(cxt, propertyDeps = cxt.schema) {
         const deps = propertyDeps[prop];
         if (deps.length === 0)
             continue;
-        const hasProperty = code_1.propertyInData(gen, data, prop, it.opts.ownProperties);
+        const hasProperty = (0, code_1.propertyInData)(gen, data, prop, it.opts.ownProperties);
         cxt.setParams({
             property: prop,
             depsCount: deps.length,
@@ -5727,13 +5779,13 @@ function validatePropertyDeps(cxt, propertyDeps = cxt.schema) {
         if (it.allErrors) {
             gen.if(hasProperty, () => {
                 for (const depProp of deps) {
-                    code_1.checkReportMissingProp(cxt, depProp);
+                    (0, code_1.checkReportMissingProp)(cxt, depProp);
                 }
             });
         }
         else {
-            gen.if(codegen_1._ `${hasProperty} && (${code_1.checkMissingProp(cxt, deps, missing)})`);
-            code_1.reportMissingProp(cxt, missing);
+            gen.if((0, codegen_1._) `${hasProperty} && (${(0, code_1.checkMissingProp)(cxt, deps, missing)})`);
+            (0, code_1.reportMissingProp)(cxt, missing);
             gen.else();
         }
     }
@@ -5743,9 +5795,9 @@ function validateSchemaDeps(cxt, schemaDeps = cxt.schema) {
     const { gen, data, keyword, it } = cxt;
     const valid = gen.name("valid");
     for (const prop in schemaDeps) {
-        if (util_1.alwaysValidSchema(it, schemaDeps[prop]))
+        if ((0, util_1.alwaysValidSchema)(it, schemaDeps[prop]))
             continue;
-        gen.if(code_1.propertyInData(gen, data, prop, it.opts.ownProperties), () => {
+        gen.if((0, code_1.propertyInData)(gen, data, prop, it.opts.ownProperties), () => {
             const schCxt = cxt.subschema({ keyword, schemaProp: prop }, valid);
             cxt.mergeValidEvaluated(schCxt, valid);
         }, () => gen.var(valid, true) // TODO var
@@ -5756,14 +5808,14 @@ function validateSchemaDeps(cxt, schemaDeps = cxt.schema) {
 exports.validateSchemaDeps = validateSchemaDeps;
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../code":52}],41:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../code":53}],42:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
-    message: ({ params }) => codegen_1.str `must match "${params.ifClause}" schema`,
-    params: ({ params }) => codegen_1._ `{failingKeyword: ${params.ifClause}}`,
+    message: ({ params }) => (0, codegen_1.str) `must match "${params.ifClause}" schema`,
+    params: ({ params }) => (0, codegen_1._) `{failingKeyword: ${params.ifClause}}`,
 };
 const def = {
     keyword: "if",
@@ -5773,7 +5825,7 @@ const def = {
     code(cxt) {
         const { gen, parentSchema, it } = cxt;
         if (parentSchema.then === undefined && parentSchema.else === undefined) {
-            util_1.checkStrictMode(it, '"if" without "then" and "else" is ignored');
+            (0, util_1.checkStrictMode)(it, '"if" without "then" and "else" is ignored');
         }
         const hasThen = hasSchema(it, "then");
         const hasElse = hasSchema(it, "else");
@@ -5792,7 +5844,7 @@ const def = {
             gen.if(schValid, validateClause("then"));
         }
         else {
-            gen.if(codegen_1.not(schValid), validateClause("else"));
+            gen.if((0, codegen_1.not)(schValid), validateClause("else"));
         }
         cxt.pass(valid, () => cxt.error(true));
         function validateIf() {
@@ -5810,7 +5862,7 @@ const def = {
                 gen.assign(valid, schValid);
                 cxt.mergeValidEvaluated(schCxt, valid);
                 if (ifClause)
-                    gen.assign(ifClause, codegen_1._ `${keyword}`);
+                    gen.assign(ifClause, (0, codegen_1._) `${keyword}`);
                 else
                     cxt.setParams({ ifClause: keyword });
             };
@@ -5819,11 +5871,11 @@ const def = {
 };
 function hasSchema(it, keyword) {
     const schema = it.schema[keyword];
-    return schema !== undefined && !util_1.alwaysValidSchema(it, schema);
+    return schema !== undefined && !(0, util_1.alwaysValidSchema)(it, schema);
 }
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21}],42:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21}],43:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const additionalItems_1 = require("./additionalItems");
@@ -5868,7 +5920,7 @@ function getApplicator(draft2020 = false) {
 }
 exports.default = getApplicator;
 
-},{"./additionalItems":35,"./additionalProperties":36,"./allOf":37,"./anyOf":38,"./contains":39,"./dependencies":40,"./if":41,"./items":43,"./items2020":44,"./not":45,"./oneOf":46,"./patternProperties":47,"./prefixItems":48,"./properties":49,"./propertyNames":50,"./thenElse":51}],43:[function(require,module,exports){
+},{"./additionalItems":36,"./additionalProperties":37,"./allOf":38,"./anyOf":39,"./contains":40,"./dependencies":41,"./if":42,"./items":44,"./items2020":45,"./not":46,"./oneOf":47,"./patternProperties":48,"./prefixItems":49,"./properties":50,"./propertyNames":51,"./thenElse":52}],44:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateTuple = void 0;
@@ -5885,9 +5937,9 @@ const def = {
         if (Array.isArray(schema))
             return validateTuple(cxt, "additionalItems", schema);
         it.items = true;
-        if (util_1.alwaysValidSchema(it, schema))
+        if ((0, util_1.alwaysValidSchema)(it, schema))
             return;
-        cxt.ok(code_1.validateArray(cxt));
+        cxt.ok((0, code_1.validateArray)(cxt));
     },
 };
 function validateTuple(cxt, extraItems, schArr = cxt.schema) {
@@ -5897,11 +5949,11 @@ function validateTuple(cxt, extraItems, schArr = cxt.schema) {
         it.items = util_1.mergeEvaluated.items(gen, schArr.length, it.items);
     }
     const valid = gen.name("valid");
-    const len = gen.const("len", codegen_1._ `${data}.length`);
+    const len = gen.const("len", (0, codegen_1._) `${data}.length`);
     schArr.forEach((sch, i) => {
-        if (util_1.alwaysValidSchema(it, sch))
+        if ((0, util_1.alwaysValidSchema)(it, sch))
             return;
-        gen.if(codegen_1._ `${len} > ${i}`, () => cxt.subschema({
+        gen.if((0, codegen_1._) `${len} > ${i}`, () => cxt.subschema({
             keyword,
             schemaProp: i,
             dataProp: i,
@@ -5914,14 +5966,14 @@ function validateTuple(cxt, extraItems, schArr = cxt.schema) {
         const fullTuple = l === sch.minItems && (l === sch.maxItems || sch[extraItems] === false);
         if (opts.strictTuples && !fullTuple) {
             const msg = `"${keyword}" is ${l}-tuple, but minItems or maxItems/${extraItems} are not specified or different at path "${errSchemaPath}"`;
-            util_1.checkStrictMode(it, msg, opts.strictTuples);
+            (0, util_1.checkStrictMode)(it, msg, opts.strictTuples);
         }
     }
 }
 exports.validateTuple = validateTuple;
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../code":52}],44:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../code":53}],45:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
@@ -5929,8 +5981,8 @@ const util_1 = require("../../compile/util");
 const code_1 = require("../code");
 const additionalItems_1 = require("./additionalItems");
 const error = {
-    message: ({ params: { len } }) => codegen_1.str `must NOT have more than ${len} items`,
-    params: ({ params: { len } }) => codegen_1._ `{limit: ${len}}`,
+    message: ({ params: { len } }) => (0, codegen_1.str) `must NOT have more than ${len} items`,
+    params: ({ params: { len } }) => (0, codegen_1._) `{limit: ${len}}`,
 };
 const def = {
     keyword: "items",
@@ -5942,17 +5994,17 @@ const def = {
         const { schema, parentSchema, it } = cxt;
         const { prefixItems } = parentSchema;
         it.items = true;
-        if (util_1.alwaysValidSchema(it, schema))
+        if ((0, util_1.alwaysValidSchema)(it, schema))
             return;
         if (prefixItems)
-            additionalItems_1.validateAdditionalItems(cxt, prefixItems);
+            (0, additionalItems_1.validateAdditionalItems)(cxt, prefixItems);
         else
-            cxt.ok(code_1.validateArray(cxt));
+            cxt.ok((0, code_1.validateArray)(cxt));
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../code":52,"./additionalItems":35}],45:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../code":53,"./additionalItems":36}],46:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../../compile/util");
@@ -5962,7 +6014,7 @@ const def = {
     trackErrors: true,
     code(cxt) {
         const { gen, schema, it } = cxt;
-        if (util_1.alwaysValidSchema(it, schema)) {
+        if ((0, util_1.alwaysValidSchema)(it, schema)) {
             cxt.fail();
             return;
         }
@@ -5979,14 +6031,14 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/util":21}],46:[function(require,module,exports){
+},{"../../compile/util":21}],47:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
     message: "must match exactly one schema in oneOf",
-    params: ({ params }) => codegen_1._ `{passingSchemas: ${params.passing}}`,
+    params: ({ params }) => (0, codegen_1._) `{passingSchemas: ${params.passing}}`,
 };
 const def = {
     keyword: "oneOf",
@@ -6011,7 +6063,7 @@ const def = {
         function validateOneOf() {
             schArr.forEach((sch, i) => {
                 let schCxt;
-                if (util_1.alwaysValidSchema(it, sch)) {
+                if ((0, util_1.alwaysValidSchema)(it, sch)) {
                     gen.var(schValid, true);
                 }
                 else {
@@ -6023,9 +6075,9 @@ const def = {
                 }
                 if (i > 0) {
                     gen
-                        .if(codegen_1._ `${schValid} && ${valid}`)
+                        .if((0, codegen_1._) `${schValid} && ${valid}`)
                         .assign(valid, false)
-                        .assign(passing, codegen_1._ `[${passing}, ${i}]`)
+                        .assign(passing, (0, codegen_1._) `[${passing}, ${i}]`)
                         .else();
                 }
                 gen.if(schValid, () => {
@@ -6040,7 +6092,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21}],47:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21}],48:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const code_1 = require("../code");
@@ -6054,8 +6106,8 @@ const def = {
     code(cxt) {
         const { gen, schema, data, parentSchema, it } = cxt;
         const { opts } = it;
-        const patterns = code_1.allSchemaProperties(schema);
-        const alwaysValidPatterns = patterns.filter((p) => util_1.alwaysValidSchema(it, schema[p]));
+        const patterns = (0, code_1.allSchemaProperties)(schema);
+        const alwaysValidPatterns = patterns.filter((p) => (0, util_1.alwaysValidSchema)(it, schema[p]));
         if (patterns.length === 0 ||
             (alwaysValidPatterns.length === patterns.length &&
                 (!it.opts.unevaluated || it.props === true))) {
@@ -6064,7 +6116,7 @@ const def = {
         const checkProperties = opts.strictSchema && !opts.allowMatchingProperties && parentSchema.properties;
         const valid = gen.name("valid");
         if (it.props !== true && !(it.props instanceof codegen_1.Name)) {
-            it.props = util_2.evaluatedPropsToName(gen, it.props);
+            it.props = (0, util_2.evaluatedPropsToName)(gen, it.props);
         }
         const { props } = it;
         validatePatternProperties();
@@ -6085,13 +6137,13 @@ const def = {
         function checkMatchingProperties(pat) {
             for (const prop in checkProperties) {
                 if (new RegExp(pat).test(prop)) {
-                    util_1.checkStrictMode(it, `property ${prop} matches pattern ${pat} (use allowMatchingProperties)`);
+                    (0, util_1.checkStrictMode)(it, `property ${prop} matches pattern ${pat} (use allowMatchingProperties)`);
                 }
             }
         }
         function validateProperties(pat) {
             gen.forIn("key", data, (key) => {
-                gen.if(codegen_1._ `${code_1.usePattern(cxt, pat)}.test(${key})`, () => {
+                gen.if((0, codegen_1._) `${(0, code_1.usePattern)(cxt, pat)}.test(${key})`, () => {
                     const alwaysValid = alwaysValidPatterns.includes(pat);
                     if (!alwaysValid) {
                         cxt.subschema({
@@ -6102,12 +6154,12 @@ const def = {
                         }, valid);
                     }
                     if (it.opts.unevaluated && props !== true) {
-                        gen.assign(codegen_1._ `${props}[${key}]`, true);
+                        gen.assign((0, codegen_1._) `${props}[${key}]`, true);
                     }
                     else if (!alwaysValid && !it.allErrors) {
                         // can short-circuit if `unevaluatedProperties` is not supported (opts.next === false)
                         // or if all properties were evaluated (props === true)
-                        gen.if(codegen_1.not(valid), () => gen.break());
+                        gen.if((0, codegen_1.not)(valid), () => gen.break());
                     }
                 });
             });
@@ -6116,7 +6168,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../code":52}],48:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../code":53}],49:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const items_1 = require("./items");
@@ -6125,11 +6177,11 @@ const def = {
     type: "array",
     schemaType: ["array"],
     before: "uniqueItems",
-    code: (cxt) => items_1.validateTuple(cxt, "items"),
+    code: (cxt) => (0, items_1.validateTuple)(cxt, "items"),
 };
 exports.default = def;
 
-},{"./items":43}],49:[function(require,module,exports){
+},{"./items":44}],50:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const validate_1 = require("../../compile/validate");
@@ -6145,14 +6197,14 @@ const def = {
         if (it.opts.removeAdditional === "all" && parentSchema.additionalProperties === undefined) {
             additionalProperties_1.default.code(new validate_1.KeywordCxt(it, additionalProperties_1.default, "additionalProperties"));
         }
-        const allProps = code_1.allSchemaProperties(schema);
+        const allProps = (0, code_1.allSchemaProperties)(schema);
         for (const prop of allProps) {
             it.definedProperties.add(prop);
         }
         if (it.opts.unevaluated && allProps.length && it.props !== true) {
-            it.props = util_1.mergeEvaluated.props(gen, util_1.toHash(allProps), it.props);
+            it.props = util_1.mergeEvaluated.props(gen, (0, util_1.toHash)(allProps), it.props);
         }
-        const properties = allProps.filter((p) => !util_1.alwaysValidSchema(it, schema[p]));
+        const properties = allProps.filter((p) => !(0, util_1.alwaysValidSchema)(it, schema[p]));
         if (properties.length === 0)
             return;
         const valid = gen.name("valid");
@@ -6161,7 +6213,7 @@ const def = {
                 applyPropertySchema(prop);
             }
             else {
-                gen.if(code_1.propertyInData(gen, data, prop, it.opts.ownProperties));
+                gen.if((0, code_1.propertyInData)(gen, data, prop, it.opts.ownProperties));
                 applyPropertySchema(prop);
                 if (!it.allErrors)
                     gen.else().var(valid, true);
@@ -6184,14 +6236,14 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/util":21,"../../compile/validate":26,"../code":52,"./additionalProperties":36}],50:[function(require,module,exports){
+},{"../../compile/util":21,"../../compile/validate":26,"../code":53,"./additionalProperties":37}],51:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
     message: "property name must be valid",
-    params: ({ params }) => codegen_1._ `{propertyName: ${params.propertyName}}`,
+    params: ({ params }) => (0, codegen_1._) `{propertyName: ${params.propertyName}}`,
 };
 const def = {
     keyword: "propertyNames",
@@ -6200,7 +6252,7 @@ const def = {
     error,
     code(cxt) {
         const { gen, schema, data, it } = cxt;
-        if (util_1.alwaysValidSchema(it, schema))
+        if ((0, util_1.alwaysValidSchema)(it, schema))
             return;
         const valid = gen.name("valid");
         gen.forIn("key", data, (key) => {
@@ -6212,7 +6264,7 @@ const def = {
                 propertyName: key,
                 compositeRule: true,
             }, valid);
-            gen.if(codegen_1.not(valid), () => {
+            gen.if((0, codegen_1.not)(valid), () => {
                 cxt.error(true);
                 if (!it.allErrors)
                     gen.break();
@@ -6223,7 +6275,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21}],51:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21}],52:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../../compile/util");
@@ -6232,28 +6284,29 @@ const def = {
     schemaType: ["object", "boolean"],
     code({ keyword, parentSchema, it }) {
         if (parentSchema.if === undefined)
-            util_1.checkStrictMode(it, `"${keyword}" without "if" is ignored`);
+            (0, util_1.checkStrictMode)(it, `"${keyword}" without "if" is ignored`);
     },
 };
 exports.default = def;
 
-},{"../../compile/util":21}],52:[function(require,module,exports){
+},{"../../compile/util":21}],53:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateUnion = exports.validateArray = exports.usePattern = exports.callValidateCode = exports.schemaProperties = exports.allSchemaProperties = exports.noPropertyInData = exports.propertyInData = exports.isOwnProperty = exports.hasPropFunc = exports.reportMissingProp = exports.checkMissingProp = exports.checkReportMissingProp = void 0;
 const codegen_1 = require("../compile/codegen");
 const util_1 = require("../compile/util");
 const names_1 = require("../compile/names");
+const util_2 = require("../compile/util");
 function checkReportMissingProp(cxt, prop) {
     const { gen, data, it } = cxt;
     gen.if(noPropertyInData(gen, data, prop, it.opts.ownProperties), () => {
-        cxt.setParams({ missingProperty: codegen_1._ `${prop}` }, true);
+        cxt.setParams({ missingProperty: (0, codegen_1._) `${prop}` }, true);
         cxt.error();
     });
 }
 exports.checkReportMissingProp = checkReportMissingProp;
 function checkMissingProp({ gen, data, it: { opts } }, properties, missing) {
-    return codegen_1.or(...properties.map((prop) => codegen_1.and(noPropertyInData(gen, data, prop, opts.ownProperties), codegen_1._ `${missing} = ${prop}`)));
+    return (0, codegen_1.or)(...properties.map((prop) => (0, codegen_1.and)(noPropertyInData(gen, data, prop, opts.ownProperties), (0, codegen_1._) `${missing} = ${prop}`)));
 }
 exports.checkMissingProp = checkMissingProp;
 function reportMissingProp(cxt, missing) {
@@ -6265,22 +6318,22 @@ function hasPropFunc(gen) {
     return gen.scopeValue("func", {
         // eslint-disable-next-line @typescript-eslint/unbound-method
         ref: Object.prototype.hasOwnProperty,
-        code: codegen_1._ `Object.prototype.hasOwnProperty`,
+        code: (0, codegen_1._) `Object.prototype.hasOwnProperty`,
     });
 }
 exports.hasPropFunc = hasPropFunc;
 function isOwnProperty(gen, data, property) {
-    return codegen_1._ `${hasPropFunc(gen)}.call(${data}, ${property})`;
+    return (0, codegen_1._) `${hasPropFunc(gen)}.call(${data}, ${property})`;
 }
 exports.isOwnProperty = isOwnProperty;
 function propertyInData(gen, data, property, ownProperties) {
-    const cond = codegen_1._ `${data}${codegen_1.getProperty(property)} !== undefined`;
-    return ownProperties ? codegen_1._ `${cond} && ${isOwnProperty(gen, data, property)}` : cond;
+    const cond = (0, codegen_1._) `${data}${(0, codegen_1.getProperty)(property)} !== undefined`;
+    return ownProperties ? (0, codegen_1._) `${cond} && ${isOwnProperty(gen, data, property)}` : cond;
 }
 exports.propertyInData = propertyInData;
 function noPropertyInData(gen, data, property, ownProperties) {
-    const cond = codegen_1._ `${data}${codegen_1.getProperty(property)} === undefined`;
-    return ownProperties ? codegen_1.or(cond, codegen_1.not(isOwnProperty(gen, data, property))) : cond;
+    const cond = (0, codegen_1._) `${data}${(0, codegen_1.getProperty)(property)} === undefined`;
+    return ownProperties ? (0, codegen_1.or)(cond, (0, codegen_1.not)(isOwnProperty(gen, data, property))) : cond;
 }
 exports.noPropertyInData = noPropertyInData;
 function allSchemaProperties(schemaMap) {
@@ -6288,29 +6341,32 @@ function allSchemaProperties(schemaMap) {
 }
 exports.allSchemaProperties = allSchemaProperties;
 function schemaProperties(it, schemaMap) {
-    return allSchemaProperties(schemaMap).filter((p) => !util_1.alwaysValidSchema(it, schemaMap[p]));
+    return allSchemaProperties(schemaMap).filter((p) => !(0, util_1.alwaysValidSchema)(it, schemaMap[p]));
 }
 exports.schemaProperties = schemaProperties;
 function callValidateCode({ schemaCode, data, it: { gen, topSchemaRef, schemaPath, errorPath }, it }, func, context, passSchema) {
-    const dataAndSchema = passSchema ? codegen_1._ `${schemaCode}, ${data}, ${topSchemaRef}${schemaPath}` : data;
+    const dataAndSchema = passSchema ? (0, codegen_1._) `${schemaCode}, ${data}, ${topSchemaRef}${schemaPath}` : data;
     const valCxt = [
-        [names_1.default.instancePath, codegen_1.strConcat(names_1.default.instancePath, errorPath)],
+        [names_1.default.instancePath, (0, codegen_1.strConcat)(names_1.default.instancePath, errorPath)],
         [names_1.default.parentData, it.parentData],
         [names_1.default.parentDataProperty, it.parentDataProperty],
         [names_1.default.rootData, names_1.default.rootData],
     ];
     if (it.opts.dynamicRef)
         valCxt.push([names_1.default.dynamicAnchors, names_1.default.dynamicAnchors]);
-    const args = codegen_1._ `${dataAndSchema}, ${gen.object(...valCxt)}`;
-    return context !== codegen_1.nil ? codegen_1._ `${func}.call(${context}, ${args})` : codegen_1._ `${func}(${args})`;
+    const args = (0, codegen_1._) `${dataAndSchema}, ${gen.object(...valCxt)}`;
+    return context !== codegen_1.nil ? (0, codegen_1._) `${func}.call(${context}, ${args})` : (0, codegen_1._) `${func}(${args})`;
 }
 exports.callValidateCode = callValidateCode;
+const newRegExp = (0, codegen_1._) `new RegExp`;
 function usePattern({ gen, it: { opts } }, pattern) {
     const u = opts.unicodeRegExp ? "u" : "";
+    const { regExp } = opts.code;
+    const rx = regExp(pattern, u);
     return gen.scopeValue("pattern", {
-        key: pattern,
-        ref: new RegExp(pattern, u),
-        code: codegen_1._ `new RegExp(${pattern}, ${u})`,
+        key: rx.toString(),
+        ref: rx,
+        code: (0, codegen_1._) `${regExp.code === "new RegExp" ? newRegExp : (0, util_2.useFunc)(gen, regExp)}(${pattern}, ${u})`,
     });
 }
 exports.usePattern = usePattern;
@@ -6326,14 +6382,14 @@ function validateArray(cxt) {
     validateItems(() => gen.break());
     return valid;
     function validateItems(notValid) {
-        const len = gen.const("len", codegen_1._ `${data}.length`);
+        const len = gen.const("len", (0, codegen_1._) `${data}.length`);
         gen.forRange("i", 0, len, (i) => {
             cxt.subschema({
                 keyword,
                 dataProp: i,
                 dataPropType: util_1.Type.Num,
             }, valid);
-            gen.if(codegen_1.not(valid), notValid);
+            gen.if((0, codegen_1.not)(valid), notValid);
         });
     }
 }
@@ -6343,7 +6399,7 @@ function validateUnion(cxt) {
     /* istanbul ignore if */
     if (!Array.isArray(schema))
         throw new Error("ajv implementation error");
-    const alwaysValid = schema.some((sch) => util_1.alwaysValidSchema(it, sch));
+    const alwaysValid = schema.some((sch) => (0, util_1.alwaysValidSchema)(it, sch));
     if (alwaysValid && !it.opts.unevaluated)
         return;
     const valid = gen.let("valid", false);
@@ -6354,18 +6410,18 @@ function validateUnion(cxt) {
             schemaProp: i,
             compositeRule: true,
         }, schValid);
-        gen.assign(valid, codegen_1._ `${valid} || ${schValid}`);
+        gen.assign(valid, (0, codegen_1._) `${valid} || ${schValid}`);
         const merged = cxt.mergeValidEvaluated(schCxt, schValid);
         // can short-circuit if `unevaluatedProperties/Items` not supported (opts.unevaluated !== true)
         // or if all properties and items were evaluated (it.props === true && it.items === true)
         if (!merged)
-            gen.if(codegen_1.not(valid));
+            gen.if((0, codegen_1.not)(valid));
     }));
     cxt.result(valid, () => cxt.reset(), () => cxt.error(true));
 }
 exports.validateUnion = validateUnion;
 
-},{"../compile/codegen":13,"../compile/names":17,"../compile/util":21}],53:[function(require,module,exports){
+},{"../compile/codegen":13,"../compile/names":17,"../compile/util":21}],54:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const def = {
@@ -6376,7 +6432,7 @@ const def = {
 };
 exports.default = def;
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const id_1 = require("./id");
@@ -6393,7 +6449,7 @@ const core = [
 ];
 exports.default = core;
 
-},{"./id":53,"./ref":55}],55:[function(require,module,exports){
+},{"./id":54,"./ref":56}],56:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.callRef = exports.getValidate = void 0;
@@ -6414,7 +6470,7 @@ const def = {
             return callRootRef();
         const schOrEnv = compile_1.resolveRef.call(self, root, baseId, $ref);
         if (schOrEnv === undefined)
-            throw new ref_error_1.default(baseId, $ref);
+            throw new ref_error_1.default(it.opts.uriResolver, baseId, $ref);
         if (schOrEnv instanceof compile_1.SchemaEnv)
             return callValidate(schOrEnv);
         return inlineRefSchema(schOrEnv);
@@ -6422,14 +6478,14 @@ const def = {
             if (env === root)
                 return callRef(cxt, validateName, env, env.$async);
             const rootName = gen.scopeValue("root", { ref: root });
-            return callRef(cxt, codegen_1._ `${rootName}.validate`, root, root.$async);
+            return callRef(cxt, (0, codegen_1._) `${rootName}.validate`, root, root.$async);
         }
         function callValidate(sch) {
             const v = getValidate(cxt, sch);
             callRef(cxt, v, sch, sch.$async);
         }
         function inlineRefSchema(sch) {
-            const schName = gen.scopeValue("schema", opts.code.source === true ? { ref: sch, code: codegen_1.stringify(sch) } : { ref: sch });
+            const schName = gen.scopeValue("schema", opts.code.source === true ? { ref: sch, code: (0, codegen_1.stringify)(sch) } : { ref: sch });
             const valid = gen.name("valid");
             const schCxt = cxt.subschema({
                 schema: sch,
@@ -6447,7 +6503,7 @@ function getValidate(cxt, sch) {
     const { gen } = cxt;
     return sch.validate
         ? gen.scopeValue("validate", { ref: sch.validate })
-        : codegen_1._ `${gen.scopeValue("wrapper", { ref: sch })}.validate`;
+        : (0, codegen_1._) `${gen.scopeValue("wrapper", { ref: sch })}.validate`;
 }
 exports.getValidate = getValidate;
 function callRef(cxt, v, sch, $async) {
@@ -6463,12 +6519,12 @@ function callRef(cxt, v, sch, $async) {
             throw new Error("async schema referenced by sync schema");
         const valid = gen.let("valid");
         gen.try(() => {
-            gen.code(codegen_1._ `await ${code_1.callValidateCode(cxt, v, passCxt)}`);
+            gen.code((0, codegen_1._) `await ${(0, code_1.callValidateCode)(cxt, v, passCxt)}`);
             addEvaluatedFrom(v); // TODO will not work with async, it has to be returned with the result
             if (!allErrors)
                 gen.assign(valid, true);
         }, (e) => {
-            gen.if(codegen_1._ `!(${e} instanceof ${it.ValidationError})`, () => gen.throw(e));
+            gen.if((0, codegen_1._) `!(${e} instanceof ${it.ValidationError})`, () => gen.throw(e));
             addErrorsFrom(e);
             if (!allErrors)
                 gen.assign(valid, false);
@@ -6476,12 +6532,12 @@ function callRef(cxt, v, sch, $async) {
         cxt.ok(valid);
     }
     function callSyncRef() {
-        cxt.result(code_1.callValidateCode(cxt, v, passCxt), () => addEvaluatedFrom(v), () => addErrorsFrom(v));
+        cxt.result((0, code_1.callValidateCode)(cxt, v, passCxt), () => addEvaluatedFrom(v), () => addErrorsFrom(v));
     }
     function addErrorsFrom(source) {
-        const errs = codegen_1._ `${source}.errors`;
-        gen.assign(names_1.default.vErrors, codegen_1._ `${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`); // TODO tagged
-        gen.assign(names_1.default.errors, codegen_1._ `${names_1.default.vErrors}.length`);
+        const errs = (0, codegen_1._) `${source}.errors`;
+        gen.assign(names_1.default.vErrors, (0, codegen_1._) `${names_1.default.vErrors} === null ? ${errs} : ${names_1.default.vErrors}.concat(${errs})`); // TODO tagged
+        gen.assign(names_1.default.errors, (0, codegen_1._) `${names_1.default.vErrors}.length`);
     }
     function addEvaluatedFrom(source) {
         var _a;
@@ -6496,7 +6552,7 @@ function callRef(cxt, v, sch, $async) {
                 }
             }
             else {
-                const props = gen.var("props", codegen_1._ `${source}.evaluated.props`);
+                const props = gen.var("props", (0, codegen_1._) `${source}.evaluated.props`);
                 it.props = util_1.mergeEvaluated.props(gen, props, it.props, codegen_1.Name);
             }
         }
@@ -6507,7 +6563,7 @@ function callRef(cxt, v, sch, $async) {
                 }
             }
             else {
-                const items = gen.var("items", codegen_1._ `${source}.evaluated.items`);
+                const items = gen.var("items", (0, codegen_1._) `${source}.evaluated.items`);
                 it.items = util_1.mergeEvaluated.items(gen, items, it.items, codegen_1.Name);
             }
         }
@@ -6516,16 +6572,18 @@ function callRef(cxt, v, sch, $async) {
 exports.callRef = callRef;
 exports.default = def;
 
-},{"../../compile":16,"../../compile/codegen":13,"../../compile/names":17,"../../compile/ref_error":18,"../../compile/util":21,"../code":52}],56:[function(require,module,exports){
+},{"../../compile":16,"../../compile/codegen":13,"../../compile/names":17,"../../compile/ref_error":18,"../../compile/util":21,"../code":53}],57:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const types_1 = require("../discriminator/types");
+const compile_1 = require("../../compile");
+const util_1 = require("../../compile/util");
 const error = {
     message: ({ params: { discrError, tagName } }) => discrError === types_1.DiscrError.Tag
         ? `tag "${tagName}" must be string`
         : `value of tag "${tagName}" must be in oneOf`,
-    params: ({ params: { discrError, tag, tagName } }) => codegen_1._ `{error: ${discrError}, tag: ${tagName}, tagValue: ${tag}}`,
+    params: ({ params: { discrError, tag, tagName } }) => (0, codegen_1._) `{error: ${discrError}, tag: ${tagName}, tagValue: ${tag}}`,
 };
 const def = {
     keyword: "discriminator",
@@ -6546,14 +6604,14 @@ const def = {
         if (!oneOf)
             throw new Error("discriminator: requires oneOf keyword");
         const valid = gen.let("valid", false);
-        const tag = gen.const("tag", codegen_1._ `${data}${codegen_1.getProperty(tagName)}`);
-        gen.if(codegen_1._ `typeof ${tag} == "string"`, () => validateMapping(), () => cxt.error(false, { discrError: types_1.DiscrError.Tag, tag, tagName }));
+        const tag = gen.const("tag", (0, codegen_1._) `${data}${(0, codegen_1.getProperty)(tagName)}`);
+        gen.if((0, codegen_1._) `typeof ${tag} == "string"`, () => validateMapping(), () => cxt.error(false, { discrError: types_1.DiscrError.Tag, tag, tagName }));
         cxt.ok(valid);
         function validateMapping() {
             const mapping = getMapping();
             gen.if(false);
             for (const tagValue in mapping) {
-                gen.elseIf(codegen_1._ `${tag} === ${tagValue}`);
+                gen.elseIf((0, codegen_1._) `${tag} === ${tagValue}`);
                 gen.assign(valid, applyTagSchema(mapping[tagValue]));
             }
             gen.else();
@@ -6572,10 +6630,15 @@ const def = {
             const topRequired = hasRequired(parentSchema);
             let tagRequired = true;
             for (let i = 0; i < oneOf.length; i++) {
-                const sch = oneOf[i];
-                const propSch = (_a = sch.properties) === null || _a === void 0 ? void 0 : _a[tagName];
+                let sch = oneOf[i];
+                if ((sch === null || sch === void 0 ? void 0 : sch.$ref) && !(0, util_1.schemaHasRulesButRef)(sch, it.self.RULES)) {
+                    sch = compile_1.resolveRef.call(it.self, it.schemaEnv.root, it.baseId, sch === null || sch === void 0 ? void 0 : sch.$ref);
+                    if (sch instanceof compile_1.SchemaEnv)
+                        sch = sch.schema;
+                }
+                const propSch = (_a = sch === null || sch === void 0 ? void 0 : sch.properties) === null || _a === void 0 ? void 0 : _a[tagName];
                 if (typeof propSch != "object") {
-                    throw new Error(`discriminator: oneOf schemas must have "properties/${tagName}"`);
+                    throw new Error(`discriminator: oneOf subschemas (or referenced schemas) must have "properties/${tagName}"`);
                 }
                 tagRequired = tagRequired && (topRequired || hasRequired(sch));
                 addMappings(propSch, i);
@@ -6610,7 +6673,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../discriminator/types":57}],57:[function(require,module,exports){
+},{"../../compile":16,"../../compile/codegen":13,"../../compile/util":21,"../discriminator/types":58}],58:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscrError = void 0;
@@ -6620,7 +6683,7 @@ var DiscrError;
     DiscrError["Mapping"] = "mapping";
 })(DiscrError = exports.DiscrError || (exports.DiscrError = {}));
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("./core");
@@ -6631,20 +6694,20 @@ const metadata_1 = require("./metadata");
 const draft7Vocabularies = [
     core_1.default,
     validation_1.default,
-    applicator_1.default(),
+    (0, applicator_1.default)(),
     format_1.default,
     metadata_1.metadataVocabulary,
     metadata_1.contentVocabulary,
 ];
 exports.default = draft7Vocabularies;
 
-},{"./applicator":42,"./core":54,"./format":60,"./metadata":61,"./validation":64}],59:[function(require,module,exports){
+},{"./applicator":43,"./core":55,"./format":61,"./metadata":62,"./validation":65}],60:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const error = {
-    message: ({ schemaCode }) => codegen_1.str `must match format "${schemaCode}"`,
-    params: ({ schemaCode }) => codegen_1._ `{format: ${schemaCode}}`,
+    message: ({ schemaCode }) => (0, codegen_1.str) `must match format "${schemaCode}"`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{format: ${schemaCode}}`,
 };
 const def = {
     keyword: "format",
@@ -6666,23 +6729,23 @@ const def = {
                 ref: self.formats,
                 code: opts.code.formats,
             });
-            const fDef = gen.const("fDef", codegen_1._ `${fmts}[${schemaCode}]`);
+            const fDef = gen.const("fDef", (0, codegen_1._) `${fmts}[${schemaCode}]`);
             const fType = gen.let("fType");
             const format = gen.let("format");
             // TODO simplify
-            gen.if(codegen_1._ `typeof ${fDef} == "object" && !(${fDef} instanceof RegExp)`, () => gen.assign(fType, codegen_1._ `${fDef}.type || "string"`).assign(format, codegen_1._ `${fDef}.validate`), () => gen.assign(fType, codegen_1._ `"string"`).assign(format, fDef));
-            cxt.fail$data(codegen_1.or(unknownFmt(), invalidFmt()));
+            gen.if((0, codegen_1._) `typeof ${fDef} == "object" && !(${fDef} instanceof RegExp)`, () => gen.assign(fType, (0, codegen_1._) `${fDef}.type || "string"`).assign(format, (0, codegen_1._) `${fDef}.validate`), () => gen.assign(fType, (0, codegen_1._) `"string"`).assign(format, fDef));
+            cxt.fail$data((0, codegen_1.or)(unknownFmt(), invalidFmt()));
             function unknownFmt() {
                 if (opts.strictSchema === false)
                     return codegen_1.nil;
-                return codegen_1._ `${schemaCode} && !${format}`;
+                return (0, codegen_1._) `${schemaCode} && !${format}`;
             }
             function invalidFmt() {
                 const callFormat = schemaEnv.$async
-                    ? codegen_1._ `(${fDef}.async ? await ${format}(${data}) : ${format}(${data}))`
-                    : codegen_1._ `${format}(${data})`;
-                const validData = codegen_1._ `(typeof ${format} == "function" ? ${callFormat} : ${format}.test(${data}))`;
-                return codegen_1._ `${format} && ${format} !== true && ${fType} === ${ruleType} && !${validData}`;
+                    ? (0, codegen_1._) `(${fDef}.async ? await ${format}(${data}) : ${format}(${data}))`
+                    : (0, codegen_1._) `${format}(${data})`;
+                const validData = (0, codegen_1._) `(typeof ${format} == "function" ? ${callFormat} : ${format}.test(${data}))`;
+                return (0, codegen_1._) `${format} && ${format} !== true && ${fType} === ${ruleType} && !${validData}`;
             }
         }
         function validateFormat() {
@@ -6708,13 +6771,13 @@ const def = {
             }
             function getFormat(fmtDef) {
                 const code = fmtDef instanceof RegExp
-                    ? codegen_1.regexpCode(fmtDef)
+                    ? (0, codegen_1.regexpCode)(fmtDef)
                     : opts.code.formats
-                        ? codegen_1._ `${opts.code.formats}${codegen_1.getProperty(schema)}`
+                        ? (0, codegen_1._) `${opts.code.formats}${(0, codegen_1.getProperty)(schema)}`
                         : undefined;
                 const fmt = gen.scopeValue("formats", { key: schema, ref: fmtDef, code });
                 if (typeof fmtDef == "object" && !(fmtDef instanceof RegExp)) {
-                    return [fmtDef.type || "string", fmtDef.validate, codegen_1._ `${fmt}.validate`];
+                    return [fmtDef.type || "string", fmtDef.validate, (0, codegen_1._) `${fmt}.validate`];
                 }
                 return ["string", fmtDef, fmt];
             }
@@ -6722,23 +6785,23 @@ const def = {
                 if (typeof formatDef == "object" && !(formatDef instanceof RegExp) && formatDef.async) {
                     if (!schemaEnv.$async)
                         throw new Error("async format in sync schema");
-                    return codegen_1._ `await ${fmtRef}(${data})`;
+                    return (0, codegen_1._) `await ${fmtRef}(${data})`;
                 }
-                return typeof format == "function" ? codegen_1._ `${fmtRef}(${data})` : codegen_1._ `${fmtRef}.test(${data})`;
+                return typeof format == "function" ? (0, codegen_1._) `${fmtRef}(${data})` : (0, codegen_1._) `${fmtRef}.test(${data})`;
             }
         }
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13}],60:[function(require,module,exports){
+},{"../../compile/codegen":13}],61:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const format_1 = require("./format");
 const format = [format_1.default];
 exports.default = format;
 
-},{"./format":59}],61:[function(require,module,exports){
+},{"./format":60}],62:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.contentVocabulary = exports.metadataVocabulary = void 0;
@@ -6757,7 +6820,7 @@ exports.contentVocabulary = [
     "contentSchema",
 ];
 
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
@@ -6765,7 +6828,7 @@ const util_1 = require("../../compile/util");
 const equal_1 = require("../../runtime/equal");
 const error = {
     message: "must be equal to constant",
-    params: ({ schemaCode }) => codegen_1._ `{allowedValue: ${schemaCode}}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{allowedValue: ${schemaCode}}`,
 };
 const def = {
     keyword: "const",
@@ -6774,16 +6837,16 @@ const def = {
     code(cxt) {
         const { gen, data, $data, schemaCode, schema } = cxt;
         if ($data || (schema && typeof schema == "object")) {
-            cxt.fail$data(codegen_1._ `!${util_1.useFunc(gen, equal_1.default)}(${data}, ${schemaCode})`);
+            cxt.fail$data((0, codegen_1._) `!${(0, util_1.useFunc)(gen, equal_1.default)}(${data}, ${schemaCode})`);
         }
         else {
-            cxt.fail(codegen_1._ `${schema} !== ${data}`);
+            cxt.fail((0, codegen_1._) `${schema} !== ${data}`);
         }
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/equal":32}],63:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/equal":32}],64:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
@@ -6791,7 +6854,7 @@ const util_1 = require("../../compile/util");
 const equal_1 = require("../../runtime/equal");
 const error = {
     message: "must be equal to one of the allowed values",
-    params: ({ schemaCode }) => codegen_1._ `{allowedValues: ${schemaCode}}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{allowedValues: ${schemaCode}}`,
 };
 const def = {
     keyword: "enum",
@@ -6803,7 +6866,8 @@ const def = {
         if (!$data && schema.length === 0)
             throw new Error("enum must have non-empty array");
         const useLoop = schema.length >= it.opts.loopEnum;
-        const eql = util_1.useFunc(gen, equal_1.default);
+        let eql;
+        const getEql = () => (eql !== null && eql !== void 0 ? eql : (eql = (0, util_1.useFunc)(gen, equal_1.default)));
         let valid;
         if (useLoop || $data) {
             valid = gen.let("valid");
@@ -6814,24 +6878,24 @@ const def = {
             if (!Array.isArray(schema))
                 throw new Error("ajv implementation error");
             const vSchema = gen.const("vSchema", schemaCode);
-            valid = codegen_1.or(...schema.map((_x, i) => equalCode(vSchema, i)));
+            valid = (0, codegen_1.or)(...schema.map((_x, i) => equalCode(vSchema, i)));
         }
         cxt.pass(valid);
         function loopEnum() {
             gen.assign(valid, false);
-            gen.forOf("v", schemaCode, (v) => gen.if(codegen_1._ `${eql}(${data}, ${v})`, () => gen.assign(valid, true).break()));
+            gen.forOf("v", schemaCode, (v) => gen.if((0, codegen_1._) `${getEql()}(${data}, ${v})`, () => gen.assign(valid, true).break()));
         }
         function equalCode(vSchema, i) {
             const sch = schema[i];
             return typeof sch === "object" && sch !== null
-                ? codegen_1._ `${eql}(${data}, ${vSchema}[${i}])`
-                : codegen_1._ `${data} === ${sch}`;
+                ? (0, codegen_1._) `${getEql()}(${data}, ${vSchema}[${i}])`
+                : (0, codegen_1._) `${data} === ${sch}`;
         }
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/equal":32}],64:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/equal":32}],65:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const limitNumber_1 = require("./limitNumber");
@@ -6865,16 +6929,16 @@ const validation = [
 ];
 exports.default = validation;
 
-},{"./const":62,"./enum":63,"./limitItems":65,"./limitLength":66,"./limitNumber":67,"./limitProperties":68,"./multipleOf":69,"./pattern":70,"./required":71,"./uniqueItems":72}],65:[function(require,module,exports){
+},{"./const":63,"./enum":64,"./limitItems":66,"./limitLength":67,"./limitNumber":68,"./limitProperties":69,"./multipleOf":70,"./pattern":71,"./required":72,"./uniqueItems":73}],66:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const error = {
     message({ keyword, schemaCode }) {
         const comp = keyword === "maxItems" ? "more" : "fewer";
-        return codegen_1.str `must NOT have ${comp} than ${schemaCode} items`;
+        return (0, codegen_1.str) `must NOT have ${comp} than ${schemaCode} items`;
     },
-    params: ({ schemaCode }) => codegen_1._ `{limit: ${schemaCode}}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{limit: ${schemaCode}}`,
 };
 const def = {
     keyword: ["maxItems", "minItems"],
@@ -6885,12 +6949,12 @@ const def = {
     code(cxt) {
         const { keyword, data, schemaCode } = cxt;
         const op = keyword === "maxItems" ? codegen_1.operators.GT : codegen_1.operators.LT;
-        cxt.fail$data(codegen_1._ `${data}.length ${op} ${schemaCode}`);
+        cxt.fail$data((0, codegen_1._) `${data}.length ${op} ${schemaCode}`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13}],66:[function(require,module,exports){
+},{"../../compile/codegen":13}],67:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
@@ -6899,9 +6963,9 @@ const ucs2length_1 = require("../../runtime/ucs2length");
 const error = {
     message({ keyword, schemaCode }) {
         const comp = keyword === "maxLength" ? "more" : "fewer";
-        return codegen_1.str `must NOT have ${comp} than ${schemaCode} characters`;
+        return (0, codegen_1.str) `must NOT have ${comp} than ${schemaCode} characters`;
     },
-    params: ({ schemaCode }) => codegen_1._ `{limit: ${schemaCode}}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{limit: ${schemaCode}}`,
 };
 const def = {
     keyword: ["maxLength", "minLength"],
@@ -6912,13 +6976,13 @@ const def = {
     code(cxt) {
         const { keyword, data, schemaCode, it } = cxt;
         const op = keyword === "maxLength" ? codegen_1.operators.GT : codegen_1.operators.LT;
-        const len = it.opts.unicode === false ? codegen_1._ `${data}.length` : codegen_1._ `${util_1.useFunc(cxt.gen, ucs2length_1.default)}(${data})`;
-        cxt.fail$data(codegen_1._ `${len} ${op} ${schemaCode}`);
+        const len = it.opts.unicode === false ? (0, codegen_1._) `${data}.length` : (0, codegen_1._) `${(0, util_1.useFunc)(cxt.gen, ucs2length_1.default)}(${data})`;
+        cxt.fail$data((0, codegen_1._) `${len} ${op} ${schemaCode}`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/ucs2length":33}],67:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../../runtime/ucs2length":33}],68:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
@@ -6930,8 +6994,8 @@ const KWDs = {
     exclusiveMinimum: { okStr: ">", ok: ops.GT, fail: ops.LTE },
 };
 const error = {
-    message: ({ keyword, schemaCode }) => codegen_1.str `must be ${KWDs[keyword].okStr} ${schemaCode}`,
-    params: ({ keyword, schemaCode }) => codegen_1._ `{comparison: ${KWDs[keyword].okStr}, limit: ${schemaCode}}`,
+    message: ({ keyword, schemaCode }) => (0, codegen_1.str) `must be ${KWDs[keyword].okStr} ${schemaCode}`,
+    params: ({ keyword, schemaCode }) => (0, codegen_1._) `{comparison: ${KWDs[keyword].okStr}, limit: ${schemaCode}}`,
 };
 const def = {
     keyword: Object.keys(KWDs),
@@ -6941,21 +7005,21 @@ const def = {
     error,
     code(cxt) {
         const { keyword, data, schemaCode } = cxt;
-        cxt.fail$data(codegen_1._ `${data} ${KWDs[keyword].fail} ${schemaCode} || isNaN(${data})`);
+        cxt.fail$data((0, codegen_1._) `${data} ${KWDs[keyword].fail} ${schemaCode} || isNaN(${data})`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13}],68:[function(require,module,exports){
+},{"../../compile/codegen":13}],69:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const error = {
     message({ keyword, schemaCode }) {
         const comp = keyword === "maxProperties" ? "more" : "fewer";
-        return codegen_1.str `must NOT have ${comp} than ${schemaCode} items`;
+        return (0, codegen_1.str) `must NOT have ${comp} than ${schemaCode} properties`;
     },
-    params: ({ schemaCode }) => codegen_1._ `{limit: ${schemaCode}}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{limit: ${schemaCode}}`,
 };
 const def = {
     keyword: ["maxProperties", "minProperties"],
@@ -6966,18 +7030,18 @@ const def = {
     code(cxt) {
         const { keyword, data, schemaCode } = cxt;
         const op = keyword === "maxProperties" ? codegen_1.operators.GT : codegen_1.operators.LT;
-        cxt.fail$data(codegen_1._ `Object.keys(${data}).length ${op} ${schemaCode}`);
+        cxt.fail$data((0, codegen_1._) `Object.keys(${data}).length ${op} ${schemaCode}`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13}],69:[function(require,module,exports){
+},{"../../compile/codegen":13}],70:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const codegen_1 = require("../../compile/codegen");
 const error = {
-    message: ({ schemaCode }) => codegen_1.str `must be multiple of ${schemaCode}`,
-    params: ({ schemaCode }) => codegen_1._ `{multipleOf: ${schemaCode}}`,
+    message: ({ schemaCode }) => (0, codegen_1.str) `must be multiple of ${schemaCode}`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{multipleOf: ${schemaCode}}`,
 };
 const def = {
     keyword: "multipleOf",
@@ -6991,21 +7055,21 @@ const def = {
         const prec = it.opts.multipleOfPrecision;
         const res = gen.let("res");
         const invalid = prec
-            ? codegen_1._ `Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}`
-            : codegen_1._ `${res} !== parseInt(${res})`;
-        cxt.fail$data(codegen_1._ `(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid}))`);
+            ? (0, codegen_1._) `Math.abs(Math.round(${res}) - ${res}) > 1e-${prec}`
+            : (0, codegen_1._) `${res} !== parseInt(${res})`;
+        cxt.fail$data((0, codegen_1._) `(${schemaCode} === 0 || (${res} = ${data}/${schemaCode}, ${invalid}))`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13}],70:[function(require,module,exports){
+},{"../../compile/codegen":13}],71:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const code_1 = require("../code");
 const codegen_1 = require("../../compile/codegen");
 const error = {
-    message: ({ schemaCode }) => codegen_1.str `must match pattern "${schemaCode}"`,
-    params: ({ schemaCode }) => codegen_1._ `{pattern: ${schemaCode}}`,
+    message: ({ schemaCode }) => (0, codegen_1.str) `must match pattern "${schemaCode}"`,
+    params: ({ schemaCode }) => (0, codegen_1._) `{pattern: ${schemaCode}}`,
 };
 const def = {
     keyword: "pattern",
@@ -7017,21 +7081,21 @@ const def = {
         const { data, $data, schema, schemaCode, it } = cxt;
         // TODO regexp should be wrapped in try/catchs
         const u = it.opts.unicodeRegExp ? "u" : "";
-        const regExp = $data ? codegen_1._ `(new RegExp(${schemaCode}, ${u}))` : code_1.usePattern(cxt, schema);
-        cxt.fail$data(codegen_1._ `!${regExp}.test(${data})`);
+        const regExp = $data ? (0, codegen_1._) `(new RegExp(${schemaCode}, ${u}))` : (0, code_1.usePattern)(cxt, schema);
+        cxt.fail$data((0, codegen_1._) `!${regExp}.test(${data})`);
     },
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../code":52}],71:[function(require,module,exports){
+},{"../../compile/codegen":13,"../code":53}],72:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const code_1 = require("../code");
 const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const error = {
-    message: ({ params: { missingProperty } }) => codegen_1.str `must have required property '${missingProperty}'`,
-    params: ({ params: { missingProperty } }) => codegen_1._ `{missingProperty: ${missingProperty}}`,
+    message: ({ params: { missingProperty } }) => (0, codegen_1.str) `must have required property '${missingProperty}'`,
+    params: ({ params: { missingProperty } }) => (0, codegen_1._) `{missingProperty: ${missingProperty}}`,
 };
 const def = {
     keyword: "required",
@@ -7056,7 +7120,7 @@ const def = {
                 if ((props === null || props === void 0 ? void 0 : props[requiredKey]) === undefined && !definedProperties.has(requiredKey)) {
                     const schemaPath = it.schemaEnv.baseId + it.errSchemaPath;
                     const msg = `required property "${requiredKey}" is not defined at "${schemaPath}" (strictRequired)`;
-                    util_1.checkStrictMode(it, msg, it.opts.strictRequired);
+                    (0, util_1.checkStrictMode)(it, msg, it.opts.strictRequired);
                 }
             }
         }
@@ -7066,7 +7130,7 @@ const def = {
             }
             else {
                 for (const prop of schema) {
-                    code_1.checkReportMissingProp(cxt, prop);
+                    (0, code_1.checkReportMissingProp)(cxt, prop);
                 }
             }
         }
@@ -7078,22 +7142,22 @@ const def = {
                 cxt.ok(valid);
             }
             else {
-                gen.if(code_1.checkMissingProp(cxt, schema, missing));
-                code_1.reportMissingProp(cxt, missing);
+                gen.if((0, code_1.checkMissingProp)(cxt, schema, missing));
+                (0, code_1.reportMissingProp)(cxt, missing);
                 gen.else();
             }
         }
         function loopAllRequired() {
             gen.forOf("prop", schemaCode, (prop) => {
                 cxt.setParams({ missingProperty: prop });
-                gen.if(code_1.noPropertyInData(gen, data, prop, opts.ownProperties), () => cxt.error());
+                gen.if((0, code_1.noPropertyInData)(gen, data, prop, opts.ownProperties), () => cxt.error());
             });
         }
         function loopUntilMissing(missing, valid) {
             cxt.setParams({ missingProperty: missing });
             gen.forOf(missing, schemaCode, () => {
-                gen.assign(valid, code_1.propertyInData(gen, data, missing, opts.ownProperties));
-                gen.if(codegen_1.not(valid), () => {
+                gen.assign(valid, (0, code_1.propertyInData)(gen, data, missing, opts.ownProperties));
+                gen.if((0, codegen_1.not)(valid), () => {
                     cxt.error();
                     gen.break();
                 });
@@ -7103,7 +7167,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../code":52}],72:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../code":53}],73:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const dataType_1 = require("../../compile/validate/dataType");
@@ -7111,8 +7175,8 @@ const codegen_1 = require("../../compile/codegen");
 const util_1 = require("../../compile/util");
 const equal_1 = require("../../runtime/equal");
 const error = {
-    message: ({ params: { i, j } }) => codegen_1.str `must NOT have duplicate items (items ## ${j} and ${i} are identical)`,
-    params: ({ params: { i, j } }) => codegen_1._ `{i: ${i}, j: ${j}}`,
+    message: ({ params: { i, j } }) => (0, codegen_1.str) `must NOT have duplicate items (items ## ${j} and ${i} are identical)`,
+    params: ({ params: { i, j } }) => (0, codegen_1._) `{i: ${i}, j: ${j}}`,
 };
 const def = {
     keyword: "uniqueItems",
@@ -7125,41 +7189,41 @@ const def = {
         if (!$data && !schema)
             return;
         const valid = gen.let("valid");
-        const itemTypes = parentSchema.items ? dataType_1.getSchemaTypes(parentSchema.items) : [];
-        cxt.block$data(valid, validateUniqueItems, codegen_1._ `${schemaCode} === false`);
+        const itemTypes = parentSchema.items ? (0, dataType_1.getSchemaTypes)(parentSchema.items) : [];
+        cxt.block$data(valid, validateUniqueItems, (0, codegen_1._) `${schemaCode} === false`);
         cxt.ok(valid);
         function validateUniqueItems() {
-            const i = gen.let("i", codegen_1._ `${data}.length`);
+            const i = gen.let("i", (0, codegen_1._) `${data}.length`);
             const j = gen.let("j");
             cxt.setParams({ i, j });
             gen.assign(valid, true);
-            gen.if(codegen_1._ `${i} > 1`, () => (canOptimize() ? loopN : loopN2)(i, j));
+            gen.if((0, codegen_1._) `${i} > 1`, () => (canOptimize() ? loopN : loopN2)(i, j));
         }
         function canOptimize() {
             return itemTypes.length > 0 && !itemTypes.some((t) => t === "object" || t === "array");
         }
         function loopN(i, j) {
             const item = gen.name("item");
-            const wrongType = dataType_1.checkDataTypes(itemTypes, item, it.opts.strictNumbers, dataType_1.DataType.Wrong);
-            const indices = gen.const("indices", codegen_1._ `{}`);
-            gen.for(codegen_1._ `;${i}--;`, () => {
-                gen.let(item, codegen_1._ `${data}[${i}]`);
-                gen.if(wrongType, codegen_1._ `continue`);
+            const wrongType = (0, dataType_1.checkDataTypes)(itemTypes, item, it.opts.strictNumbers, dataType_1.DataType.Wrong);
+            const indices = gen.const("indices", (0, codegen_1._) `{}`);
+            gen.for((0, codegen_1._) `;${i}--;`, () => {
+                gen.let(item, (0, codegen_1._) `${data}[${i}]`);
+                gen.if(wrongType, (0, codegen_1._) `continue`);
                 if (itemTypes.length > 1)
-                    gen.if(codegen_1._ `typeof ${item} == "string"`, codegen_1._ `${item} += "_"`);
+                    gen.if((0, codegen_1._) `typeof ${item} == "string"`, (0, codegen_1._) `${item} += "_"`);
                 gen
-                    .if(codegen_1._ `typeof ${indices}[${item}] == "number"`, () => {
-                    gen.assign(j, codegen_1._ `${indices}[${item}]`);
+                    .if((0, codegen_1._) `typeof ${indices}[${item}] == "number"`, () => {
+                    gen.assign(j, (0, codegen_1._) `${indices}[${item}]`);
                     cxt.error();
                     gen.assign(valid, false).break();
                 })
-                    .code(codegen_1._ `${indices}[${item}] = ${i}`);
+                    .code((0, codegen_1._) `${indices}[${item}] = ${i}`);
             });
         }
         function loopN2(i, j) {
-            const eql = util_1.useFunc(gen, equal_1.default);
+            const eql = (0, util_1.useFunc)(gen, equal_1.default);
             const outer = gen.name("outer");
-            gen.label(outer).for(codegen_1._ `;${i}--;`, () => gen.for(codegen_1._ `${j} = ${i}; ${j}--;`, () => gen.if(codegen_1._ `${eql}(${data}[${i}], ${data}[${j}])`, () => {
+            gen.label(outer).for((0, codegen_1._) `;${i}--;`, () => gen.for((0, codegen_1._) `${j} = ${i}; ${j}--;`, () => gen.if((0, codegen_1._) `${eql}(${data}[${i}], ${data}[${j}])`, () => {
                 cxt.error();
                 gen.assign(valid, false).break(outer);
             })));
@@ -7168,7 +7232,7 @@ const def = {
 };
 exports.default = def;
 
-},{"../../compile/codegen":13,"../../compile/util":21,"../../compile/validate/dataType":24,"../../runtime/equal":32}],73:[function(require,module,exports){
+},{"../../compile/codegen":13,"../../compile/util":21,"../../compile/validate/dataType":24,"../../runtime/equal":32}],74:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -7320,9 +7384,9 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],74:[function(require,module,exports){
-
 },{}],75:[function(require,module,exports){
+
+},{}],76:[function(require,module,exports){
 (function (Buffer){(function (){
 /*!
  * The buffer module from node.js, for the browser.
@@ -9103,7 +9167,7 @@ function numberIsNaN (obj) {
 }
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"base64-js":73,"buffer":75,"ieee754":79}],76:[function(require,module,exports){
+},{"base64-js":74,"buffer":76,"ieee754":80}],77:[function(require,module,exports){
 (function (Buffer){(function (){
 var clone = (function() {
 'use strict';
@@ -9364,7 +9428,7 @@ if (typeof module === 'object' && module.exports) {
 }
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"buffer":75}],77:[function(require,module,exports){
+},{"buffer":76}],78:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9863,7 +9927,7 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
   }
 }
 
-},{}],78:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict';
 
 // do not edit .js files directly - edit src/index.jst
@@ -9911,7 +9975,7 @@ module.exports = function equal(a, b) {
   return a!==a && b!==b;
 };
 
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -9998,7 +10062,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -10027,7 +10091,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],81:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 'use strict';
 
 var traverse = module.exports = function (schema, opts, cb) {
@@ -10122,7 +10186,7 @@ function escapeJsonPtr(str) {
   return str.replace(/~/g, '~0').replace(/\//g, '~1');
 }
 
-},{}],82:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
@@ -10511,12 +10575,34 @@ function escapeJsonPtr(str) {
 	function internalize (holder, name, reviver) {
 	    var value = holder[name];
 	    if (value != null && typeof value === 'object') {
-	        for (var key in value) {
-	            var replacement = internalize(value, key, reviver);
-	            if (replacement === undefined) {
-	                delete value[key];
-	            } else {
-	                value[key] = replacement;
+	        if (Array.isArray(value)) {
+	            for (var i = 0; i < value.length; i++) {
+	                var key = String(i);
+	                var replacement = internalize(value, key, reviver);
+	                if (replacement === undefined) {
+	                    delete value[key];
+	                } else {
+	                    Object.defineProperty(value, key, {
+	                        value: replacement,
+	                        writable: true,
+	                        enumerable: true,
+	                        configurable: true,
+	                    });
+	                }
+	            }
+	        } else {
+	            for (var key$1 in value) {
+	                var replacement$1 = internalize(value, key$1, reviver);
+	                if (replacement$1 === undefined) {
+	                    delete value[key$1];
+	                } else {
+	                    Object.defineProperty(value, key$1, {
+	                        value: replacement$1,
+	                        writable: true,
+	                        enumerable: true,
+	                        configurable: true,
+	                    });
+	                }
 	            }
 	        }
 	    }
@@ -11444,7 +11530,12 @@ function escapeJsonPtr(str) {
 	        if (Array.isArray(parent)) {
 	            parent.push(value);
 	        } else {
-	            parent[key] = value;
+	            Object.defineProperty(parent, key, {
+	                value: value,
+	                writable: true,
+	                enumerable: true,
+	                configurable: true,
+	            });
 	        }
 	    }
 
@@ -11834,7 +11925,7 @@ function escapeJsonPtr(str) {
 
 })));
 
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 (function (global){(function (){
 /**
  * @license
@@ -29047,7 +29138,7 @@ function escapeJsonPtr(str) {
 }.call(this));
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 'use strict';
 
 const w3 = {
@@ -29062,7 +29153,7 @@ module.exports = (w, h) => ['svg', {
   viewBox: '0 0 ' + w + ' ' + h
 }];
 
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 const parse = require('./parse.js');
@@ -29086,7 +29177,7 @@ exports.p = parse;
 exports.s = stringify;
 exports.t = traverse;
 
-},{"./gen-svg.js":84,"./parse.js":86,"./renderer.js":87,"./stringify.js":88,"./traverse.js":89,"./tt.js":90}],86:[function(require,module,exports){
+},{"./gen-svg.js":85,"./parse.js":87,"./renderer.js":88,"./stringify.js":89,"./traverse.js":90,"./tt.js":91}],87:[function(require,module,exports){
 'use strict';
 
 const parser = require('sax').parser;
@@ -29139,7 +29230,7 @@ function parse(data, config) {
 
 module.exports = parse;
 
-},{"sax":93}],87:[function(require,module,exports){
+},{"sax":108}],88:[function(require,module,exports){
 'use strict';
 
 const stringify = require('./stringify.js');
@@ -29164,7 +29255,7 @@ module.exports = renderer;
 
 /* eslint-env browser */
 
-},{"./stringify.js":88}],88:[function(require,module,exports){
+},{"./stringify.js":89}],89:[function(require,module,exports){
 'use strict';
 
 const isObject = o => o && Object.prototype.toString.call(o) === '[object Object]';
@@ -29257,7 +29348,7 @@ function stringify (a, indentation) {
 
 module.exports = stringify;
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 function skipFn() {
@@ -29385,7 +29476,7 @@ module.exports = traverse;
 
 /* eslint complexity: 0 */
 
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
 module.exports = (x, y, obj) => {
@@ -29398,7 +29489,7 @@ module.exports = (x, y, obj) => {
   return Object.assign(objt, obj);
 };
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -29584,7 +29675,3115 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
+'use strict';
+
+function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
+
+var codes = {};
+
+function createErrorType(code, message, Base) {
+  if (!Base) {
+    Base = Error;
+  }
+
+  function getMessage(arg1, arg2, arg3) {
+    if (typeof message === 'string') {
+      return message;
+    } else {
+      return message(arg1, arg2, arg3);
+    }
+  }
+
+  var NodeError =
+  /*#__PURE__*/
+  function (_Base) {
+    _inheritsLoose(NodeError, _Base);
+
+    function NodeError(arg1, arg2, arg3) {
+      return _Base.call(this, getMessage(arg1, arg2, arg3)) || this;
+    }
+
+    return NodeError;
+  }(Base);
+
+  NodeError.prototype.name = Base.name;
+  NodeError.prototype.code = code;
+  codes[code] = NodeError;
+} // https://github.com/nodejs/node/blob/v10.8.0/lib/internal/errors.js
+
+
+function oneOf(expected, thing) {
+  if (Array.isArray(expected)) {
+    var len = expected.length;
+    expected = expected.map(function (i) {
+      return String(i);
+    });
+
+    if (len > 2) {
+      return "one of ".concat(thing, " ").concat(expected.slice(0, len - 1).join(', '), ", or ") + expected[len - 1];
+    } else if (len === 2) {
+      return "one of ".concat(thing, " ").concat(expected[0], " or ").concat(expected[1]);
+    } else {
+      return "of ".concat(thing, " ").concat(expected[0]);
+    }
+  } else {
+    return "of ".concat(thing, " ").concat(String(expected));
+  }
+} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
+
+
+function startsWith(str, search, pos) {
+  return str.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+
+
+function endsWith(str, search, this_len) {
+  if (this_len === undefined || this_len > str.length) {
+    this_len = str.length;
+  }
+
+  return str.substring(this_len - search.length, this_len) === search;
+} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
+
+
+function includes(str, search, start) {
+  if (typeof start !== 'number') {
+    start = 0;
+  }
+
+  if (start + search.length > str.length) {
+    return false;
+  } else {
+    return str.indexOf(search, start) !== -1;
+  }
+}
+
+createErrorType('ERR_INVALID_OPT_VALUE', function (name, value) {
+  return 'The value "' + value + '" is invalid for option "' + name + '"';
+}, TypeError);
+createErrorType('ERR_INVALID_ARG_TYPE', function (name, expected, actual) {
+  // determiner: 'must be' or 'must not be'
+  var determiner;
+
+  if (typeof expected === 'string' && startsWith(expected, 'not ')) {
+    determiner = 'must not be';
+    expected = expected.replace(/^not /, '');
+  } else {
+    determiner = 'must be';
+  }
+
+  var msg;
+
+  if (endsWith(name, ' argument')) {
+    // For cases like 'first argument'
+    msg = "The ".concat(name, " ").concat(determiner, " ").concat(oneOf(expected, 'type'));
+  } else {
+    var type = includes(name, '.') ? 'property' : 'argument';
+    msg = "The \"".concat(name, "\" ").concat(type, " ").concat(determiner, " ").concat(oneOf(expected, 'type'));
+  }
+
+  msg += ". Received type ".concat(typeof actual);
+  return msg;
+}, TypeError);
+createErrorType('ERR_STREAM_PUSH_AFTER_EOF', 'stream.push() after EOF');
+createErrorType('ERR_METHOD_NOT_IMPLEMENTED', function (name) {
+  return 'The ' + name + ' method is not implemented';
+});
+createErrorType('ERR_STREAM_PREMATURE_CLOSE', 'Premature close');
+createErrorType('ERR_STREAM_DESTROYED', function (name) {
+  return 'Cannot call ' + name + ' after a stream was destroyed';
+});
+createErrorType('ERR_MULTIPLE_CALLBACK', 'Callback called multiple times');
+createErrorType('ERR_STREAM_CANNOT_PIPE', 'Cannot pipe, not readable');
+createErrorType('ERR_STREAM_WRITE_AFTER_END', 'write after end');
+createErrorType('ERR_STREAM_NULL_VALUES', 'May not write null values to stream', TypeError);
+createErrorType('ERR_UNKNOWN_ENCODING', function (arg) {
+  return 'Unknown encoding: ' + arg;
+}, TypeError);
+createErrorType('ERR_STREAM_UNSHIFT_AFTER_END_EVENT', 'stream.unshift() after end event');
+module.exports.codes = codes;
+
+},{}],94:[function(require,module,exports){
+(function (process){(function (){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+// a duplex stream is just a stream that is both readable and writable.
+// Since JS doesn't have multiple prototypal inheritance, this class
+// prototypally inherits from Readable, and then parasitically from
+// Writable.
+'use strict';
+/*<replacement>*/
+
+var objectKeys = Object.keys || function (obj) {
+  var keys = [];
+
+  for (var key in obj) {
+    keys.push(key);
+  }
+
+  return keys;
+};
+/*</replacement>*/
+
+
+module.exports = Duplex;
+
+var Readable = require('./_stream_readable');
+
+var Writable = require('./_stream_writable');
+
+require('inherits')(Duplex, Readable);
+
+{
+  // Allow the keys array to be GC'ed.
+  var keys = objectKeys(Writable.prototype);
+
+  for (var v = 0; v < keys.length; v++) {
+    var method = keys[v];
+    if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+  }
+}
+
+function Duplex(options) {
+  if (!(this instanceof Duplex)) return new Duplex(options);
+  Readable.call(this, options);
+  Writable.call(this, options);
+  this.allowHalfOpen = true;
+
+  if (options) {
+    if (options.readable === false) this.readable = false;
+    if (options.writable === false) this.writable = false;
+
+    if (options.allowHalfOpen === false) {
+      this.allowHalfOpen = false;
+      this.once('end', onend);
+    }
+  }
+}
+
+Object.defineProperty(Duplex.prototype, 'writableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState.highWaterMark;
+  }
+});
+Object.defineProperty(Duplex.prototype, 'writableBuffer', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState && this._writableState.getBuffer();
+  }
+});
+Object.defineProperty(Duplex.prototype, 'writableLength', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState.length;
+  }
+}); // the no-half-open enforcer
+
+function onend() {
+  // If the writable side ended, then we're ok.
+  if (this._writableState.ended) return; // no more data can be written.
+  // But allow more writes to happen in this tick.
+
+  process.nextTick(onEndNT, this);
+}
+
+function onEndNT(self) {
+  self.end();
+}
+
+Object.defineProperty(Duplex.prototype, 'destroyed', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return false;
+    }
+
+    return this._readableState.destroyed && this._writableState.destroyed;
+  },
+  set: function set(value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (this._readableState === undefined || this._writableState === undefined) {
+      return;
+    } // backward compatibility, the user is explicitly
+    // managing destroyed
+
+
+    this._readableState.destroyed = value;
+    this._writableState.destroyed = value;
+  }
+});
+}).call(this)}).call(this,require('_process'))
+},{"./_stream_readable":96,"./_stream_writable":98,"_process":92,"inherits":81}],95:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+// a passthrough stream.
+// basically just the most minimal sort of Transform stream.
+// Every written chunk gets output as-is.
+'use strict';
+
+module.exports = PassThrough;
+
+var Transform = require('./_stream_transform');
+
+require('inherits')(PassThrough, Transform);
+
+function PassThrough(options) {
+  if (!(this instanceof PassThrough)) return new PassThrough(options);
+  Transform.call(this, options);
+}
+
+PassThrough.prototype._transform = function (chunk, encoding, cb) {
+  cb(null, chunk);
+};
+},{"./_stream_transform":97,"inherits":81}],96:[function(require,module,exports){
+(function (process,global){(function (){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+'use strict';
+
+module.exports = Readable;
+/*<replacement>*/
+
+var Duplex;
+/*</replacement>*/
+
+Readable.ReadableState = ReadableState;
+/*<replacement>*/
+
+var EE = require('events').EventEmitter;
+
+var EElistenerCount = function EElistenerCount(emitter, type) {
+  return emitter.listeners(type).length;
+};
+/*</replacement>*/
+
+/*<replacement>*/
+
+
+var Stream = require('./internal/streams/stream');
+/*</replacement>*/
+
+
+var Buffer = require('buffer').Buffer;
+
+var OurUint8Array = global.Uint8Array || function () {};
+
+function _uint8ArrayToBuffer(chunk) {
+  return Buffer.from(chunk);
+}
+
+function _isUint8Array(obj) {
+  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
+}
+/*<replacement>*/
+
+
+var debugUtil = require('util');
+
+var debug;
+
+if (debugUtil && debugUtil.debuglog) {
+  debug = debugUtil.debuglog('stream');
+} else {
+  debug = function debug() {};
+}
+/*</replacement>*/
+
+
+var BufferList = require('./internal/streams/buffer_list');
+
+var destroyImpl = require('./internal/streams/destroy');
+
+var _require = require('./internal/streams/state'),
+    getHighWaterMark = _require.getHighWaterMark;
+
+var _require$codes = require('../errors').codes,
+    ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
+    ERR_STREAM_PUSH_AFTER_EOF = _require$codes.ERR_STREAM_PUSH_AFTER_EOF,
+    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
+    ERR_STREAM_UNSHIFT_AFTER_END_EVENT = _require$codes.ERR_STREAM_UNSHIFT_AFTER_END_EVENT; // Lazy loaded to improve the startup performance.
+
+
+var StringDecoder;
+var createReadableStreamAsyncIterator;
+var from;
+
+require('inherits')(Readable, Stream);
+
+var errorOrDestroy = destroyImpl.errorOrDestroy;
+var kProxyEvents = ['error', 'close', 'destroy', 'pause', 'resume'];
+
+function prependListener(emitter, event, fn) {
+  // Sadly this is not cacheable as some libraries bundle their own
+  // event emitter implementation with them.
+  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn); // This is a hack to make sure that our error handler is attached before any
+  // userland ones.  NEVER DO THIS. This is here only because this code needs
+  // to continue to work with older versions of Node.js that do not include
+  // the prependListener() method. The goal is to eventually remove this hack.
+
+  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (Array.isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
+}
+
+function ReadableState(options, stream, isDuplex) {
+  Duplex = Duplex || require('./_stream_duplex');
+  options = options || {}; // Duplex streams are both readable and writable, but share
+  // the same options object.
+  // However, some cases require setting options to different
+  // values for the readable and the writable sides of the duplex stream.
+  // These options can be provided separately as readableXXX and writableXXX.
+
+  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof Duplex; // object stream flag. Used to make read(n) ignore n and to
+  // make all the buffer merging and length checks go away
+
+  this.objectMode = !!options.objectMode;
+  if (isDuplex) this.objectMode = this.objectMode || !!options.readableObjectMode; // the point at which it stops calling _read() to fill the buffer
+  // Note: 0 is a valid value, means "don't call _read preemptively ever"
+
+  this.highWaterMark = getHighWaterMark(this, options, 'readableHighWaterMark', isDuplex); // A linked list is used to store data chunks instead of an array because the
+  // linked list can remove elements from the beginning faster than
+  // array.shift()
+
+  this.buffer = new BufferList();
+  this.length = 0;
+  this.pipes = null;
+  this.pipesCount = 0;
+  this.flowing = null;
+  this.ended = false;
+  this.endEmitted = false;
+  this.reading = false; // a flag to be able to tell if the event 'readable'/'data' is emitted
+  // immediately, or on a later tick.  We set this to true at first, because
+  // any actions that shouldn't happen until "later" should generally also
+  // not happen before the first read call.
+
+  this.sync = true; // whenever we return null, then we set a flag to say
+  // that we're awaiting a 'readable' event emission.
+
+  this.needReadable = false;
+  this.emittedReadable = false;
+  this.readableListening = false;
+  this.resumeScheduled = false;
+  this.paused = true; // Should close be emitted on destroy. Defaults to true.
+
+  this.emitClose = options.emitClose !== false; // Should .destroy() be called after 'end' (and potentially 'finish')
+
+  this.autoDestroy = !!options.autoDestroy; // has it been destroyed
+
+  this.destroyed = false; // Crypto is kind of old and crusty.  Historically, its default string
+  // encoding is 'binary' so we have to make this configurable.
+  // Everything else in the universe uses 'utf8', though.
+
+  this.defaultEncoding = options.defaultEncoding || 'utf8'; // the number of writers that are awaiting a drain event in .pipe()s
+
+  this.awaitDrain = 0; // if true, a maybeReadMore has been scheduled
+
+  this.readingMore = false;
+  this.decoder = null;
+  this.encoding = null;
+
+  if (options.encoding) {
+    if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
+    this.decoder = new StringDecoder(options.encoding);
+    this.encoding = options.encoding;
+  }
+}
+
+function Readable(options) {
+  Duplex = Duplex || require('./_stream_duplex');
+  if (!(this instanceof Readable)) return new Readable(options); // Checking for a Stream.Duplex instance is faster here instead of inside
+  // the ReadableState constructor, at least with V8 6.5
+
+  var isDuplex = this instanceof Duplex;
+  this._readableState = new ReadableState(options, this, isDuplex); // legacy
+
+  this.readable = true;
+
+  if (options) {
+    if (typeof options.read === 'function') this._read = options.read;
+    if (typeof options.destroy === 'function') this._destroy = options.destroy;
+  }
+
+  Stream.call(this);
+}
+
+Object.defineProperty(Readable.prototype, 'destroyed', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    if (this._readableState === undefined) {
+      return false;
+    }
+
+    return this._readableState.destroyed;
+  },
+  set: function set(value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (!this._readableState) {
+      return;
+    } // backward compatibility, the user is explicitly
+    // managing destroyed
+
+
+    this._readableState.destroyed = value;
+  }
+});
+Readable.prototype.destroy = destroyImpl.destroy;
+Readable.prototype._undestroy = destroyImpl.undestroy;
+
+Readable.prototype._destroy = function (err, cb) {
+  cb(err);
+}; // Manually shove something into the read() buffer.
+// This returns true if the highWaterMark has not been hit yet,
+// similar to how Writable.write() returns true if you should
+// write() some more.
+
+
+Readable.prototype.push = function (chunk, encoding) {
+  var state = this._readableState;
+  var skipChunkCheck;
+
+  if (!state.objectMode) {
+    if (typeof chunk === 'string') {
+      encoding = encoding || state.defaultEncoding;
+
+      if (encoding !== state.encoding) {
+        chunk = Buffer.from(chunk, encoding);
+        encoding = '';
+      }
+
+      skipChunkCheck = true;
+    }
+  } else {
+    skipChunkCheck = true;
+  }
+
+  return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
+}; // Unshift should *always* be something directly out of read()
+
+
+Readable.prototype.unshift = function (chunk) {
+  return readableAddChunk(this, chunk, null, true, false);
+};
+
+function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
+  debug('readableAddChunk', chunk);
+  var state = stream._readableState;
+
+  if (chunk === null) {
+    state.reading = false;
+    onEofChunk(stream, state);
+  } else {
+    var er;
+    if (!skipChunkCheck) er = chunkInvalid(state, chunk);
+
+    if (er) {
+      errorOrDestroy(stream, er);
+    } else if (state.objectMode || chunk && chunk.length > 0) {
+      if (typeof chunk !== 'string' && !state.objectMode && Object.getPrototypeOf(chunk) !== Buffer.prototype) {
+        chunk = _uint8ArrayToBuffer(chunk);
+      }
+
+      if (addToFront) {
+        if (state.endEmitted) errorOrDestroy(stream, new ERR_STREAM_UNSHIFT_AFTER_END_EVENT());else addChunk(stream, state, chunk, true);
+      } else if (state.ended) {
+        errorOrDestroy(stream, new ERR_STREAM_PUSH_AFTER_EOF());
+      } else if (state.destroyed) {
+        return false;
+      } else {
+        state.reading = false;
+
+        if (state.decoder && !encoding) {
+          chunk = state.decoder.write(chunk);
+          if (state.objectMode || chunk.length !== 0) addChunk(stream, state, chunk, false);else maybeReadMore(stream, state);
+        } else {
+          addChunk(stream, state, chunk, false);
+        }
+      }
+    } else if (!addToFront) {
+      state.reading = false;
+      maybeReadMore(stream, state);
+    }
+  } // We can push more data if we are below the highWaterMark.
+  // Also, if we have no data yet, we can stand some more bytes.
+  // This is to work around cases where hwm=0, such as the repl.
+
+
+  return !state.ended && (state.length < state.highWaterMark || state.length === 0);
+}
+
+function addChunk(stream, state, chunk, addToFront) {
+  if (state.flowing && state.length === 0 && !state.sync) {
+    state.awaitDrain = 0;
+    stream.emit('data', chunk);
+  } else {
+    // update the buffer info.
+    state.length += state.objectMode ? 1 : chunk.length;
+    if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
+    if (state.needReadable) emitReadable(stream);
+  }
+
+  maybeReadMore(stream, state);
+}
+
+function chunkInvalid(state, chunk) {
+  var er;
+
+  if (!_isUint8Array(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
+    er = new ERR_INVALID_ARG_TYPE('chunk', ['string', 'Buffer', 'Uint8Array'], chunk);
+  }
+
+  return er;
+}
+
+Readable.prototype.isPaused = function () {
+  return this._readableState.flowing === false;
+}; // backwards compatibility.
+
+
+Readable.prototype.setEncoding = function (enc) {
+  if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
+  var decoder = new StringDecoder(enc);
+  this._readableState.decoder = decoder; // If setEncoding(null), decoder.encoding equals utf8
+
+  this._readableState.encoding = this._readableState.decoder.encoding; // Iterate over current buffer to convert already stored Buffers:
+
+  var p = this._readableState.buffer.head;
+  var content = '';
+
+  while (p !== null) {
+    content += decoder.write(p.data);
+    p = p.next;
+  }
+
+  this._readableState.buffer.clear();
+
+  if (content !== '') this._readableState.buffer.push(content);
+  this._readableState.length = content.length;
+  return this;
+}; // Don't raise the hwm > 1GB
+
+
+var MAX_HWM = 0x40000000;
+
+function computeNewHighWaterMark(n) {
+  if (n >= MAX_HWM) {
+    // TODO(ronag): Throw ERR_VALUE_OUT_OF_RANGE.
+    n = MAX_HWM;
+  } else {
+    // Get the next highest power of 2 to prevent increasing hwm excessively in
+    // tiny amounts
+    n--;
+    n |= n >>> 1;
+    n |= n >>> 2;
+    n |= n >>> 4;
+    n |= n >>> 8;
+    n |= n >>> 16;
+    n++;
+  }
+
+  return n;
+} // This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+
+
+function howMuchToRead(n, state) {
+  if (n <= 0 || state.length === 0 && state.ended) return 0;
+  if (state.objectMode) return 1;
+
+  if (n !== n) {
+    // Only flow one buffer at a time
+    if (state.flowing && state.length) return state.buffer.head.data.length;else return state.length;
+  } // If we're asking for more than the current hwm, then raise the hwm.
+
+
+  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
+  if (n <= state.length) return n; // Don't have enough
+
+  if (!state.ended) {
+    state.needReadable = true;
+    return 0;
+  }
+
+  return state.length;
+} // you can override either this method, or the async _read(n) below.
+
+
+Readable.prototype.read = function (n) {
+  debug('read', n);
+  n = parseInt(n, 10);
+  var state = this._readableState;
+  var nOrig = n;
+  if (n !== 0) state.emittedReadable = false; // if we're doing read(0) to trigger a readable event, but we
+  // already have a bunch of data in the buffer, then just trigger
+  // the 'readable' event and move on.
+
+  if (n === 0 && state.needReadable && ((state.highWaterMark !== 0 ? state.length >= state.highWaterMark : state.length > 0) || state.ended)) {
+    debug('read: emitReadable', state.length, state.ended);
+    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
+    return null;
+  }
+
+  n = howMuchToRead(n, state); // if we've ended, and we're now clear, then finish it up.
+
+  if (n === 0 && state.ended) {
+    if (state.length === 0) endReadable(this);
+    return null;
+  } // All the actual chunk generation logic needs to be
+  // *below* the call to _read.  The reason is that in certain
+  // synthetic stream cases, such as passthrough streams, _read
+  // may be a completely synchronous operation which may change
+  // the state of the read buffer, providing enough data when
+  // before there was *not* enough.
+  //
+  // So, the steps are:
+  // 1. Figure out what the state of things will be after we do
+  // a read from the buffer.
+  //
+  // 2. If that resulting state will trigger a _read, then call _read.
+  // Note that this may be asynchronous, or synchronous.  Yes, it is
+  // deeply ugly to write APIs this way, but that still doesn't mean
+  // that the Readable class should behave improperly, as streams are
+  // designed to be sync/async agnostic.
+  // Take note if the _read call is sync or async (ie, if the read call
+  // has returned yet), so that we know whether or not it's safe to emit
+  // 'readable' etc.
+  //
+  // 3. Actually pull the requested chunks out of the buffer and return.
+  // if we need a readable event, then we need to do some reading.
+
+
+  var doRead = state.needReadable;
+  debug('need readable', doRead); // if we currently have less than the highWaterMark, then also read some
+
+  if (state.length === 0 || state.length - n < state.highWaterMark) {
+    doRead = true;
+    debug('length less than watermark', doRead);
+  } // however, if we've ended, then there's no point, and if we're already
+  // reading, then it's unnecessary.
+
+
+  if (state.ended || state.reading) {
+    doRead = false;
+    debug('reading or ended', doRead);
+  } else if (doRead) {
+    debug('do read');
+    state.reading = true;
+    state.sync = true; // if the length is currently zero, then we *need* a readable event.
+
+    if (state.length === 0) state.needReadable = true; // call internal read method
+
+    this._read(state.highWaterMark);
+
+    state.sync = false; // If _read pushed data synchronously, then `reading` will be false,
+    // and we need to re-evaluate how much data we can return to the user.
+
+    if (!state.reading) n = howMuchToRead(nOrig, state);
+  }
+
+  var ret;
+  if (n > 0) ret = fromList(n, state);else ret = null;
+
+  if (ret === null) {
+    state.needReadable = state.length <= state.highWaterMark;
+    n = 0;
+  } else {
+    state.length -= n;
+    state.awaitDrain = 0;
+  }
+
+  if (state.length === 0) {
+    // If we have nothing in the buffer, then we want to know
+    // as soon as we *do* get something into the buffer.
+    if (!state.ended) state.needReadable = true; // If we tried to read() past the EOF, then emit end on the next tick.
+
+    if (nOrig !== n && state.ended) endReadable(this);
+  }
+
+  if (ret !== null) this.emit('data', ret);
+  return ret;
+};
+
+function onEofChunk(stream, state) {
+  debug('onEofChunk');
+  if (state.ended) return;
+
+  if (state.decoder) {
+    var chunk = state.decoder.end();
+
+    if (chunk && chunk.length) {
+      state.buffer.push(chunk);
+      state.length += state.objectMode ? 1 : chunk.length;
+    }
+  }
+
+  state.ended = true;
+
+  if (state.sync) {
+    // if we are sync, wait until next tick to emit the data.
+    // Otherwise we risk emitting data in the flow()
+    // the readable code triggers during a read() call
+    emitReadable(stream);
+  } else {
+    // emit 'readable' now to make sure it gets picked up.
+    state.needReadable = false;
+
+    if (!state.emittedReadable) {
+      state.emittedReadable = true;
+      emitReadable_(stream);
+    }
+  }
+} // Don't emit readable right away in sync mode, because this can trigger
+// another read() call => stack overflow.  This way, it might trigger
+// a nextTick recursion warning, but that's not so bad.
+
+
+function emitReadable(stream) {
+  var state = stream._readableState;
+  debug('emitReadable', state.needReadable, state.emittedReadable);
+  state.needReadable = false;
+
+  if (!state.emittedReadable) {
+    debug('emitReadable', state.flowing);
+    state.emittedReadable = true;
+    process.nextTick(emitReadable_, stream);
+  }
+}
+
+function emitReadable_(stream) {
+  var state = stream._readableState;
+  debug('emitReadable_', state.destroyed, state.length, state.ended);
+
+  if (!state.destroyed && (state.length || state.ended)) {
+    stream.emit('readable');
+    state.emittedReadable = false;
+  } // The stream needs another readable event if
+  // 1. It is not flowing, as the flow mechanism will take
+  //    care of it.
+  // 2. It is not ended.
+  // 3. It is below the highWaterMark, so we can schedule
+  //    another readable later.
+
+
+  state.needReadable = !state.flowing && !state.ended && state.length <= state.highWaterMark;
+  flow(stream);
+} // at this point, the user has presumably seen the 'readable' event,
+// and called read() to consume some data.  that may have triggered
+// in turn another _read(n) call, in which case reading = true if
+// it's in progress.
+// However, if we're not ended, or reading, and the length < hwm,
+// then go ahead and try to read some more preemptively.
+
+
+function maybeReadMore(stream, state) {
+  if (!state.readingMore) {
+    state.readingMore = true;
+    process.nextTick(maybeReadMore_, stream, state);
+  }
+}
+
+function maybeReadMore_(stream, state) {
+  // Attempt to read more data if we should.
+  //
+  // The conditions for reading more data are (one of):
+  // - Not enough data buffered (state.length < state.highWaterMark). The loop
+  //   is responsible for filling the buffer with enough data if such data
+  //   is available. If highWaterMark is 0 and we are not in the flowing mode
+  //   we should _not_ attempt to buffer any extra data. We'll get more data
+  //   when the stream consumer calls read() instead.
+  // - No data in the buffer, and the stream is in flowing mode. In this mode
+  //   the loop below is responsible for ensuring read() is called. Failing to
+  //   call read here would abort the flow and there's no other mechanism for
+  //   continuing the flow if the stream consumer has just subscribed to the
+  //   'data' event.
+  //
+  // In addition to the above conditions to keep reading data, the following
+  // conditions prevent the data from being read:
+  // - The stream has ended (state.ended).
+  // - There is already a pending 'read' operation (state.reading). This is a
+  //   case where the the stream has called the implementation defined _read()
+  //   method, but they are processing the call asynchronously and have _not_
+  //   called push() with new data. In this case we skip performing more
+  //   read()s. The execution ends in this method again after the _read() ends
+  //   up calling push() with more data.
+  while (!state.reading && !state.ended && (state.length < state.highWaterMark || state.flowing && state.length === 0)) {
+    var len = state.length;
+    debug('maybeReadMore read 0');
+    stream.read(0);
+    if (len === state.length) // didn't get any data, stop spinning.
+      break;
+  }
+
+  state.readingMore = false;
+} // abstract method.  to be overridden in specific implementation classes.
+// call cb(er, data) where data is <= n in length.
+// for virtual (non-string, non-buffer) streams, "length" is somewhat
+// arbitrary, and perhaps not very meaningful.
+
+
+Readable.prototype._read = function (n) {
+  errorOrDestroy(this, new ERR_METHOD_NOT_IMPLEMENTED('_read()'));
+};
+
+Readable.prototype.pipe = function (dest, pipeOpts) {
+  var src = this;
+  var state = this._readableState;
+
+  switch (state.pipesCount) {
+    case 0:
+      state.pipes = dest;
+      break;
+
+    case 1:
+      state.pipes = [state.pipes, dest];
+      break;
+
+    default:
+      state.pipes.push(dest);
+      break;
+  }
+
+  state.pipesCount += 1;
+  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
+  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
+  var endFn = doEnd ? onend : unpipe;
+  if (state.endEmitted) process.nextTick(endFn);else src.once('end', endFn);
+  dest.on('unpipe', onunpipe);
+
+  function onunpipe(readable, unpipeInfo) {
+    debug('onunpipe');
+
+    if (readable === src) {
+      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
+        unpipeInfo.hasUnpiped = true;
+        cleanup();
+      }
+    }
+  }
+
+  function onend() {
+    debug('onend');
+    dest.end();
+  } // when the dest drains, it reduces the awaitDrain counter
+  // on the source.  This would be more elegant with a .once()
+  // handler in flow(), but adding and removing repeatedly is
+  // too slow.
+
+
+  var ondrain = pipeOnDrain(src);
+  dest.on('drain', ondrain);
+  var cleanedUp = false;
+
+  function cleanup() {
+    debug('cleanup'); // cleanup event handlers once the pipe is broken
+
+    dest.removeListener('close', onclose);
+    dest.removeListener('finish', onfinish);
+    dest.removeListener('drain', ondrain);
+    dest.removeListener('error', onerror);
+    dest.removeListener('unpipe', onunpipe);
+    src.removeListener('end', onend);
+    src.removeListener('end', unpipe);
+    src.removeListener('data', ondata);
+    cleanedUp = true; // if the reader is waiting for a drain event from this
+    // specific writer, then it would cause it to never start
+    // flowing again.
+    // So, if this is awaiting a drain, then we just call it now.
+    // If we don't know, then assume that we are waiting for one.
+
+    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
+  }
+
+  src.on('data', ondata);
+
+  function ondata(chunk) {
+    debug('ondata');
+    var ret = dest.write(chunk);
+    debug('dest.write', ret);
+
+    if (ret === false) {
+      // If the user unpiped during `dest.write()`, it is possible
+      // to get stuck in a permanently paused state if that write
+      // also returned false.
+      // => Check whether `dest` is still a piping destination.
+      if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
+        debug('false write response, pause', state.awaitDrain);
+        state.awaitDrain++;
+      }
+
+      src.pause();
+    }
+  } // if the dest has an error, then stop piping into it.
+  // however, don't suppress the throwing behavior for this.
+
+
+  function onerror(er) {
+    debug('onerror', er);
+    unpipe();
+    dest.removeListener('error', onerror);
+    if (EElistenerCount(dest, 'error') === 0) errorOrDestroy(dest, er);
+  } // Make sure our error handler is attached before userland ones.
+
+
+  prependListener(dest, 'error', onerror); // Both close and finish should trigger unpipe, but only once.
+
+  function onclose() {
+    dest.removeListener('finish', onfinish);
+    unpipe();
+  }
+
+  dest.once('close', onclose);
+
+  function onfinish() {
+    debug('onfinish');
+    dest.removeListener('close', onclose);
+    unpipe();
+  }
+
+  dest.once('finish', onfinish);
+
+  function unpipe() {
+    debug('unpipe');
+    src.unpipe(dest);
+  } // tell the dest that it's being piped to
+
+
+  dest.emit('pipe', src); // start the flow if it hasn't been started already.
+
+  if (!state.flowing) {
+    debug('pipe resume');
+    src.resume();
+  }
+
+  return dest;
+};
+
+function pipeOnDrain(src) {
+  return function pipeOnDrainFunctionResult() {
+    var state = src._readableState;
+    debug('pipeOnDrain', state.awaitDrain);
+    if (state.awaitDrain) state.awaitDrain--;
+
+    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
+      state.flowing = true;
+      flow(src);
+    }
+  };
+}
+
+Readable.prototype.unpipe = function (dest) {
+  var state = this._readableState;
+  var unpipeInfo = {
+    hasUnpiped: false
+  }; // if we're not piping anywhere, then do nothing.
+
+  if (state.pipesCount === 0) return this; // just one destination.  most common case.
+
+  if (state.pipesCount === 1) {
+    // passed in one, but it's not the right one.
+    if (dest && dest !== state.pipes) return this;
+    if (!dest) dest = state.pipes; // got a match.
+
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+    if (dest) dest.emit('unpipe', this, unpipeInfo);
+    return this;
+  } // slow case. multiple pipe destinations.
+
+
+  if (!dest) {
+    // remove all.
+    var dests = state.pipes;
+    var len = state.pipesCount;
+    state.pipes = null;
+    state.pipesCount = 0;
+    state.flowing = false;
+
+    for (var i = 0; i < len; i++) {
+      dests[i].emit('unpipe', this, {
+        hasUnpiped: false
+      });
+    }
+
+    return this;
+  } // try to find the right one.
+
+
+  var index = indexOf(state.pipes, dest);
+  if (index === -1) return this;
+  state.pipes.splice(index, 1);
+  state.pipesCount -= 1;
+  if (state.pipesCount === 1) state.pipes = state.pipes[0];
+  dest.emit('unpipe', this, unpipeInfo);
+  return this;
+}; // set up data events if they are asked for
+// Ensure readable listeners eventually get something
+
+
+Readable.prototype.on = function (ev, fn) {
+  var res = Stream.prototype.on.call(this, ev, fn);
+  var state = this._readableState;
+
+  if (ev === 'data') {
+    // update readableListening so that resume() may be a no-op
+    // a few lines down. This is needed to support once('readable').
+    state.readableListening = this.listenerCount('readable') > 0; // Try start flowing on next tick if stream isn't explicitly paused
+
+    if (state.flowing !== false) this.resume();
+  } else if (ev === 'readable') {
+    if (!state.endEmitted && !state.readableListening) {
+      state.readableListening = state.needReadable = true;
+      state.flowing = false;
+      state.emittedReadable = false;
+      debug('on readable', state.length, state.reading);
+
+      if (state.length) {
+        emitReadable(this);
+      } else if (!state.reading) {
+        process.nextTick(nReadingNextTick, this);
+      }
+    }
+  }
+
+  return res;
+};
+
+Readable.prototype.addListener = Readable.prototype.on;
+
+Readable.prototype.removeListener = function (ev, fn) {
+  var res = Stream.prototype.removeListener.call(this, ev, fn);
+
+  if (ev === 'readable') {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+};
+
+Readable.prototype.removeAllListeners = function (ev) {
+  var res = Stream.prototype.removeAllListeners.apply(this, arguments);
+
+  if (ev === 'readable' || ev === undefined) {
+    // We need to check if there is someone still listening to
+    // readable and reset the state. However this needs to happen
+    // after readable has been emitted but before I/O (nextTick) to
+    // support once('readable', fn) cycles. This means that calling
+    // resume within the same tick will have no
+    // effect.
+    process.nextTick(updateReadableListening, this);
+  }
+
+  return res;
+};
+
+function updateReadableListening(self) {
+  var state = self._readableState;
+  state.readableListening = self.listenerCount('readable') > 0;
+
+  if (state.resumeScheduled && !state.paused) {
+    // flowing needs to be set to true now, otherwise
+    // the upcoming resume will not flow.
+    state.flowing = true; // crude way to check if we should resume
+  } else if (self.listenerCount('data') > 0) {
+    self.resume();
+  }
+}
+
+function nReadingNextTick(self) {
+  debug('readable nexttick read 0');
+  self.read(0);
+} // pause() and resume() are remnants of the legacy readable stream API
+// If the user uses them, then switch into old mode.
+
+
+Readable.prototype.resume = function () {
+  var state = this._readableState;
+
+  if (!state.flowing) {
+    debug('resume'); // we flow only if there is no one listening
+    // for readable, but we still have to call
+    // resume()
+
+    state.flowing = !state.readableListening;
+    resume(this, state);
+  }
+
+  state.paused = false;
+  return this;
+};
+
+function resume(stream, state) {
+  if (!state.resumeScheduled) {
+    state.resumeScheduled = true;
+    process.nextTick(resume_, stream, state);
+  }
+}
+
+function resume_(stream, state) {
+  debug('resume', state.reading);
+
+  if (!state.reading) {
+    stream.read(0);
+  }
+
+  state.resumeScheduled = false;
+  stream.emit('resume');
+  flow(stream);
+  if (state.flowing && !state.reading) stream.read(0);
+}
+
+Readable.prototype.pause = function () {
+  debug('call pause flowing=%j', this._readableState.flowing);
+
+  if (this._readableState.flowing !== false) {
+    debug('pause');
+    this._readableState.flowing = false;
+    this.emit('pause');
+  }
+
+  this._readableState.paused = true;
+  return this;
+};
+
+function flow(stream) {
+  var state = stream._readableState;
+  debug('flow', state.flowing);
+
+  while (state.flowing && stream.read() !== null) {
+    ;
+  }
+} // wrap an old-style stream as the async data source.
+// This is *not* part of the readable stream interface.
+// It is an ugly unfortunate mess of history.
+
+
+Readable.prototype.wrap = function (stream) {
+  var _this = this;
+
+  var state = this._readableState;
+  var paused = false;
+  stream.on('end', function () {
+    debug('wrapped end');
+
+    if (state.decoder && !state.ended) {
+      var chunk = state.decoder.end();
+      if (chunk && chunk.length) _this.push(chunk);
+    }
+
+    _this.push(null);
+  });
+  stream.on('data', function (chunk) {
+    debug('wrapped data');
+    if (state.decoder) chunk = state.decoder.write(chunk); // don't skip over falsy values in objectMode
+
+    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
+
+    var ret = _this.push(chunk);
+
+    if (!ret) {
+      paused = true;
+      stream.pause();
+    }
+  }); // proxy all the other methods.
+  // important when wrapping filters and duplexes.
+
+  for (var i in stream) {
+    if (this[i] === undefined && typeof stream[i] === 'function') {
+      this[i] = function methodWrap(method) {
+        return function methodWrapReturnFunction() {
+          return stream[method].apply(stream, arguments);
+        };
+      }(i);
+    }
+  } // proxy certain important events.
+
+
+  for (var n = 0; n < kProxyEvents.length; n++) {
+    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
+  } // when we try to consume some more bytes, simply unpause the
+  // underlying stream.
+
+
+  this._read = function (n) {
+    debug('wrapped _read', n);
+
+    if (paused) {
+      paused = false;
+      stream.resume();
+    }
+  };
+
+  return this;
+};
+
+if (typeof Symbol === 'function') {
+  Readable.prototype[Symbol.asyncIterator] = function () {
+    if (createReadableStreamAsyncIterator === undefined) {
+      createReadableStreamAsyncIterator = require('./internal/streams/async_iterator');
+    }
+
+    return createReadableStreamAsyncIterator(this);
+  };
+}
+
+Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._readableState.highWaterMark;
+  }
+});
+Object.defineProperty(Readable.prototype, 'readableBuffer', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._readableState && this._readableState.buffer;
+  }
+});
+Object.defineProperty(Readable.prototype, 'readableFlowing', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._readableState.flowing;
+  },
+  set: function set(state) {
+    if (this._readableState) {
+      this._readableState.flowing = state;
+    }
+  }
+}); // exposed for testing purposes only.
+
+Readable._fromList = fromList;
+Object.defineProperty(Readable.prototype, 'readableLength', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._readableState.length;
+  }
+}); // Pluck off n bytes from an array of buffers.
+// Length is the combined lengths of all the buffers in the list.
+// This function is designed to be inlinable, so please take care when making
+// changes to the function body.
+
+function fromList(n, state) {
+  // nothing buffered
+  if (state.length === 0) return null;
+  var ret;
+  if (state.objectMode) ret = state.buffer.shift();else if (!n || n >= state.length) {
+    // read it all, truncate the list
+    if (state.decoder) ret = state.buffer.join('');else if (state.buffer.length === 1) ret = state.buffer.first();else ret = state.buffer.concat(state.length);
+    state.buffer.clear();
+  } else {
+    // read part of list
+    ret = state.buffer.consume(n, state.decoder);
+  }
+  return ret;
+}
+
+function endReadable(stream) {
+  var state = stream._readableState;
+  debug('endReadable', state.endEmitted);
+
+  if (!state.endEmitted) {
+    state.ended = true;
+    process.nextTick(endReadableNT, state, stream);
+  }
+}
+
+function endReadableNT(state, stream) {
+  debug('endReadableNT', state.endEmitted, state.length); // Check that we didn't get one last unshift.
+
+  if (!state.endEmitted && state.length === 0) {
+    state.endEmitted = true;
+    stream.readable = false;
+    stream.emit('end');
+
+    if (state.autoDestroy) {
+      // In case of duplex streams we need a way to detect
+      // if the writable side is ready for autoDestroy as well
+      var wState = stream._writableState;
+
+      if (!wState || wState.autoDestroy && wState.finished) {
+        stream.destroy();
+      }
+    }
+  }
+}
+
+if (typeof Symbol === 'function') {
+  Readable.from = function (iterable, opts) {
+    if (from === undefined) {
+      from = require('./internal/streams/from');
+    }
+
+    return from(Readable, iterable, opts);
+  };
+}
+
+function indexOf(xs, x) {
+  for (var i = 0, l = xs.length; i < l; i++) {
+    if (xs[i] === x) return i;
+  }
+
+  return -1;
+}
+}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../errors":93,"./_stream_duplex":94,"./internal/streams/async_iterator":99,"./internal/streams/buffer_list":100,"./internal/streams/destroy":101,"./internal/streams/from":103,"./internal/streams/state":105,"./internal/streams/stream":106,"_process":92,"buffer":76,"events":78,"inherits":81,"string_decoder/":110,"util":75}],97:[function(require,module,exports){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+// a transform stream is a readable/writable stream where you do
+// something with the data.  Sometimes it's called a "filter",
+// but that's not a great name for it, since that implies a thing where
+// some bits pass through, and others are simply ignored.  (That would
+// be a valid example of a transform, of course.)
+//
+// While the output is causally related to the input, it's not a
+// necessarily symmetric or synchronous transformation.  For example,
+// a zlib stream might take multiple plain-text writes(), and then
+// emit a single compressed chunk some time in the future.
+//
+// Here's how this works:
+//
+// The Transform stream has all the aspects of the readable and writable
+// stream classes.  When you write(chunk), that calls _write(chunk,cb)
+// internally, and returns false if there's a lot of pending writes
+// buffered up.  When you call read(), that calls _read(n) until
+// there's enough pending readable data buffered up.
+//
+// In a transform stream, the written data is placed in a buffer.  When
+// _read(n) is called, it transforms the queued up data, calling the
+// buffered _write cb's as it consumes chunks.  If consuming a single
+// written chunk would result in multiple output chunks, then the first
+// outputted bit calls the readcb, and subsequent chunks just go into
+// the read buffer, and will cause it to emit 'readable' if necessary.
+//
+// This way, back-pressure is actually determined by the reading side,
+// since _read has to be called to start processing a new chunk.  However,
+// a pathological inflate type of transform can cause excessive buffering
+// here.  For example, imagine a stream where every byte of input is
+// interpreted as an integer from 0-255, and then results in that many
+// bytes of output.  Writing the 4 bytes {ff,ff,ff,ff} would result in
+// 1kb of data being output.  In this case, you could write a very small
+// amount of input, and end up with a very large amount of output.  In
+// such a pathological inflating mechanism, there'd be no way to tell
+// the system to stop doing the transform.  A single 4MB write could
+// cause the system to run out of memory.
+//
+// However, even in such a pathological case, only a single written chunk
+// would be consumed, and then the rest would wait (un-transformed) until
+// the results of the previous transformed chunk were consumed.
+'use strict';
+
+module.exports = Transform;
+
+var _require$codes = require('../errors').codes,
+    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
+    ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
+    ERR_TRANSFORM_ALREADY_TRANSFORMING = _require$codes.ERR_TRANSFORM_ALREADY_TRANSFORMING,
+    ERR_TRANSFORM_WITH_LENGTH_0 = _require$codes.ERR_TRANSFORM_WITH_LENGTH_0;
+
+var Duplex = require('./_stream_duplex');
+
+require('inherits')(Transform, Duplex);
+
+function afterTransform(er, data) {
+  var ts = this._transformState;
+  ts.transforming = false;
+  var cb = ts.writecb;
+
+  if (cb === null) {
+    return this.emit('error', new ERR_MULTIPLE_CALLBACK());
+  }
+
+  ts.writechunk = null;
+  ts.writecb = null;
+  if (data != null) // single equals check for both `null` and `undefined`
+    this.push(data);
+  cb(er);
+  var rs = this._readableState;
+  rs.reading = false;
+
+  if (rs.needReadable || rs.length < rs.highWaterMark) {
+    this._read(rs.highWaterMark);
+  }
+}
+
+function Transform(options) {
+  if (!(this instanceof Transform)) return new Transform(options);
+  Duplex.call(this, options);
+  this._transformState = {
+    afterTransform: afterTransform.bind(this),
+    needTransform: false,
+    transforming: false,
+    writecb: null,
+    writechunk: null,
+    writeencoding: null
+  }; // start out asking for a readable event once data is transformed.
+
+  this._readableState.needReadable = true; // we have implemented the _read method, and done the other things
+  // that Readable wants before the first _read call, so unset the
+  // sync guard flag.
+
+  this._readableState.sync = false;
+
+  if (options) {
+    if (typeof options.transform === 'function') this._transform = options.transform;
+    if (typeof options.flush === 'function') this._flush = options.flush;
+  } // When the writable side finishes, then flush out anything remaining.
+
+
+  this.on('prefinish', prefinish);
+}
+
+function prefinish() {
+  var _this = this;
+
+  if (typeof this._flush === 'function' && !this._readableState.destroyed) {
+    this._flush(function (er, data) {
+      done(_this, er, data);
+    });
+  } else {
+    done(this, null, null);
+  }
+}
+
+Transform.prototype.push = function (chunk, encoding) {
+  this._transformState.needTransform = false;
+  return Duplex.prototype.push.call(this, chunk, encoding);
+}; // This is the part where you do stuff!
+// override this function in implementation classes.
+// 'chunk' is an input chunk.
+//
+// Call `push(newChunk)` to pass along transformed output
+// to the readable side.  You may call 'push' zero or more times.
+//
+// Call `cb(err)` when you are done with this chunk.  If you pass
+// an error, then that'll put the hurt on the whole operation.  If you
+// never call cb(), then you'll never get another chunk.
+
+
+Transform.prototype._transform = function (chunk, encoding, cb) {
+  cb(new ERR_METHOD_NOT_IMPLEMENTED('_transform()'));
+};
+
+Transform.prototype._write = function (chunk, encoding, cb) {
+  var ts = this._transformState;
+  ts.writecb = cb;
+  ts.writechunk = chunk;
+  ts.writeencoding = encoding;
+
+  if (!ts.transforming) {
+    var rs = this._readableState;
+    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
+  }
+}; // Doesn't matter what the args are here.
+// _transform does all the work.
+// That we got here means that the readable side wants more data.
+
+
+Transform.prototype._read = function (n) {
+  var ts = this._transformState;
+
+  if (ts.writechunk !== null && !ts.transforming) {
+    ts.transforming = true;
+
+    this._transform(ts.writechunk, ts.writeencoding, ts.afterTransform);
+  } else {
+    // mark that we need a transform, so that any data that comes in
+    // will get processed, now that we've asked for it.
+    ts.needTransform = true;
+  }
+};
+
+Transform.prototype._destroy = function (err, cb) {
+  Duplex.prototype._destroy.call(this, err, function (err2) {
+    cb(err2);
+  });
+};
+
+function done(stream, er, data) {
+  if (er) return stream.emit('error', er);
+  if (data != null) // single equals check for both `null` and `undefined`
+    stream.push(data); // TODO(BridgeAR): Write a test for these two error cases
+  // if there's nothing in the write buffer, then that means
+  // that nothing more will ever be provided
+
+  if (stream._writableState.length) throw new ERR_TRANSFORM_WITH_LENGTH_0();
+  if (stream._transformState.transforming) throw new ERR_TRANSFORM_ALREADY_TRANSFORMING();
+  return stream.push(null);
+}
+},{"../errors":93,"./_stream_duplex":94,"inherits":81}],98:[function(require,module,exports){
+(function (process,global){(function (){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+// A bit simpler than readable streams.
+// Implement an async ._write(chunk, encoding, cb), and it'll handle all
+// the drain event emission and buffering.
+'use strict';
+
+module.exports = Writable;
+/* <replacement> */
+
+function WriteReq(chunk, encoding, cb) {
+  this.chunk = chunk;
+  this.encoding = encoding;
+  this.callback = cb;
+  this.next = null;
+} // It seems a linked list but it is not
+// there will be only 2 of these for each stream
+
+
+function CorkedRequest(state) {
+  var _this = this;
+
+  this.next = null;
+  this.entry = null;
+
+  this.finish = function () {
+    onCorkedFinish(_this, state);
+  };
+}
+/* </replacement> */
+
+/*<replacement>*/
+
+
+var Duplex;
+/*</replacement>*/
+
+Writable.WritableState = WritableState;
+/*<replacement>*/
+
+var internalUtil = {
+  deprecate: require('util-deprecate')
+};
+/*</replacement>*/
+
+/*<replacement>*/
+
+var Stream = require('./internal/streams/stream');
+/*</replacement>*/
+
+
+var Buffer = require('buffer').Buffer;
+
+var OurUint8Array = global.Uint8Array || function () {};
+
+function _uint8ArrayToBuffer(chunk) {
+  return Buffer.from(chunk);
+}
+
+function _isUint8Array(obj) {
+  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
+}
+
+var destroyImpl = require('./internal/streams/destroy');
+
+var _require = require('./internal/streams/state'),
+    getHighWaterMark = _require.getHighWaterMark;
+
+var _require$codes = require('../errors').codes,
+    ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
+    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
+    ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
+    ERR_STREAM_CANNOT_PIPE = _require$codes.ERR_STREAM_CANNOT_PIPE,
+    ERR_STREAM_DESTROYED = _require$codes.ERR_STREAM_DESTROYED,
+    ERR_STREAM_NULL_VALUES = _require$codes.ERR_STREAM_NULL_VALUES,
+    ERR_STREAM_WRITE_AFTER_END = _require$codes.ERR_STREAM_WRITE_AFTER_END,
+    ERR_UNKNOWN_ENCODING = _require$codes.ERR_UNKNOWN_ENCODING;
+
+var errorOrDestroy = destroyImpl.errorOrDestroy;
+
+require('inherits')(Writable, Stream);
+
+function nop() {}
+
+function WritableState(options, stream, isDuplex) {
+  Duplex = Duplex || require('./_stream_duplex');
+  options = options || {}; // Duplex streams are both readable and writable, but share
+  // the same options object.
+  // However, some cases require setting options to different
+  // values for the readable and the writable sides of the duplex stream,
+  // e.g. options.readableObjectMode vs. options.writableObjectMode, etc.
+
+  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof Duplex; // object stream flag to indicate whether or not this stream
+  // contains buffers or objects.
+
+  this.objectMode = !!options.objectMode;
+  if (isDuplex) this.objectMode = this.objectMode || !!options.writableObjectMode; // the point at which write() starts returning false
+  // Note: 0 is a valid value, means that we always return false if
+  // the entire buffer is not flushed immediately on write()
+
+  this.highWaterMark = getHighWaterMark(this, options, 'writableHighWaterMark', isDuplex); // if _final has been called
+
+  this.finalCalled = false; // drain event flag.
+
+  this.needDrain = false; // at the start of calling end()
+
+  this.ending = false; // when end() has been called, and returned
+
+  this.ended = false; // when 'finish' is emitted
+
+  this.finished = false; // has it been destroyed
+
+  this.destroyed = false; // should we decode strings into buffers before passing to _write?
+  // this is here so that some node-core streams can optimize string
+  // handling at a lower level.
+
+  var noDecode = options.decodeStrings === false;
+  this.decodeStrings = !noDecode; // Crypto is kind of old and crusty.  Historically, its default string
+  // encoding is 'binary' so we have to make this configurable.
+  // Everything else in the universe uses 'utf8', though.
+
+  this.defaultEncoding = options.defaultEncoding || 'utf8'; // not an actual buffer we keep track of, but a measurement
+  // of how much we're waiting to get pushed to some underlying
+  // socket or file.
+
+  this.length = 0; // a flag to see when we're in the middle of a write.
+
+  this.writing = false; // when true all writes will be buffered until .uncork() call
+
+  this.corked = 0; // a flag to be able to tell if the onwrite cb is called immediately,
+  // or on a later tick.  We set this to true at first, because any
+  // actions that shouldn't happen until "later" should generally also
+  // not happen before the first write call.
+
+  this.sync = true; // a flag to know if we're processing previously buffered items, which
+  // may call the _write() callback in the same tick, so that we don't
+  // end up in an overlapped onwrite situation.
+
+  this.bufferProcessing = false; // the callback that's passed to _write(chunk,cb)
+
+  this.onwrite = function (er) {
+    onwrite(stream, er);
+  }; // the callback that the user supplies to write(chunk,encoding,cb)
+
+
+  this.writecb = null; // the amount that is being written when _write is called.
+
+  this.writelen = 0;
+  this.bufferedRequest = null;
+  this.lastBufferedRequest = null; // number of pending user-supplied write callbacks
+  // this must be 0 before 'finish' can be emitted
+
+  this.pendingcb = 0; // emit prefinish if the only thing we're waiting for is _write cbs
+  // This is relevant for synchronous Transform streams
+
+  this.prefinished = false; // True if the error was already emitted and should not be thrown again
+
+  this.errorEmitted = false; // Should close be emitted on destroy. Defaults to true.
+
+  this.emitClose = options.emitClose !== false; // Should .destroy() be called after 'finish' (and potentially 'end')
+
+  this.autoDestroy = !!options.autoDestroy; // count buffered requests
+
+  this.bufferedRequestCount = 0; // allocate the first CorkedRequest, there is always
+  // one allocated and free to use, and we maintain at most two
+
+  this.corkedRequestsFree = new CorkedRequest(this);
+}
+
+WritableState.prototype.getBuffer = function getBuffer() {
+  var current = this.bufferedRequest;
+  var out = [];
+
+  while (current) {
+    out.push(current);
+    current = current.next;
+  }
+
+  return out;
+};
+
+(function () {
+  try {
+    Object.defineProperty(WritableState.prototype, 'buffer', {
+      get: internalUtil.deprecate(function writableStateBufferGetter() {
+        return this.getBuffer();
+      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.', 'DEP0003')
+    });
+  } catch (_) {}
+})(); // Test _writableState for inheritance to account for Duplex streams,
+// whose prototype chain only points to Readable.
+
+
+var realHasInstance;
+
+if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
+  realHasInstance = Function.prototype[Symbol.hasInstance];
+  Object.defineProperty(Writable, Symbol.hasInstance, {
+    value: function value(object) {
+      if (realHasInstance.call(this, object)) return true;
+      if (this !== Writable) return false;
+      return object && object._writableState instanceof WritableState;
+    }
+  });
+} else {
+  realHasInstance = function realHasInstance(object) {
+    return object instanceof this;
+  };
+}
+
+function Writable(options) {
+  Duplex = Duplex || require('./_stream_duplex'); // Writable ctor is applied to Duplexes, too.
+  // `realHasInstance` is necessary because using plain `instanceof`
+  // would return false, as no `_writableState` property is attached.
+  // Trying to use the custom `instanceof` for Writable here will also break the
+  // Node.js LazyTransform implementation, which has a non-trivial getter for
+  // `_writableState` that would lead to infinite recursion.
+  // Checking for a Stream.Duplex instance is faster here instead of inside
+  // the WritableState constructor, at least with V8 6.5
+
+  var isDuplex = this instanceof Duplex;
+  if (!isDuplex && !realHasInstance.call(Writable, this)) return new Writable(options);
+  this._writableState = new WritableState(options, this, isDuplex); // legacy.
+
+  this.writable = true;
+
+  if (options) {
+    if (typeof options.write === 'function') this._write = options.write;
+    if (typeof options.writev === 'function') this._writev = options.writev;
+    if (typeof options.destroy === 'function') this._destroy = options.destroy;
+    if (typeof options.final === 'function') this._final = options.final;
+  }
+
+  Stream.call(this);
+} // Otherwise people can pipe Writable streams, which is just wrong.
+
+
+Writable.prototype.pipe = function () {
+  errorOrDestroy(this, new ERR_STREAM_CANNOT_PIPE());
+};
+
+function writeAfterEnd(stream, cb) {
+  var er = new ERR_STREAM_WRITE_AFTER_END(); // TODO: defer error events consistently everywhere, not just the cb
+
+  errorOrDestroy(stream, er);
+  process.nextTick(cb, er);
+} // Checks that a user-supplied chunk is valid, especially for the particular
+// mode the stream is in. Currently this means that `null` is never accepted
+// and undefined/non-string values are only allowed in object mode.
+
+
+function validChunk(stream, state, chunk, cb) {
+  var er;
+
+  if (chunk === null) {
+    er = new ERR_STREAM_NULL_VALUES();
+  } else if (typeof chunk !== 'string' && !state.objectMode) {
+    er = new ERR_INVALID_ARG_TYPE('chunk', ['string', 'Buffer'], chunk);
+  }
+
+  if (er) {
+    errorOrDestroy(stream, er);
+    process.nextTick(cb, er);
+    return false;
+  }
+
+  return true;
+}
+
+Writable.prototype.write = function (chunk, encoding, cb) {
+  var state = this._writableState;
+  var ret = false;
+
+  var isBuf = !state.objectMode && _isUint8Array(chunk);
+
+  if (isBuf && !Buffer.isBuffer(chunk)) {
+    chunk = _uint8ArrayToBuffer(chunk);
+  }
+
+  if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (isBuf) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
+  if (typeof cb !== 'function') cb = nop;
+  if (state.ending) writeAfterEnd(this, cb);else if (isBuf || validChunk(this, state, chunk, cb)) {
+    state.pendingcb++;
+    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
+  }
+  return ret;
+};
+
+Writable.prototype.cork = function () {
+  this._writableState.corked++;
+};
+
+Writable.prototype.uncork = function () {
+  var state = this._writableState;
+
+  if (state.corked) {
+    state.corked--;
+    if (!state.writing && !state.corked && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
+  }
+};
+
+Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
+  // node::ParseEncoding() requires lower case.
+  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
+  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new ERR_UNKNOWN_ENCODING(encoding);
+  this._writableState.defaultEncoding = encoding;
+  return this;
+};
+
+Object.defineProperty(Writable.prototype, 'writableBuffer', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState && this._writableState.getBuffer();
+  }
+});
+
+function decodeChunk(state, chunk, encoding) {
+  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
+    chunk = Buffer.from(chunk, encoding);
+  }
+
+  return chunk;
+}
+
+Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState.highWaterMark;
+  }
+}); // if we're already writing something, then just put this
+// in the queue, and wait our turn.  Otherwise, call _write
+// If we return false, then we need a drain event, so set that flag.
+
+function writeOrBuffer(stream, state, isBuf, chunk, encoding, cb) {
+  if (!isBuf) {
+    var newChunk = decodeChunk(state, chunk, encoding);
+
+    if (chunk !== newChunk) {
+      isBuf = true;
+      encoding = 'buffer';
+      chunk = newChunk;
+    }
+  }
+
+  var len = state.objectMode ? 1 : chunk.length;
+  state.length += len;
+  var ret = state.length < state.highWaterMark; // we must ensure that previous needDrain will not be reset to false.
+
+  if (!ret) state.needDrain = true;
+
+  if (state.writing || state.corked) {
+    var last = state.lastBufferedRequest;
+    state.lastBufferedRequest = {
+      chunk: chunk,
+      encoding: encoding,
+      isBuf: isBuf,
+      callback: cb,
+      next: null
+    };
+
+    if (last) {
+      last.next = state.lastBufferedRequest;
+    } else {
+      state.bufferedRequest = state.lastBufferedRequest;
+    }
+
+    state.bufferedRequestCount += 1;
+  } else {
+    doWrite(stream, state, false, len, chunk, encoding, cb);
+  }
+
+  return ret;
+}
+
+function doWrite(stream, state, writev, len, chunk, encoding, cb) {
+  state.writelen = len;
+  state.writecb = cb;
+  state.writing = true;
+  state.sync = true;
+  if (state.destroyed) state.onwrite(new ERR_STREAM_DESTROYED('write'));else if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
+  state.sync = false;
+}
+
+function onwriteError(stream, state, sync, er, cb) {
+  --state.pendingcb;
+
+  if (sync) {
+    // defer the callback if we are being called synchronously
+    // to avoid piling up things on the stack
+    process.nextTick(cb, er); // this can emit finish, and it will always happen
+    // after error
+
+    process.nextTick(finishMaybe, stream, state);
+    stream._writableState.errorEmitted = true;
+    errorOrDestroy(stream, er);
+  } else {
+    // the caller expect this to happen before if
+    // it is async
+    cb(er);
+    stream._writableState.errorEmitted = true;
+    errorOrDestroy(stream, er); // this can emit finish, but finish must
+    // always follow error
+
+    finishMaybe(stream, state);
+  }
+}
+
+function onwriteStateUpdate(state) {
+  state.writing = false;
+  state.writecb = null;
+  state.length -= state.writelen;
+  state.writelen = 0;
+}
+
+function onwrite(stream, er) {
+  var state = stream._writableState;
+  var sync = state.sync;
+  var cb = state.writecb;
+  if (typeof cb !== 'function') throw new ERR_MULTIPLE_CALLBACK();
+  onwriteStateUpdate(state);
+  if (er) onwriteError(stream, state, sync, er, cb);else {
+    // Check if we're actually ready to finish, but don't emit yet
+    var finished = needFinish(state) || stream.destroyed;
+
+    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
+      clearBuffer(stream, state);
+    }
+
+    if (sync) {
+      process.nextTick(afterWrite, stream, state, finished, cb);
+    } else {
+      afterWrite(stream, state, finished, cb);
+    }
+  }
+}
+
+function afterWrite(stream, state, finished, cb) {
+  if (!finished) onwriteDrain(stream, state);
+  state.pendingcb--;
+  cb();
+  finishMaybe(stream, state);
+} // Must force callback to be called on nextTick, so that we don't
+// emit 'drain' before the write() consumer gets the 'false' return
+// value, and has a chance to attach a 'drain' listener.
+
+
+function onwriteDrain(stream, state) {
+  if (state.length === 0 && state.needDrain) {
+    state.needDrain = false;
+    stream.emit('drain');
+  }
+} // if there's something in the buffer waiting, then process it
+
+
+function clearBuffer(stream, state) {
+  state.bufferProcessing = true;
+  var entry = state.bufferedRequest;
+
+  if (stream._writev && entry && entry.next) {
+    // Fast case, write everything using _writev()
+    var l = state.bufferedRequestCount;
+    var buffer = new Array(l);
+    var holder = state.corkedRequestsFree;
+    holder.entry = entry;
+    var count = 0;
+    var allBuffers = true;
+
+    while (entry) {
+      buffer[count] = entry;
+      if (!entry.isBuf) allBuffers = false;
+      entry = entry.next;
+      count += 1;
+    }
+
+    buffer.allBuffers = allBuffers;
+    doWrite(stream, state, true, state.length, buffer, '', holder.finish); // doWrite is almost always async, defer these to save a bit of time
+    // as the hot path ends with doWrite
+
+    state.pendingcb++;
+    state.lastBufferedRequest = null;
+
+    if (holder.next) {
+      state.corkedRequestsFree = holder.next;
+      holder.next = null;
+    } else {
+      state.corkedRequestsFree = new CorkedRequest(state);
+    }
+
+    state.bufferedRequestCount = 0;
+  } else {
+    // Slow case, write chunks one-by-one
+    while (entry) {
+      var chunk = entry.chunk;
+      var encoding = entry.encoding;
+      var cb = entry.callback;
+      var len = state.objectMode ? 1 : chunk.length;
+      doWrite(stream, state, false, len, chunk, encoding, cb);
+      entry = entry.next;
+      state.bufferedRequestCount--; // if we didn't call the onwrite immediately, then
+      // it means that we need to wait until it does.
+      // also, that means that the chunk and cb are currently
+      // being processed, so move the buffer counter past them.
+
+      if (state.writing) {
+        break;
+      }
+    }
+
+    if (entry === null) state.lastBufferedRequest = null;
+  }
+
+  state.bufferedRequest = entry;
+  state.bufferProcessing = false;
+}
+
+Writable.prototype._write = function (chunk, encoding, cb) {
+  cb(new ERR_METHOD_NOT_IMPLEMENTED('_write()'));
+};
+
+Writable.prototype._writev = null;
+
+Writable.prototype.end = function (chunk, encoding, cb) {
+  var state = this._writableState;
+
+  if (typeof chunk === 'function') {
+    cb = chunk;
+    chunk = null;
+    encoding = null;
+  } else if (typeof encoding === 'function') {
+    cb = encoding;
+    encoding = null;
+  }
+
+  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding); // .end() fully uncorks
+
+  if (state.corked) {
+    state.corked = 1;
+    this.uncork();
+  } // ignore unnecessary end() calls.
+
+
+  if (!state.ending) endWritable(this, state, cb);
+  return this;
+};
+
+Object.defineProperty(Writable.prototype, 'writableLength', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    return this._writableState.length;
+  }
+});
+
+function needFinish(state) {
+  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
+}
+
+function callFinal(stream, state) {
+  stream._final(function (err) {
+    state.pendingcb--;
+
+    if (err) {
+      errorOrDestroy(stream, err);
+    }
+
+    state.prefinished = true;
+    stream.emit('prefinish');
+    finishMaybe(stream, state);
+  });
+}
+
+function prefinish(stream, state) {
+  if (!state.prefinished && !state.finalCalled) {
+    if (typeof stream._final === 'function' && !state.destroyed) {
+      state.pendingcb++;
+      state.finalCalled = true;
+      process.nextTick(callFinal, stream, state);
+    } else {
+      state.prefinished = true;
+      stream.emit('prefinish');
+    }
+  }
+}
+
+function finishMaybe(stream, state) {
+  var need = needFinish(state);
+
+  if (need) {
+    prefinish(stream, state);
+
+    if (state.pendingcb === 0) {
+      state.finished = true;
+      stream.emit('finish');
+
+      if (state.autoDestroy) {
+        // In case of duplex streams we need a way to detect
+        // if the readable side is ready for autoDestroy as well
+        var rState = stream._readableState;
+
+        if (!rState || rState.autoDestroy && rState.endEmitted) {
+          stream.destroy();
+        }
+      }
+    }
+  }
+
+  return need;
+}
+
+function endWritable(stream, state, cb) {
+  state.ending = true;
+  finishMaybe(stream, state);
+
+  if (cb) {
+    if (state.finished) process.nextTick(cb);else stream.once('finish', cb);
+  }
+
+  state.ended = true;
+  stream.writable = false;
+}
+
+function onCorkedFinish(corkReq, state, err) {
+  var entry = corkReq.entry;
+  corkReq.entry = null;
+
+  while (entry) {
+    var cb = entry.callback;
+    state.pendingcb--;
+    cb(err);
+    entry = entry.next;
+  } // reuse the free corkReq.
+
+
+  state.corkedRequestsFree.next = corkReq;
+}
+
+Object.defineProperty(Writable.prototype, 'destroyed', {
+  // making it explicit this property is not enumerable
+  // because otherwise some prototype manipulation in
+  // userland will fail
+  enumerable: false,
+  get: function get() {
+    if (this._writableState === undefined) {
+      return false;
+    }
+
+    return this._writableState.destroyed;
+  },
+  set: function set(value) {
+    // we ignore the value if the stream
+    // has not been initialized yet
+    if (!this._writableState) {
+      return;
+    } // backward compatibility, the user is explicitly
+    // managing destroyed
+
+
+    this._writableState.destroyed = value;
+  }
+});
+Writable.prototype.destroy = destroyImpl.destroy;
+Writable.prototype._undestroy = destroyImpl.undestroy;
+
+Writable.prototype._destroy = function (err, cb) {
+  cb(err);
+};
+}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../errors":93,"./_stream_duplex":94,"./internal/streams/destroy":101,"./internal/streams/state":105,"./internal/streams/stream":106,"_process":92,"buffer":76,"inherits":81,"util-deprecate":112}],99:[function(require,module,exports){
+(function (process){(function (){
+'use strict';
+
+var _Object$setPrototypeO;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var finished = require('./end-of-stream');
+
+var kLastResolve = Symbol('lastResolve');
+var kLastReject = Symbol('lastReject');
+var kError = Symbol('error');
+var kEnded = Symbol('ended');
+var kLastPromise = Symbol('lastPromise');
+var kHandlePromise = Symbol('handlePromise');
+var kStream = Symbol('stream');
+
+function createIterResult(value, done) {
+  return {
+    value: value,
+    done: done
+  };
+}
+
+function readAndResolve(iter) {
+  var resolve = iter[kLastResolve];
+
+  if (resolve !== null) {
+    var data = iter[kStream].read(); // we defer if data is null
+    // we can be expecting either 'end' or
+    // 'error'
+
+    if (data !== null) {
+      iter[kLastPromise] = null;
+      iter[kLastResolve] = null;
+      iter[kLastReject] = null;
+      resolve(createIterResult(data, false));
+    }
+  }
+}
+
+function onReadable(iter) {
+  // we wait for the next tick, because it might
+  // emit an error with process.nextTick
+  process.nextTick(readAndResolve, iter);
+}
+
+function wrapForNext(lastPromise, iter) {
+  return function (resolve, reject) {
+    lastPromise.then(function () {
+      if (iter[kEnded]) {
+        resolve(createIterResult(undefined, true));
+        return;
+      }
+
+      iter[kHandlePromise](resolve, reject);
+    }, reject);
+  };
+}
+
+var AsyncIteratorPrototype = Object.getPrototypeOf(function () {});
+var ReadableStreamAsyncIteratorPrototype = Object.setPrototypeOf((_Object$setPrototypeO = {
+  get stream() {
+    return this[kStream];
+  },
+
+  next: function next() {
+    var _this = this;
+
+    // if we have detected an error in the meanwhile
+    // reject straight away
+    var error = this[kError];
+
+    if (error !== null) {
+      return Promise.reject(error);
+    }
+
+    if (this[kEnded]) {
+      return Promise.resolve(createIterResult(undefined, true));
+    }
+
+    if (this[kStream].destroyed) {
+      // We need to defer via nextTick because if .destroy(err) is
+      // called, the error will be emitted via nextTick, and
+      // we cannot guarantee that there is no error lingering around
+      // waiting to be emitted.
+      return new Promise(function (resolve, reject) {
+        process.nextTick(function () {
+          if (_this[kError]) {
+            reject(_this[kError]);
+          } else {
+            resolve(createIterResult(undefined, true));
+          }
+        });
+      });
+    } // if we have multiple next() calls
+    // we will wait for the previous Promise to finish
+    // this logic is optimized to support for await loops,
+    // where next() is only called once at a time
+
+
+    var lastPromise = this[kLastPromise];
+    var promise;
+
+    if (lastPromise) {
+      promise = new Promise(wrapForNext(lastPromise, this));
+    } else {
+      // fast path needed to support multiple this.push()
+      // without triggering the next() queue
+      var data = this[kStream].read();
+
+      if (data !== null) {
+        return Promise.resolve(createIterResult(data, false));
+      }
+
+      promise = new Promise(this[kHandlePromise]);
+    }
+
+    this[kLastPromise] = promise;
+    return promise;
+  }
+}, _defineProperty(_Object$setPrototypeO, Symbol.asyncIterator, function () {
+  return this;
+}), _defineProperty(_Object$setPrototypeO, "return", function _return() {
+  var _this2 = this;
+
+  // destroy(err, cb) is a private API
+  // we can guarantee we have that here, because we control the
+  // Readable class this is attached to
+  return new Promise(function (resolve, reject) {
+    _this2[kStream].destroy(null, function (err) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(createIterResult(undefined, true));
+    });
+  });
+}), _Object$setPrototypeO), AsyncIteratorPrototype);
+
+var createReadableStreamAsyncIterator = function createReadableStreamAsyncIterator(stream) {
+  var _Object$create;
+
+  var iterator = Object.create(ReadableStreamAsyncIteratorPrototype, (_Object$create = {}, _defineProperty(_Object$create, kStream, {
+    value: stream,
+    writable: true
+  }), _defineProperty(_Object$create, kLastResolve, {
+    value: null,
+    writable: true
+  }), _defineProperty(_Object$create, kLastReject, {
+    value: null,
+    writable: true
+  }), _defineProperty(_Object$create, kError, {
+    value: null,
+    writable: true
+  }), _defineProperty(_Object$create, kEnded, {
+    value: stream._readableState.endEmitted,
+    writable: true
+  }), _defineProperty(_Object$create, kHandlePromise, {
+    value: function value(resolve, reject) {
+      var data = iterator[kStream].read();
+
+      if (data) {
+        iterator[kLastPromise] = null;
+        iterator[kLastResolve] = null;
+        iterator[kLastReject] = null;
+        resolve(createIterResult(data, false));
+      } else {
+        iterator[kLastResolve] = resolve;
+        iterator[kLastReject] = reject;
+      }
+    },
+    writable: true
+  }), _Object$create));
+  iterator[kLastPromise] = null;
+  finished(stream, function (err) {
+    if (err && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
+      var reject = iterator[kLastReject]; // reject if we are waiting for data in the Promise
+      // returned by next() and store the error
+
+      if (reject !== null) {
+        iterator[kLastPromise] = null;
+        iterator[kLastResolve] = null;
+        iterator[kLastReject] = null;
+        reject(err);
+      }
+
+      iterator[kError] = err;
+      return;
+    }
+
+    var resolve = iterator[kLastResolve];
+
+    if (resolve !== null) {
+      iterator[kLastPromise] = null;
+      iterator[kLastResolve] = null;
+      iterator[kLastReject] = null;
+      resolve(createIterResult(undefined, true));
+    }
+
+    iterator[kEnded] = true;
+  });
+  stream.on('readable', onReadable.bind(null, iterator));
+  return iterator;
+};
+
+module.exports = createReadableStreamAsyncIterator;
+}).call(this)}).call(this,require('_process'))
+},{"./end-of-stream":102,"_process":92}],100:[function(require,module,exports){
+'use strict';
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var _require = require('buffer'),
+    Buffer = _require.Buffer;
+
+var _require2 = require('util'),
+    inspect = _require2.inspect;
+
+var custom = inspect && inspect.custom || 'inspect';
+
+function copyBuffer(src, target, offset) {
+  Buffer.prototype.copy.call(src, target, offset);
+}
+
+module.exports =
+/*#__PURE__*/
+function () {
+  function BufferList() {
+    _classCallCheck(this, BufferList);
+
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  _createClass(BufferList, [{
+    key: "push",
+    value: function push(v) {
+      var entry = {
+        data: v,
+        next: null
+      };
+      if (this.length > 0) this.tail.next = entry;else this.head = entry;
+      this.tail = entry;
+      ++this.length;
+    }
+  }, {
+    key: "unshift",
+    value: function unshift(v) {
+      var entry = {
+        data: v,
+        next: this.head
+      };
+      if (this.length === 0) this.tail = entry;
+      this.head = entry;
+      ++this.length;
+    }
+  }, {
+    key: "shift",
+    value: function shift() {
+      if (this.length === 0) return;
+      var ret = this.head.data;
+      if (this.length === 1) this.head = this.tail = null;else this.head = this.head.next;
+      --this.length;
+      return ret;
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      this.head = this.tail = null;
+      this.length = 0;
+    }
+  }, {
+    key: "join",
+    value: function join(s) {
+      if (this.length === 0) return '';
+      var p = this.head;
+      var ret = '' + p.data;
+
+      while (p = p.next) {
+        ret += s + p.data;
+      }
+
+      return ret;
+    }
+  }, {
+    key: "concat",
+    value: function concat(n) {
+      if (this.length === 0) return Buffer.alloc(0);
+      var ret = Buffer.allocUnsafe(n >>> 0);
+      var p = this.head;
+      var i = 0;
+
+      while (p) {
+        copyBuffer(p.data, ret, i);
+        i += p.data.length;
+        p = p.next;
+      }
+
+      return ret;
+    } // Consumes a specified amount of bytes or characters from the buffered data.
+
+  }, {
+    key: "consume",
+    value: function consume(n, hasStrings) {
+      var ret;
+
+      if (n < this.head.data.length) {
+        // `slice` is the same for buffers and strings.
+        ret = this.head.data.slice(0, n);
+        this.head.data = this.head.data.slice(n);
+      } else if (n === this.head.data.length) {
+        // First chunk is a perfect match.
+        ret = this.shift();
+      } else {
+        // Result spans more than one buffer.
+        ret = hasStrings ? this._getString(n) : this._getBuffer(n);
+      }
+
+      return ret;
+    }
+  }, {
+    key: "first",
+    value: function first() {
+      return this.head.data;
+    } // Consumes a specified amount of characters from the buffered data.
+
+  }, {
+    key: "_getString",
+    value: function _getString(n) {
+      var p = this.head;
+      var c = 1;
+      var ret = p.data;
+      n -= ret.length;
+
+      while (p = p.next) {
+        var str = p.data;
+        var nb = n > str.length ? str.length : n;
+        if (nb === str.length) ret += str;else ret += str.slice(0, n);
+        n -= nb;
+
+        if (n === 0) {
+          if (nb === str.length) {
+            ++c;
+            if (p.next) this.head = p.next;else this.head = this.tail = null;
+          } else {
+            this.head = p;
+            p.data = str.slice(nb);
+          }
+
+          break;
+        }
+
+        ++c;
+      }
+
+      this.length -= c;
+      return ret;
+    } // Consumes a specified amount of bytes from the buffered data.
+
+  }, {
+    key: "_getBuffer",
+    value: function _getBuffer(n) {
+      var ret = Buffer.allocUnsafe(n);
+      var p = this.head;
+      var c = 1;
+      p.data.copy(ret);
+      n -= p.data.length;
+
+      while (p = p.next) {
+        var buf = p.data;
+        var nb = n > buf.length ? buf.length : n;
+        buf.copy(ret, ret.length - n, 0, nb);
+        n -= nb;
+
+        if (n === 0) {
+          if (nb === buf.length) {
+            ++c;
+            if (p.next) this.head = p.next;else this.head = this.tail = null;
+          } else {
+            this.head = p;
+            p.data = buf.slice(nb);
+          }
+
+          break;
+        }
+
+        ++c;
+      }
+
+      this.length -= c;
+      return ret;
+    } // Make sure the linked list only shows the minimal necessary information.
+
+  }, {
+    key: custom,
+    value: function value(_, options) {
+      return inspect(this, _objectSpread({}, options, {
+        // Only inspect one level.
+        depth: 0,
+        // It should not recurse.
+        customInspect: false
+      }));
+    }
+  }]);
+
+  return BufferList;
+}();
+},{"buffer":76,"util":75}],101:[function(require,module,exports){
+(function (process){(function (){
+'use strict'; // undocumented cb() API, needed for core, not for public API
+
+function destroy(err, cb) {
+  var _this = this;
+
+  var readableDestroyed = this._readableState && this._readableState.destroyed;
+  var writableDestroyed = this._writableState && this._writableState.destroyed;
+
+  if (readableDestroyed || writableDestroyed) {
+    if (cb) {
+      cb(err);
+    } else if (err) {
+      if (!this._writableState) {
+        process.nextTick(emitErrorNT, this, err);
+      } else if (!this._writableState.errorEmitted) {
+        this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorNT, this, err);
+      }
+    }
+
+    return this;
+  } // we set destroyed to true before firing error callbacks in order
+  // to make it re-entrance safe in case destroy() is called within callbacks
+
+
+  if (this._readableState) {
+    this._readableState.destroyed = true;
+  } // if this is a duplex stream mark the writable part as destroyed as well
+
+
+  if (this._writableState) {
+    this._writableState.destroyed = true;
+  }
+
+  this._destroy(err || null, function (err) {
+    if (!cb && err) {
+      if (!_this._writableState) {
+        process.nextTick(emitErrorAndCloseNT, _this, err);
+      } else if (!_this._writableState.errorEmitted) {
+        _this._writableState.errorEmitted = true;
+        process.nextTick(emitErrorAndCloseNT, _this, err);
+      } else {
+        process.nextTick(emitCloseNT, _this);
+      }
+    } else if (cb) {
+      process.nextTick(emitCloseNT, _this);
+      cb(err);
+    } else {
+      process.nextTick(emitCloseNT, _this);
+    }
+  });
+
+  return this;
+}
+
+function emitErrorAndCloseNT(self, err) {
+  emitErrorNT(self, err);
+  emitCloseNT(self);
+}
+
+function emitCloseNT(self) {
+  if (self._writableState && !self._writableState.emitClose) return;
+  if (self._readableState && !self._readableState.emitClose) return;
+  self.emit('close');
+}
+
+function undestroy() {
+  if (this._readableState) {
+    this._readableState.destroyed = false;
+    this._readableState.reading = false;
+    this._readableState.ended = false;
+    this._readableState.endEmitted = false;
+  }
+
+  if (this._writableState) {
+    this._writableState.destroyed = false;
+    this._writableState.ended = false;
+    this._writableState.ending = false;
+    this._writableState.finalCalled = false;
+    this._writableState.prefinished = false;
+    this._writableState.finished = false;
+    this._writableState.errorEmitted = false;
+  }
+}
+
+function emitErrorNT(self, err) {
+  self.emit('error', err);
+}
+
+function errorOrDestroy(stream, err) {
+  // We have tests that rely on errors being emitted
+  // in the same tick, so changing this is semver major.
+  // For now when you opt-in to autoDestroy we allow
+  // the error to be emitted nextTick. In a future
+  // semver major update we should change the default to this.
+  var rState = stream._readableState;
+  var wState = stream._writableState;
+  if (rState && rState.autoDestroy || wState && wState.autoDestroy) stream.destroy(err);else stream.emit('error', err);
+}
+
+module.exports = {
+  destroy: destroy,
+  undestroy: undestroy,
+  errorOrDestroy: errorOrDestroy
+};
+}).call(this)}).call(this,require('_process'))
+},{"_process":92}],102:[function(require,module,exports){
+// Ported from https://github.com/mafintosh/end-of-stream with
+// permission from the author, Mathias Buus (@mafintosh).
+'use strict';
+
+var ERR_STREAM_PREMATURE_CLOSE = require('../../../errors').codes.ERR_STREAM_PREMATURE_CLOSE;
+
+function once(callback) {
+  var called = false;
+  return function () {
+    if (called) return;
+    called = true;
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    callback.apply(this, args);
+  };
+}
+
+function noop() {}
+
+function isRequest(stream) {
+  return stream.setHeader && typeof stream.abort === 'function';
+}
+
+function eos(stream, opts, callback) {
+  if (typeof opts === 'function') return eos(stream, null, opts);
+  if (!opts) opts = {};
+  callback = once(callback || noop);
+  var readable = opts.readable || opts.readable !== false && stream.readable;
+  var writable = opts.writable || opts.writable !== false && stream.writable;
+
+  var onlegacyfinish = function onlegacyfinish() {
+    if (!stream.writable) onfinish();
+  };
+
+  var writableEnded = stream._writableState && stream._writableState.finished;
+
+  var onfinish = function onfinish() {
+    writable = false;
+    writableEnded = true;
+    if (!readable) callback.call(stream);
+  };
+
+  var readableEnded = stream._readableState && stream._readableState.endEmitted;
+
+  var onend = function onend() {
+    readable = false;
+    readableEnded = true;
+    if (!writable) callback.call(stream);
+  };
+
+  var onerror = function onerror(err) {
+    callback.call(stream, err);
+  };
+
+  var onclose = function onclose() {
+    var err;
+
+    if (readable && !readableEnded) {
+      if (!stream._readableState || !stream._readableState.ended) err = new ERR_STREAM_PREMATURE_CLOSE();
+      return callback.call(stream, err);
+    }
+
+    if (writable && !writableEnded) {
+      if (!stream._writableState || !stream._writableState.ended) err = new ERR_STREAM_PREMATURE_CLOSE();
+      return callback.call(stream, err);
+    }
+  };
+
+  var onrequest = function onrequest() {
+    stream.req.on('finish', onfinish);
+  };
+
+  if (isRequest(stream)) {
+    stream.on('complete', onfinish);
+    stream.on('abort', onclose);
+    if (stream.req) onrequest();else stream.on('request', onrequest);
+  } else if (writable && !stream._writableState) {
+    // legacy streams
+    stream.on('end', onlegacyfinish);
+    stream.on('close', onlegacyfinish);
+  }
+
+  stream.on('end', onend);
+  stream.on('finish', onfinish);
+  if (opts.error !== false) stream.on('error', onerror);
+  stream.on('close', onclose);
+  return function () {
+    stream.removeListener('complete', onfinish);
+    stream.removeListener('abort', onclose);
+    stream.removeListener('request', onrequest);
+    if (stream.req) stream.req.removeListener('finish', onfinish);
+    stream.removeListener('end', onlegacyfinish);
+    stream.removeListener('close', onlegacyfinish);
+    stream.removeListener('finish', onfinish);
+    stream.removeListener('end', onend);
+    stream.removeListener('error', onerror);
+    stream.removeListener('close', onclose);
+  };
+}
+
+module.exports = eos;
+},{"../../../errors":93}],103:[function(require,module,exports){
+module.exports = function () {
+  throw new Error('Readable.from is not available in the browser')
+};
+
+},{}],104:[function(require,module,exports){
+// Ported from https://github.com/mafintosh/pump with
+// permission from the author, Mathias Buus (@mafintosh).
+'use strict';
+
+var eos;
+
+function once(callback) {
+  var called = false;
+  return function () {
+    if (called) return;
+    called = true;
+    callback.apply(void 0, arguments);
+  };
+}
+
+var _require$codes = require('../../../errors').codes,
+    ERR_MISSING_ARGS = _require$codes.ERR_MISSING_ARGS,
+    ERR_STREAM_DESTROYED = _require$codes.ERR_STREAM_DESTROYED;
+
+function noop(err) {
+  // Rethrow the error if it exists to avoid swallowing it
+  if (err) throw err;
+}
+
+function isRequest(stream) {
+  return stream.setHeader && typeof stream.abort === 'function';
+}
+
+function destroyer(stream, reading, writing, callback) {
+  callback = once(callback);
+  var closed = false;
+  stream.on('close', function () {
+    closed = true;
+  });
+  if (eos === undefined) eos = require('./end-of-stream');
+  eos(stream, {
+    readable: reading,
+    writable: writing
+  }, function (err) {
+    if (err) return callback(err);
+    closed = true;
+    callback();
+  });
+  var destroyed = false;
+  return function (err) {
+    if (closed) return;
+    if (destroyed) return;
+    destroyed = true; // request.destroy just do .end - .abort is what we want
+
+    if (isRequest(stream)) return stream.abort();
+    if (typeof stream.destroy === 'function') return stream.destroy();
+    callback(err || new ERR_STREAM_DESTROYED('pipe'));
+  };
+}
+
+function call(fn) {
+  fn();
+}
+
+function pipe(from, to) {
+  return from.pipe(to);
+}
+
+function popCallback(streams) {
+  if (!streams.length) return noop;
+  if (typeof streams[streams.length - 1] !== 'function') return noop;
+  return streams.pop();
+}
+
+function pipeline() {
+  for (var _len = arguments.length, streams = new Array(_len), _key = 0; _key < _len; _key++) {
+    streams[_key] = arguments[_key];
+  }
+
+  var callback = popCallback(streams);
+  if (Array.isArray(streams[0])) streams = streams[0];
+
+  if (streams.length < 2) {
+    throw new ERR_MISSING_ARGS('streams');
+  }
+
+  var error;
+  var destroys = streams.map(function (stream, i) {
+    var reading = i < streams.length - 1;
+    var writing = i > 0;
+    return destroyer(stream, reading, writing, function (err) {
+      if (!error) error = err;
+      if (err) destroys.forEach(call);
+      if (reading) return;
+      destroys.forEach(call);
+      callback(error);
+    });
+  });
+  return streams.reduce(pipe);
+}
+
+module.exports = pipeline;
+},{"../../../errors":93,"./end-of-stream":102}],105:[function(require,module,exports){
+'use strict';
+
+var ERR_INVALID_OPT_VALUE = require('../../../errors').codes.ERR_INVALID_OPT_VALUE;
+
+function highWaterMarkFrom(options, isDuplex, duplexKey) {
+  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null;
+}
+
+function getHighWaterMark(state, options, duplexKey, isDuplex) {
+  var hwm = highWaterMarkFrom(options, isDuplex, duplexKey);
+
+  if (hwm != null) {
+    if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
+      var name = isDuplex ? duplexKey : 'highWaterMark';
+      throw new ERR_INVALID_OPT_VALUE(name, hwm);
+    }
+
+    return Math.floor(hwm);
+  } // Default value
+
+
+  return state.objectMode ? 16 : 16 * 1024;
+}
+
+module.exports = {
+  getHighWaterMark: getHighWaterMark
+};
+},{"../../../errors":93}],106:[function(require,module,exports){
+module.exports = require('events').EventEmitter;
+
+},{"events":78}],107:[function(require,module,exports){
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
@@ -29651,7 +32850,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":75}],93:[function(require,module,exports){
+},{"buffer":76}],108:[function(require,module,exports){
 (function (Buffer){(function (){
 ;(function (sax) { // wrapper for non-node envs
   sax.parser = function (strict, opt) { return new SAXParser(strict, opt) }
@@ -31220,7 +34419,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 })(typeof exports === 'undefined' ? this.sax = {} : exports)
 
 }).call(this)}).call(this,require("buffer").Buffer)
-},{"buffer":75,"stream":94,"string_decoder":109}],94:[function(require,module,exports){
+},{"buffer":76,"stream":109,"string_decoder":110}],109:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -31351,3115 +34550,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":77,"inherits":80,"readable-stream/lib/_stream_duplex.js":96,"readable-stream/lib/_stream_passthrough.js":97,"readable-stream/lib/_stream_readable.js":98,"readable-stream/lib/_stream_transform.js":99,"readable-stream/lib/_stream_writable.js":100,"readable-stream/lib/internal/streams/end-of-stream.js":104,"readable-stream/lib/internal/streams/pipeline.js":106}],95:[function(require,module,exports){
-'use strict';
-
-function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
-
-var codes = {};
-
-function createErrorType(code, message, Base) {
-  if (!Base) {
-    Base = Error;
-  }
-
-  function getMessage(arg1, arg2, arg3) {
-    if (typeof message === 'string') {
-      return message;
-    } else {
-      return message(arg1, arg2, arg3);
-    }
-  }
-
-  var NodeError =
-  /*#__PURE__*/
-  function (_Base) {
-    _inheritsLoose(NodeError, _Base);
-
-    function NodeError(arg1, arg2, arg3) {
-      return _Base.call(this, getMessage(arg1, arg2, arg3)) || this;
-    }
-
-    return NodeError;
-  }(Base);
-
-  NodeError.prototype.name = Base.name;
-  NodeError.prototype.code = code;
-  codes[code] = NodeError;
-} // https://github.com/nodejs/node/blob/v10.8.0/lib/internal/errors.js
-
-
-function oneOf(expected, thing) {
-  if (Array.isArray(expected)) {
-    var len = expected.length;
-    expected = expected.map(function (i) {
-      return String(i);
-    });
-
-    if (len > 2) {
-      return "one of ".concat(thing, " ").concat(expected.slice(0, len - 1).join(', '), ", or ") + expected[len - 1];
-    } else if (len === 2) {
-      return "one of ".concat(thing, " ").concat(expected[0], " or ").concat(expected[1]);
-    } else {
-      return "of ".concat(thing, " ").concat(expected[0]);
-    }
-  } else {
-    return "of ".concat(thing, " ").concat(String(expected));
-  }
-} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith
-
-
-function startsWith(str, search, pos) {
-  return str.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
-} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
-
-
-function endsWith(str, search, this_len) {
-  if (this_len === undefined || this_len > str.length) {
-    this_len = str.length;
-  }
-
-  return str.substring(this_len - search.length, this_len) === search;
-} // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
-
-
-function includes(str, search, start) {
-  if (typeof start !== 'number') {
-    start = 0;
-  }
-
-  if (start + search.length > str.length) {
-    return false;
-  } else {
-    return str.indexOf(search, start) !== -1;
-  }
-}
-
-createErrorType('ERR_INVALID_OPT_VALUE', function (name, value) {
-  return 'The value "' + value + '" is invalid for option "' + name + '"';
-}, TypeError);
-createErrorType('ERR_INVALID_ARG_TYPE', function (name, expected, actual) {
-  // determiner: 'must be' or 'must not be'
-  var determiner;
-
-  if (typeof expected === 'string' && startsWith(expected, 'not ')) {
-    determiner = 'must not be';
-    expected = expected.replace(/^not /, '');
-  } else {
-    determiner = 'must be';
-  }
-
-  var msg;
-
-  if (endsWith(name, ' argument')) {
-    // For cases like 'first argument'
-    msg = "The ".concat(name, " ").concat(determiner, " ").concat(oneOf(expected, 'type'));
-  } else {
-    var type = includes(name, '.') ? 'property' : 'argument';
-    msg = "The \"".concat(name, "\" ").concat(type, " ").concat(determiner, " ").concat(oneOf(expected, 'type'));
-  }
-
-  msg += ". Received type ".concat(typeof actual);
-  return msg;
-}, TypeError);
-createErrorType('ERR_STREAM_PUSH_AFTER_EOF', 'stream.push() after EOF');
-createErrorType('ERR_METHOD_NOT_IMPLEMENTED', function (name) {
-  return 'The ' + name + ' method is not implemented';
-});
-createErrorType('ERR_STREAM_PREMATURE_CLOSE', 'Premature close');
-createErrorType('ERR_STREAM_DESTROYED', function (name) {
-  return 'Cannot call ' + name + ' after a stream was destroyed';
-});
-createErrorType('ERR_MULTIPLE_CALLBACK', 'Callback called multiple times');
-createErrorType('ERR_STREAM_CANNOT_PIPE', 'Cannot pipe, not readable');
-createErrorType('ERR_STREAM_WRITE_AFTER_END', 'write after end');
-createErrorType('ERR_STREAM_NULL_VALUES', 'May not write null values to stream', TypeError);
-createErrorType('ERR_UNKNOWN_ENCODING', function (arg) {
-  return 'Unknown encoding: ' + arg;
-}, TypeError);
-createErrorType('ERR_STREAM_UNSHIFT_AFTER_END_EVENT', 'stream.unshift() after end event');
-module.exports.codes = codes;
-
-},{}],96:[function(require,module,exports){
-(function (process){(function (){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-// a duplex stream is just a stream that is both readable and writable.
-// Since JS doesn't have multiple prototypal inheritance, this class
-// prototypally inherits from Readable, and then parasitically from
-// Writable.
-'use strict';
-/*<replacement>*/
-
-var objectKeys = Object.keys || function (obj) {
-  var keys = [];
-
-  for (var key in obj) {
-    keys.push(key);
-  }
-
-  return keys;
-};
-/*</replacement>*/
-
-
-module.exports = Duplex;
-
-var Readable = require('./_stream_readable');
-
-var Writable = require('./_stream_writable');
-
-require('inherits')(Duplex, Readable);
-
-{
-  // Allow the keys array to be GC'ed.
-  var keys = objectKeys(Writable.prototype);
-
-  for (var v = 0; v < keys.length; v++) {
-    var method = keys[v];
-    if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
-  }
-}
-
-function Duplex(options) {
-  if (!(this instanceof Duplex)) return new Duplex(options);
-  Readable.call(this, options);
-  Writable.call(this, options);
-  this.allowHalfOpen = true;
-
-  if (options) {
-    if (options.readable === false) this.readable = false;
-    if (options.writable === false) this.writable = false;
-
-    if (options.allowHalfOpen === false) {
-      this.allowHalfOpen = false;
-      this.once('end', onend);
-    }
-  }
-}
-
-Object.defineProperty(Duplex.prototype, 'writableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState.highWaterMark;
-  }
-});
-Object.defineProperty(Duplex.prototype, 'writableBuffer', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState && this._writableState.getBuffer();
-  }
-});
-Object.defineProperty(Duplex.prototype, 'writableLength', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState.length;
-  }
-}); // the no-half-open enforcer
-
-function onend() {
-  // If the writable side ended, then we're ok.
-  if (this._writableState.ended) return; // no more data can be written.
-  // But allow more writes to happen in this tick.
-
-  process.nextTick(onEndNT, this);
-}
-
-function onEndNT(self) {
-  self.end();
-}
-
-Object.defineProperty(Duplex.prototype, 'destroyed', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    if (this._readableState === undefined || this._writableState === undefined) {
-      return false;
-    }
-
-    return this._readableState.destroyed && this._writableState.destroyed;
-  },
-  set: function set(value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (this._readableState === undefined || this._writableState === undefined) {
-      return;
-    } // backward compatibility, the user is explicitly
-    // managing destroyed
-
-
-    this._readableState.destroyed = value;
-    this._writableState.destroyed = value;
-  }
-});
-}).call(this)}).call(this,require('_process'))
-},{"./_stream_readable":98,"./_stream_writable":100,"_process":91,"inherits":80}],97:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-// a passthrough stream.
-// basically just the most minimal sort of Transform stream.
-// Every written chunk gets output as-is.
-'use strict';
-
-module.exports = PassThrough;
-
-var Transform = require('./_stream_transform');
-
-require('inherits')(PassThrough, Transform);
-
-function PassThrough(options) {
-  if (!(this instanceof PassThrough)) return new PassThrough(options);
-  Transform.call(this, options);
-}
-
-PassThrough.prototype._transform = function (chunk, encoding, cb) {
-  cb(null, chunk);
-};
-},{"./_stream_transform":99,"inherits":80}],98:[function(require,module,exports){
-(function (process,global){(function (){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-'use strict';
-
-module.exports = Readable;
-/*<replacement>*/
-
-var Duplex;
-/*</replacement>*/
-
-Readable.ReadableState = ReadableState;
-/*<replacement>*/
-
-var EE = require('events').EventEmitter;
-
-var EElistenerCount = function EElistenerCount(emitter, type) {
-  return emitter.listeners(type).length;
-};
-/*</replacement>*/
-
-/*<replacement>*/
-
-
-var Stream = require('./internal/streams/stream');
-/*</replacement>*/
-
-
-var Buffer = require('buffer').Buffer;
-
-var OurUint8Array = global.Uint8Array || function () {};
-
-function _uint8ArrayToBuffer(chunk) {
-  return Buffer.from(chunk);
-}
-
-function _isUint8Array(obj) {
-  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
-}
-/*<replacement>*/
-
-
-var debugUtil = require('util');
-
-var debug;
-
-if (debugUtil && debugUtil.debuglog) {
-  debug = debugUtil.debuglog('stream');
-} else {
-  debug = function debug() {};
-}
-/*</replacement>*/
-
-
-var BufferList = require('./internal/streams/buffer_list');
-
-var destroyImpl = require('./internal/streams/destroy');
-
-var _require = require('./internal/streams/state'),
-    getHighWaterMark = _require.getHighWaterMark;
-
-var _require$codes = require('../errors').codes,
-    ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
-    ERR_STREAM_PUSH_AFTER_EOF = _require$codes.ERR_STREAM_PUSH_AFTER_EOF,
-    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
-    ERR_STREAM_UNSHIFT_AFTER_END_EVENT = _require$codes.ERR_STREAM_UNSHIFT_AFTER_END_EVENT; // Lazy loaded to improve the startup performance.
-
-
-var StringDecoder;
-var createReadableStreamAsyncIterator;
-var from;
-
-require('inherits')(Readable, Stream);
-
-var errorOrDestroy = destroyImpl.errorOrDestroy;
-var kProxyEvents = ['error', 'close', 'destroy', 'pause', 'resume'];
-
-function prependListener(emitter, event, fn) {
-  // Sadly this is not cacheable as some libraries bundle their own
-  // event emitter implementation with them.
-  if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn); // This is a hack to make sure that our error handler is attached before any
-  // userland ones.  NEVER DO THIS. This is here only because this code needs
-  // to continue to work with older versions of Node.js that do not include
-  // the prependListener() method. The goal is to eventually remove this hack.
-
-  if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (Array.isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
-}
-
-function ReadableState(options, stream, isDuplex) {
-  Duplex = Duplex || require('./_stream_duplex');
-  options = options || {}; // Duplex streams are both readable and writable, but share
-  // the same options object.
-  // However, some cases require setting options to different
-  // values for the readable and the writable sides of the duplex stream.
-  // These options can be provided separately as readableXXX and writableXXX.
-
-  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof Duplex; // object stream flag. Used to make read(n) ignore n and to
-  // make all the buffer merging and length checks go away
-
-  this.objectMode = !!options.objectMode;
-  if (isDuplex) this.objectMode = this.objectMode || !!options.readableObjectMode; // the point at which it stops calling _read() to fill the buffer
-  // Note: 0 is a valid value, means "don't call _read preemptively ever"
-
-  this.highWaterMark = getHighWaterMark(this, options, 'readableHighWaterMark', isDuplex); // A linked list is used to store data chunks instead of an array because the
-  // linked list can remove elements from the beginning faster than
-  // array.shift()
-
-  this.buffer = new BufferList();
-  this.length = 0;
-  this.pipes = null;
-  this.pipesCount = 0;
-  this.flowing = null;
-  this.ended = false;
-  this.endEmitted = false;
-  this.reading = false; // a flag to be able to tell if the event 'readable'/'data' is emitted
-  // immediately, or on a later tick.  We set this to true at first, because
-  // any actions that shouldn't happen until "later" should generally also
-  // not happen before the first read call.
-
-  this.sync = true; // whenever we return null, then we set a flag to say
-  // that we're awaiting a 'readable' event emission.
-
-  this.needReadable = false;
-  this.emittedReadable = false;
-  this.readableListening = false;
-  this.resumeScheduled = false;
-  this.paused = true; // Should close be emitted on destroy. Defaults to true.
-
-  this.emitClose = options.emitClose !== false; // Should .destroy() be called after 'end' (and potentially 'finish')
-
-  this.autoDestroy = !!options.autoDestroy; // has it been destroyed
-
-  this.destroyed = false; // Crypto is kind of old and crusty.  Historically, its default string
-  // encoding is 'binary' so we have to make this configurable.
-  // Everything else in the universe uses 'utf8', though.
-
-  this.defaultEncoding = options.defaultEncoding || 'utf8'; // the number of writers that are awaiting a drain event in .pipe()s
-
-  this.awaitDrain = 0; // if true, a maybeReadMore has been scheduled
-
-  this.readingMore = false;
-  this.decoder = null;
-  this.encoding = null;
-
-  if (options.encoding) {
-    if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
-    this.decoder = new StringDecoder(options.encoding);
-    this.encoding = options.encoding;
-  }
-}
-
-function Readable(options) {
-  Duplex = Duplex || require('./_stream_duplex');
-  if (!(this instanceof Readable)) return new Readable(options); // Checking for a Stream.Duplex instance is faster here instead of inside
-  // the ReadableState constructor, at least with V8 6.5
-
-  var isDuplex = this instanceof Duplex;
-  this._readableState = new ReadableState(options, this, isDuplex); // legacy
-
-  this.readable = true;
-
-  if (options) {
-    if (typeof options.read === 'function') this._read = options.read;
-    if (typeof options.destroy === 'function') this._destroy = options.destroy;
-  }
-
-  Stream.call(this);
-}
-
-Object.defineProperty(Readable.prototype, 'destroyed', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    if (this._readableState === undefined) {
-      return false;
-    }
-
-    return this._readableState.destroyed;
-  },
-  set: function set(value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (!this._readableState) {
-      return;
-    } // backward compatibility, the user is explicitly
-    // managing destroyed
-
-
-    this._readableState.destroyed = value;
-  }
-});
-Readable.prototype.destroy = destroyImpl.destroy;
-Readable.prototype._undestroy = destroyImpl.undestroy;
-
-Readable.prototype._destroy = function (err, cb) {
-  cb(err);
-}; // Manually shove something into the read() buffer.
-// This returns true if the highWaterMark has not been hit yet,
-// similar to how Writable.write() returns true if you should
-// write() some more.
-
-
-Readable.prototype.push = function (chunk, encoding) {
-  var state = this._readableState;
-  var skipChunkCheck;
-
-  if (!state.objectMode) {
-    if (typeof chunk === 'string') {
-      encoding = encoding || state.defaultEncoding;
-
-      if (encoding !== state.encoding) {
-        chunk = Buffer.from(chunk, encoding);
-        encoding = '';
-      }
-
-      skipChunkCheck = true;
-    }
-  } else {
-    skipChunkCheck = true;
-  }
-
-  return readableAddChunk(this, chunk, encoding, false, skipChunkCheck);
-}; // Unshift should *always* be something directly out of read()
-
-
-Readable.prototype.unshift = function (chunk) {
-  return readableAddChunk(this, chunk, null, true, false);
-};
-
-function readableAddChunk(stream, chunk, encoding, addToFront, skipChunkCheck) {
-  debug('readableAddChunk', chunk);
-  var state = stream._readableState;
-
-  if (chunk === null) {
-    state.reading = false;
-    onEofChunk(stream, state);
-  } else {
-    var er;
-    if (!skipChunkCheck) er = chunkInvalid(state, chunk);
-
-    if (er) {
-      errorOrDestroy(stream, er);
-    } else if (state.objectMode || chunk && chunk.length > 0) {
-      if (typeof chunk !== 'string' && !state.objectMode && Object.getPrototypeOf(chunk) !== Buffer.prototype) {
-        chunk = _uint8ArrayToBuffer(chunk);
-      }
-
-      if (addToFront) {
-        if (state.endEmitted) errorOrDestroy(stream, new ERR_STREAM_UNSHIFT_AFTER_END_EVENT());else addChunk(stream, state, chunk, true);
-      } else if (state.ended) {
-        errorOrDestroy(stream, new ERR_STREAM_PUSH_AFTER_EOF());
-      } else if (state.destroyed) {
-        return false;
-      } else {
-        state.reading = false;
-
-        if (state.decoder && !encoding) {
-          chunk = state.decoder.write(chunk);
-          if (state.objectMode || chunk.length !== 0) addChunk(stream, state, chunk, false);else maybeReadMore(stream, state);
-        } else {
-          addChunk(stream, state, chunk, false);
-        }
-      }
-    } else if (!addToFront) {
-      state.reading = false;
-      maybeReadMore(stream, state);
-    }
-  } // We can push more data if we are below the highWaterMark.
-  // Also, if we have no data yet, we can stand some more bytes.
-  // This is to work around cases where hwm=0, such as the repl.
-
-
-  return !state.ended && (state.length < state.highWaterMark || state.length === 0);
-}
-
-function addChunk(stream, state, chunk, addToFront) {
-  if (state.flowing && state.length === 0 && !state.sync) {
-    state.awaitDrain = 0;
-    stream.emit('data', chunk);
-  } else {
-    // update the buffer info.
-    state.length += state.objectMode ? 1 : chunk.length;
-    if (addToFront) state.buffer.unshift(chunk);else state.buffer.push(chunk);
-    if (state.needReadable) emitReadable(stream);
-  }
-
-  maybeReadMore(stream, state);
-}
-
-function chunkInvalid(state, chunk) {
-  var er;
-
-  if (!_isUint8Array(chunk) && typeof chunk !== 'string' && chunk !== undefined && !state.objectMode) {
-    er = new ERR_INVALID_ARG_TYPE('chunk', ['string', 'Buffer', 'Uint8Array'], chunk);
-  }
-
-  return er;
-}
-
-Readable.prototype.isPaused = function () {
-  return this._readableState.flowing === false;
-}; // backwards compatibility.
-
-
-Readable.prototype.setEncoding = function (enc) {
-  if (!StringDecoder) StringDecoder = require('string_decoder/').StringDecoder;
-  var decoder = new StringDecoder(enc);
-  this._readableState.decoder = decoder; // If setEncoding(null), decoder.encoding equals utf8
-
-  this._readableState.encoding = this._readableState.decoder.encoding; // Iterate over current buffer to convert already stored Buffers:
-
-  var p = this._readableState.buffer.head;
-  var content = '';
-
-  while (p !== null) {
-    content += decoder.write(p.data);
-    p = p.next;
-  }
-
-  this._readableState.buffer.clear();
-
-  if (content !== '') this._readableState.buffer.push(content);
-  this._readableState.length = content.length;
-  return this;
-}; // Don't raise the hwm > 1GB
-
-
-var MAX_HWM = 0x40000000;
-
-function computeNewHighWaterMark(n) {
-  if (n >= MAX_HWM) {
-    // TODO(ronag): Throw ERR_VALUE_OUT_OF_RANGE.
-    n = MAX_HWM;
-  } else {
-    // Get the next highest power of 2 to prevent increasing hwm excessively in
-    // tiny amounts
-    n--;
-    n |= n >>> 1;
-    n |= n >>> 2;
-    n |= n >>> 4;
-    n |= n >>> 8;
-    n |= n >>> 16;
-    n++;
-  }
-
-  return n;
-} // This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-
-
-function howMuchToRead(n, state) {
-  if (n <= 0 || state.length === 0 && state.ended) return 0;
-  if (state.objectMode) return 1;
-
-  if (n !== n) {
-    // Only flow one buffer at a time
-    if (state.flowing && state.length) return state.buffer.head.data.length;else return state.length;
-  } // If we're asking for more than the current hwm, then raise the hwm.
-
-
-  if (n > state.highWaterMark) state.highWaterMark = computeNewHighWaterMark(n);
-  if (n <= state.length) return n; // Don't have enough
-
-  if (!state.ended) {
-    state.needReadable = true;
-    return 0;
-  }
-
-  return state.length;
-} // you can override either this method, or the async _read(n) below.
-
-
-Readable.prototype.read = function (n) {
-  debug('read', n);
-  n = parseInt(n, 10);
-  var state = this._readableState;
-  var nOrig = n;
-  if (n !== 0) state.emittedReadable = false; // if we're doing read(0) to trigger a readable event, but we
-  // already have a bunch of data in the buffer, then just trigger
-  // the 'readable' event and move on.
-
-  if (n === 0 && state.needReadable && ((state.highWaterMark !== 0 ? state.length >= state.highWaterMark : state.length > 0) || state.ended)) {
-    debug('read: emitReadable', state.length, state.ended);
-    if (state.length === 0 && state.ended) endReadable(this);else emitReadable(this);
-    return null;
-  }
-
-  n = howMuchToRead(n, state); // if we've ended, and we're now clear, then finish it up.
-
-  if (n === 0 && state.ended) {
-    if (state.length === 0) endReadable(this);
-    return null;
-  } // All the actual chunk generation logic needs to be
-  // *below* the call to _read.  The reason is that in certain
-  // synthetic stream cases, such as passthrough streams, _read
-  // may be a completely synchronous operation which may change
-  // the state of the read buffer, providing enough data when
-  // before there was *not* enough.
-  //
-  // So, the steps are:
-  // 1. Figure out what the state of things will be after we do
-  // a read from the buffer.
-  //
-  // 2. If that resulting state will trigger a _read, then call _read.
-  // Note that this may be asynchronous, or synchronous.  Yes, it is
-  // deeply ugly to write APIs this way, but that still doesn't mean
-  // that the Readable class should behave improperly, as streams are
-  // designed to be sync/async agnostic.
-  // Take note if the _read call is sync or async (ie, if the read call
-  // has returned yet), so that we know whether or not it's safe to emit
-  // 'readable' etc.
-  //
-  // 3. Actually pull the requested chunks out of the buffer and return.
-  // if we need a readable event, then we need to do some reading.
-
-
-  var doRead = state.needReadable;
-  debug('need readable', doRead); // if we currently have less than the highWaterMark, then also read some
-
-  if (state.length === 0 || state.length - n < state.highWaterMark) {
-    doRead = true;
-    debug('length less than watermark', doRead);
-  } // however, if we've ended, then there's no point, and if we're already
-  // reading, then it's unnecessary.
-
-
-  if (state.ended || state.reading) {
-    doRead = false;
-    debug('reading or ended', doRead);
-  } else if (doRead) {
-    debug('do read');
-    state.reading = true;
-    state.sync = true; // if the length is currently zero, then we *need* a readable event.
-
-    if (state.length === 0) state.needReadable = true; // call internal read method
-
-    this._read(state.highWaterMark);
-
-    state.sync = false; // If _read pushed data synchronously, then `reading` will be false,
-    // and we need to re-evaluate how much data we can return to the user.
-
-    if (!state.reading) n = howMuchToRead(nOrig, state);
-  }
-
-  var ret;
-  if (n > 0) ret = fromList(n, state);else ret = null;
-
-  if (ret === null) {
-    state.needReadable = state.length <= state.highWaterMark;
-    n = 0;
-  } else {
-    state.length -= n;
-    state.awaitDrain = 0;
-  }
-
-  if (state.length === 0) {
-    // If we have nothing in the buffer, then we want to know
-    // as soon as we *do* get something into the buffer.
-    if (!state.ended) state.needReadable = true; // If we tried to read() past the EOF, then emit end on the next tick.
-
-    if (nOrig !== n && state.ended) endReadable(this);
-  }
-
-  if (ret !== null) this.emit('data', ret);
-  return ret;
-};
-
-function onEofChunk(stream, state) {
-  debug('onEofChunk');
-  if (state.ended) return;
-
-  if (state.decoder) {
-    var chunk = state.decoder.end();
-
-    if (chunk && chunk.length) {
-      state.buffer.push(chunk);
-      state.length += state.objectMode ? 1 : chunk.length;
-    }
-  }
-
-  state.ended = true;
-
-  if (state.sync) {
-    // if we are sync, wait until next tick to emit the data.
-    // Otherwise we risk emitting data in the flow()
-    // the readable code triggers during a read() call
-    emitReadable(stream);
-  } else {
-    // emit 'readable' now to make sure it gets picked up.
-    state.needReadable = false;
-
-    if (!state.emittedReadable) {
-      state.emittedReadable = true;
-      emitReadable_(stream);
-    }
-  }
-} // Don't emit readable right away in sync mode, because this can trigger
-// another read() call => stack overflow.  This way, it might trigger
-// a nextTick recursion warning, but that's not so bad.
-
-
-function emitReadable(stream) {
-  var state = stream._readableState;
-  debug('emitReadable', state.needReadable, state.emittedReadable);
-  state.needReadable = false;
-
-  if (!state.emittedReadable) {
-    debug('emitReadable', state.flowing);
-    state.emittedReadable = true;
-    process.nextTick(emitReadable_, stream);
-  }
-}
-
-function emitReadable_(stream) {
-  var state = stream._readableState;
-  debug('emitReadable_', state.destroyed, state.length, state.ended);
-
-  if (!state.destroyed && (state.length || state.ended)) {
-    stream.emit('readable');
-    state.emittedReadable = false;
-  } // The stream needs another readable event if
-  // 1. It is not flowing, as the flow mechanism will take
-  //    care of it.
-  // 2. It is not ended.
-  // 3. It is below the highWaterMark, so we can schedule
-  //    another readable later.
-
-
-  state.needReadable = !state.flowing && !state.ended && state.length <= state.highWaterMark;
-  flow(stream);
-} // at this point, the user has presumably seen the 'readable' event,
-// and called read() to consume some data.  that may have triggered
-// in turn another _read(n) call, in which case reading = true if
-// it's in progress.
-// However, if we're not ended, or reading, and the length < hwm,
-// then go ahead and try to read some more preemptively.
-
-
-function maybeReadMore(stream, state) {
-  if (!state.readingMore) {
-    state.readingMore = true;
-    process.nextTick(maybeReadMore_, stream, state);
-  }
-}
-
-function maybeReadMore_(stream, state) {
-  // Attempt to read more data if we should.
-  //
-  // The conditions for reading more data are (one of):
-  // - Not enough data buffered (state.length < state.highWaterMark). The loop
-  //   is responsible for filling the buffer with enough data if such data
-  //   is available. If highWaterMark is 0 and we are not in the flowing mode
-  //   we should _not_ attempt to buffer any extra data. We'll get more data
-  //   when the stream consumer calls read() instead.
-  // - No data in the buffer, and the stream is in flowing mode. In this mode
-  //   the loop below is responsible for ensuring read() is called. Failing to
-  //   call read here would abort the flow and there's no other mechanism for
-  //   continuing the flow if the stream consumer has just subscribed to the
-  //   'data' event.
-  //
-  // In addition to the above conditions to keep reading data, the following
-  // conditions prevent the data from being read:
-  // - The stream has ended (state.ended).
-  // - There is already a pending 'read' operation (state.reading). This is a
-  //   case where the the stream has called the implementation defined _read()
-  //   method, but they are processing the call asynchronously and have _not_
-  //   called push() with new data. In this case we skip performing more
-  //   read()s. The execution ends in this method again after the _read() ends
-  //   up calling push() with more data.
-  while (!state.reading && !state.ended && (state.length < state.highWaterMark || state.flowing && state.length === 0)) {
-    var len = state.length;
-    debug('maybeReadMore read 0');
-    stream.read(0);
-    if (len === state.length) // didn't get any data, stop spinning.
-      break;
-  }
-
-  state.readingMore = false;
-} // abstract method.  to be overridden in specific implementation classes.
-// call cb(er, data) where data is <= n in length.
-// for virtual (non-string, non-buffer) streams, "length" is somewhat
-// arbitrary, and perhaps not very meaningful.
-
-
-Readable.prototype._read = function (n) {
-  errorOrDestroy(this, new ERR_METHOD_NOT_IMPLEMENTED('_read()'));
-};
-
-Readable.prototype.pipe = function (dest, pipeOpts) {
-  var src = this;
-  var state = this._readableState;
-
-  switch (state.pipesCount) {
-    case 0:
-      state.pipes = dest;
-      break;
-
-    case 1:
-      state.pipes = [state.pipes, dest];
-      break;
-
-    default:
-      state.pipes.push(dest);
-      break;
-  }
-
-  state.pipesCount += 1;
-  debug('pipe count=%d opts=%j', state.pipesCount, pipeOpts);
-  var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
-  var endFn = doEnd ? onend : unpipe;
-  if (state.endEmitted) process.nextTick(endFn);else src.once('end', endFn);
-  dest.on('unpipe', onunpipe);
-
-  function onunpipe(readable, unpipeInfo) {
-    debug('onunpipe');
-
-    if (readable === src) {
-      if (unpipeInfo && unpipeInfo.hasUnpiped === false) {
-        unpipeInfo.hasUnpiped = true;
-        cleanup();
-      }
-    }
-  }
-
-  function onend() {
-    debug('onend');
-    dest.end();
-  } // when the dest drains, it reduces the awaitDrain counter
-  // on the source.  This would be more elegant with a .once()
-  // handler in flow(), but adding and removing repeatedly is
-  // too slow.
-
-
-  var ondrain = pipeOnDrain(src);
-  dest.on('drain', ondrain);
-  var cleanedUp = false;
-
-  function cleanup() {
-    debug('cleanup'); // cleanup event handlers once the pipe is broken
-
-    dest.removeListener('close', onclose);
-    dest.removeListener('finish', onfinish);
-    dest.removeListener('drain', ondrain);
-    dest.removeListener('error', onerror);
-    dest.removeListener('unpipe', onunpipe);
-    src.removeListener('end', onend);
-    src.removeListener('end', unpipe);
-    src.removeListener('data', ondata);
-    cleanedUp = true; // if the reader is waiting for a drain event from this
-    // specific writer, then it would cause it to never start
-    // flowing again.
-    // So, if this is awaiting a drain, then we just call it now.
-    // If we don't know, then assume that we are waiting for one.
-
-    if (state.awaitDrain && (!dest._writableState || dest._writableState.needDrain)) ondrain();
-  }
-
-  src.on('data', ondata);
-
-  function ondata(chunk) {
-    debug('ondata');
-    var ret = dest.write(chunk);
-    debug('dest.write', ret);
-
-    if (ret === false) {
-      // If the user unpiped during `dest.write()`, it is possible
-      // to get stuck in a permanently paused state if that write
-      // also returned false.
-      // => Check whether `dest` is still a piping destination.
-      if ((state.pipesCount === 1 && state.pipes === dest || state.pipesCount > 1 && indexOf(state.pipes, dest) !== -1) && !cleanedUp) {
-        debug('false write response, pause', state.awaitDrain);
-        state.awaitDrain++;
-      }
-
-      src.pause();
-    }
-  } // if the dest has an error, then stop piping into it.
-  // however, don't suppress the throwing behavior for this.
-
-
-  function onerror(er) {
-    debug('onerror', er);
-    unpipe();
-    dest.removeListener('error', onerror);
-    if (EElistenerCount(dest, 'error') === 0) errorOrDestroy(dest, er);
-  } // Make sure our error handler is attached before userland ones.
-
-
-  prependListener(dest, 'error', onerror); // Both close and finish should trigger unpipe, but only once.
-
-  function onclose() {
-    dest.removeListener('finish', onfinish);
-    unpipe();
-  }
-
-  dest.once('close', onclose);
-
-  function onfinish() {
-    debug('onfinish');
-    dest.removeListener('close', onclose);
-    unpipe();
-  }
-
-  dest.once('finish', onfinish);
-
-  function unpipe() {
-    debug('unpipe');
-    src.unpipe(dest);
-  } // tell the dest that it's being piped to
-
-
-  dest.emit('pipe', src); // start the flow if it hasn't been started already.
-
-  if (!state.flowing) {
-    debug('pipe resume');
-    src.resume();
-  }
-
-  return dest;
-};
-
-function pipeOnDrain(src) {
-  return function pipeOnDrainFunctionResult() {
-    var state = src._readableState;
-    debug('pipeOnDrain', state.awaitDrain);
-    if (state.awaitDrain) state.awaitDrain--;
-
-    if (state.awaitDrain === 0 && EElistenerCount(src, 'data')) {
-      state.flowing = true;
-      flow(src);
-    }
-  };
-}
-
-Readable.prototype.unpipe = function (dest) {
-  var state = this._readableState;
-  var unpipeInfo = {
-    hasUnpiped: false
-  }; // if we're not piping anywhere, then do nothing.
-
-  if (state.pipesCount === 0) return this; // just one destination.  most common case.
-
-  if (state.pipesCount === 1) {
-    // passed in one, but it's not the right one.
-    if (dest && dest !== state.pipes) return this;
-    if (!dest) dest = state.pipes; // got a match.
-
-    state.pipes = null;
-    state.pipesCount = 0;
-    state.flowing = false;
-    if (dest) dest.emit('unpipe', this, unpipeInfo);
-    return this;
-  } // slow case. multiple pipe destinations.
-
-
-  if (!dest) {
-    // remove all.
-    var dests = state.pipes;
-    var len = state.pipesCount;
-    state.pipes = null;
-    state.pipesCount = 0;
-    state.flowing = false;
-
-    for (var i = 0; i < len; i++) {
-      dests[i].emit('unpipe', this, {
-        hasUnpiped: false
-      });
-    }
-
-    return this;
-  } // try to find the right one.
-
-
-  var index = indexOf(state.pipes, dest);
-  if (index === -1) return this;
-  state.pipes.splice(index, 1);
-  state.pipesCount -= 1;
-  if (state.pipesCount === 1) state.pipes = state.pipes[0];
-  dest.emit('unpipe', this, unpipeInfo);
-  return this;
-}; // set up data events if they are asked for
-// Ensure readable listeners eventually get something
-
-
-Readable.prototype.on = function (ev, fn) {
-  var res = Stream.prototype.on.call(this, ev, fn);
-  var state = this._readableState;
-
-  if (ev === 'data') {
-    // update readableListening so that resume() may be a no-op
-    // a few lines down. This is needed to support once('readable').
-    state.readableListening = this.listenerCount('readable') > 0; // Try start flowing on next tick if stream isn't explicitly paused
-
-    if (state.flowing !== false) this.resume();
-  } else if (ev === 'readable') {
-    if (!state.endEmitted && !state.readableListening) {
-      state.readableListening = state.needReadable = true;
-      state.flowing = false;
-      state.emittedReadable = false;
-      debug('on readable', state.length, state.reading);
-
-      if (state.length) {
-        emitReadable(this);
-      } else if (!state.reading) {
-        process.nextTick(nReadingNextTick, this);
-      }
-    }
-  }
-
-  return res;
-};
-
-Readable.prototype.addListener = Readable.prototype.on;
-
-Readable.prototype.removeListener = function (ev, fn) {
-  var res = Stream.prototype.removeListener.call(this, ev, fn);
-
-  if (ev === 'readable') {
-    // We need to check if there is someone still listening to
-    // readable and reset the state. However this needs to happen
-    // after readable has been emitted but before I/O (nextTick) to
-    // support once('readable', fn) cycles. This means that calling
-    // resume within the same tick will have no
-    // effect.
-    process.nextTick(updateReadableListening, this);
-  }
-
-  return res;
-};
-
-Readable.prototype.removeAllListeners = function (ev) {
-  var res = Stream.prototype.removeAllListeners.apply(this, arguments);
-
-  if (ev === 'readable' || ev === undefined) {
-    // We need to check if there is someone still listening to
-    // readable and reset the state. However this needs to happen
-    // after readable has been emitted but before I/O (nextTick) to
-    // support once('readable', fn) cycles. This means that calling
-    // resume within the same tick will have no
-    // effect.
-    process.nextTick(updateReadableListening, this);
-  }
-
-  return res;
-};
-
-function updateReadableListening(self) {
-  var state = self._readableState;
-  state.readableListening = self.listenerCount('readable') > 0;
-
-  if (state.resumeScheduled && !state.paused) {
-    // flowing needs to be set to true now, otherwise
-    // the upcoming resume will not flow.
-    state.flowing = true; // crude way to check if we should resume
-  } else if (self.listenerCount('data') > 0) {
-    self.resume();
-  }
-}
-
-function nReadingNextTick(self) {
-  debug('readable nexttick read 0');
-  self.read(0);
-} // pause() and resume() are remnants of the legacy readable stream API
-// If the user uses them, then switch into old mode.
-
-
-Readable.prototype.resume = function () {
-  var state = this._readableState;
-
-  if (!state.flowing) {
-    debug('resume'); // we flow only if there is no one listening
-    // for readable, but we still have to call
-    // resume()
-
-    state.flowing = !state.readableListening;
-    resume(this, state);
-  }
-
-  state.paused = false;
-  return this;
-};
-
-function resume(stream, state) {
-  if (!state.resumeScheduled) {
-    state.resumeScheduled = true;
-    process.nextTick(resume_, stream, state);
-  }
-}
-
-function resume_(stream, state) {
-  debug('resume', state.reading);
-
-  if (!state.reading) {
-    stream.read(0);
-  }
-
-  state.resumeScheduled = false;
-  stream.emit('resume');
-  flow(stream);
-  if (state.flowing && !state.reading) stream.read(0);
-}
-
-Readable.prototype.pause = function () {
-  debug('call pause flowing=%j', this._readableState.flowing);
-
-  if (this._readableState.flowing !== false) {
-    debug('pause');
-    this._readableState.flowing = false;
-    this.emit('pause');
-  }
-
-  this._readableState.paused = true;
-  return this;
-};
-
-function flow(stream) {
-  var state = stream._readableState;
-  debug('flow', state.flowing);
-
-  while (state.flowing && stream.read() !== null) {
-    ;
-  }
-} // wrap an old-style stream as the async data source.
-// This is *not* part of the readable stream interface.
-// It is an ugly unfortunate mess of history.
-
-
-Readable.prototype.wrap = function (stream) {
-  var _this = this;
-
-  var state = this._readableState;
-  var paused = false;
-  stream.on('end', function () {
-    debug('wrapped end');
-
-    if (state.decoder && !state.ended) {
-      var chunk = state.decoder.end();
-      if (chunk && chunk.length) _this.push(chunk);
-    }
-
-    _this.push(null);
-  });
-  stream.on('data', function (chunk) {
-    debug('wrapped data');
-    if (state.decoder) chunk = state.decoder.write(chunk); // don't skip over falsy values in objectMode
-
-    if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
-
-    var ret = _this.push(chunk);
-
-    if (!ret) {
-      paused = true;
-      stream.pause();
-    }
-  }); // proxy all the other methods.
-  // important when wrapping filters and duplexes.
-
-  for (var i in stream) {
-    if (this[i] === undefined && typeof stream[i] === 'function') {
-      this[i] = function methodWrap(method) {
-        return function methodWrapReturnFunction() {
-          return stream[method].apply(stream, arguments);
-        };
-      }(i);
-    }
-  } // proxy certain important events.
-
-
-  for (var n = 0; n < kProxyEvents.length; n++) {
-    stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
-  } // when we try to consume some more bytes, simply unpause the
-  // underlying stream.
-
-
-  this._read = function (n) {
-    debug('wrapped _read', n);
-
-    if (paused) {
-      paused = false;
-      stream.resume();
-    }
-  };
-
-  return this;
-};
-
-if (typeof Symbol === 'function') {
-  Readable.prototype[Symbol.asyncIterator] = function () {
-    if (createReadableStreamAsyncIterator === undefined) {
-      createReadableStreamAsyncIterator = require('./internal/streams/async_iterator');
-    }
-
-    return createReadableStreamAsyncIterator(this);
-  };
-}
-
-Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._readableState.highWaterMark;
-  }
-});
-Object.defineProperty(Readable.prototype, 'readableBuffer', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._readableState && this._readableState.buffer;
-  }
-});
-Object.defineProperty(Readable.prototype, 'readableFlowing', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._readableState.flowing;
-  },
-  set: function set(state) {
-    if (this._readableState) {
-      this._readableState.flowing = state;
-    }
-  }
-}); // exposed for testing purposes only.
-
-Readable._fromList = fromList;
-Object.defineProperty(Readable.prototype, 'readableLength', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._readableState.length;
-  }
-}); // Pluck off n bytes from an array of buffers.
-// Length is the combined lengths of all the buffers in the list.
-// This function is designed to be inlinable, so please take care when making
-// changes to the function body.
-
-function fromList(n, state) {
-  // nothing buffered
-  if (state.length === 0) return null;
-  var ret;
-  if (state.objectMode) ret = state.buffer.shift();else if (!n || n >= state.length) {
-    // read it all, truncate the list
-    if (state.decoder) ret = state.buffer.join('');else if (state.buffer.length === 1) ret = state.buffer.first();else ret = state.buffer.concat(state.length);
-    state.buffer.clear();
-  } else {
-    // read part of list
-    ret = state.buffer.consume(n, state.decoder);
-  }
-  return ret;
-}
-
-function endReadable(stream) {
-  var state = stream._readableState;
-  debug('endReadable', state.endEmitted);
-
-  if (!state.endEmitted) {
-    state.ended = true;
-    process.nextTick(endReadableNT, state, stream);
-  }
-}
-
-function endReadableNT(state, stream) {
-  debug('endReadableNT', state.endEmitted, state.length); // Check that we didn't get one last unshift.
-
-  if (!state.endEmitted && state.length === 0) {
-    state.endEmitted = true;
-    stream.readable = false;
-    stream.emit('end');
-
-    if (state.autoDestroy) {
-      // In case of duplex streams we need a way to detect
-      // if the writable side is ready for autoDestroy as well
-      var wState = stream._writableState;
-
-      if (!wState || wState.autoDestroy && wState.finished) {
-        stream.destroy();
-      }
-    }
-  }
-}
-
-if (typeof Symbol === 'function') {
-  Readable.from = function (iterable, opts) {
-    if (from === undefined) {
-      from = require('./internal/streams/from');
-    }
-
-    return from(Readable, iterable, opts);
-  };
-}
-
-function indexOf(xs, x) {
-  for (var i = 0, l = xs.length; i < l; i++) {
-    if (xs[i] === x) return i;
-  }
-
-  return -1;
-}
-}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../errors":95,"./_stream_duplex":96,"./internal/streams/async_iterator":101,"./internal/streams/buffer_list":102,"./internal/streams/destroy":103,"./internal/streams/from":105,"./internal/streams/state":107,"./internal/streams/stream":108,"_process":91,"buffer":75,"events":77,"inherits":80,"string_decoder/":109,"util":74}],99:[function(require,module,exports){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-// a transform stream is a readable/writable stream where you do
-// something with the data.  Sometimes it's called a "filter",
-// but that's not a great name for it, since that implies a thing where
-// some bits pass through, and others are simply ignored.  (That would
-// be a valid example of a transform, of course.)
-//
-// While the output is causally related to the input, it's not a
-// necessarily symmetric or synchronous transformation.  For example,
-// a zlib stream might take multiple plain-text writes(), and then
-// emit a single compressed chunk some time in the future.
-//
-// Here's how this works:
-//
-// The Transform stream has all the aspects of the readable and writable
-// stream classes.  When you write(chunk), that calls _write(chunk,cb)
-// internally, and returns false if there's a lot of pending writes
-// buffered up.  When you call read(), that calls _read(n) until
-// there's enough pending readable data buffered up.
-//
-// In a transform stream, the written data is placed in a buffer.  When
-// _read(n) is called, it transforms the queued up data, calling the
-// buffered _write cb's as it consumes chunks.  If consuming a single
-// written chunk would result in multiple output chunks, then the first
-// outputted bit calls the readcb, and subsequent chunks just go into
-// the read buffer, and will cause it to emit 'readable' if necessary.
-//
-// This way, back-pressure is actually determined by the reading side,
-// since _read has to be called to start processing a new chunk.  However,
-// a pathological inflate type of transform can cause excessive buffering
-// here.  For example, imagine a stream where every byte of input is
-// interpreted as an integer from 0-255, and then results in that many
-// bytes of output.  Writing the 4 bytes {ff,ff,ff,ff} would result in
-// 1kb of data being output.  In this case, you could write a very small
-// amount of input, and end up with a very large amount of output.  In
-// such a pathological inflating mechanism, there'd be no way to tell
-// the system to stop doing the transform.  A single 4MB write could
-// cause the system to run out of memory.
-//
-// However, even in such a pathological case, only a single written chunk
-// would be consumed, and then the rest would wait (un-transformed) until
-// the results of the previous transformed chunk were consumed.
-'use strict';
-
-module.exports = Transform;
-
-var _require$codes = require('../errors').codes,
-    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
-    ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
-    ERR_TRANSFORM_ALREADY_TRANSFORMING = _require$codes.ERR_TRANSFORM_ALREADY_TRANSFORMING,
-    ERR_TRANSFORM_WITH_LENGTH_0 = _require$codes.ERR_TRANSFORM_WITH_LENGTH_0;
-
-var Duplex = require('./_stream_duplex');
-
-require('inherits')(Transform, Duplex);
-
-function afterTransform(er, data) {
-  var ts = this._transformState;
-  ts.transforming = false;
-  var cb = ts.writecb;
-
-  if (cb === null) {
-    return this.emit('error', new ERR_MULTIPLE_CALLBACK());
-  }
-
-  ts.writechunk = null;
-  ts.writecb = null;
-  if (data != null) // single equals check for both `null` and `undefined`
-    this.push(data);
-  cb(er);
-  var rs = this._readableState;
-  rs.reading = false;
-
-  if (rs.needReadable || rs.length < rs.highWaterMark) {
-    this._read(rs.highWaterMark);
-  }
-}
-
-function Transform(options) {
-  if (!(this instanceof Transform)) return new Transform(options);
-  Duplex.call(this, options);
-  this._transformState = {
-    afterTransform: afterTransform.bind(this),
-    needTransform: false,
-    transforming: false,
-    writecb: null,
-    writechunk: null,
-    writeencoding: null
-  }; // start out asking for a readable event once data is transformed.
-
-  this._readableState.needReadable = true; // we have implemented the _read method, and done the other things
-  // that Readable wants before the first _read call, so unset the
-  // sync guard flag.
-
-  this._readableState.sync = false;
-
-  if (options) {
-    if (typeof options.transform === 'function') this._transform = options.transform;
-    if (typeof options.flush === 'function') this._flush = options.flush;
-  } // When the writable side finishes, then flush out anything remaining.
-
-
-  this.on('prefinish', prefinish);
-}
-
-function prefinish() {
-  var _this = this;
-
-  if (typeof this._flush === 'function' && !this._readableState.destroyed) {
-    this._flush(function (er, data) {
-      done(_this, er, data);
-    });
-  } else {
-    done(this, null, null);
-  }
-}
-
-Transform.prototype.push = function (chunk, encoding) {
-  this._transformState.needTransform = false;
-  return Duplex.prototype.push.call(this, chunk, encoding);
-}; // This is the part where you do stuff!
-// override this function in implementation classes.
-// 'chunk' is an input chunk.
-//
-// Call `push(newChunk)` to pass along transformed output
-// to the readable side.  You may call 'push' zero or more times.
-//
-// Call `cb(err)` when you are done with this chunk.  If you pass
-// an error, then that'll put the hurt on the whole operation.  If you
-// never call cb(), then you'll never get another chunk.
-
-
-Transform.prototype._transform = function (chunk, encoding, cb) {
-  cb(new ERR_METHOD_NOT_IMPLEMENTED('_transform()'));
-};
-
-Transform.prototype._write = function (chunk, encoding, cb) {
-  var ts = this._transformState;
-  ts.writecb = cb;
-  ts.writechunk = chunk;
-  ts.writeencoding = encoding;
-
-  if (!ts.transforming) {
-    var rs = this._readableState;
-    if (ts.needTransform || rs.needReadable || rs.length < rs.highWaterMark) this._read(rs.highWaterMark);
-  }
-}; // Doesn't matter what the args are here.
-// _transform does all the work.
-// That we got here means that the readable side wants more data.
-
-
-Transform.prototype._read = function (n) {
-  var ts = this._transformState;
-
-  if (ts.writechunk !== null && !ts.transforming) {
-    ts.transforming = true;
-
-    this._transform(ts.writechunk, ts.writeencoding, ts.afterTransform);
-  } else {
-    // mark that we need a transform, so that any data that comes in
-    // will get processed, now that we've asked for it.
-    ts.needTransform = true;
-  }
-};
-
-Transform.prototype._destroy = function (err, cb) {
-  Duplex.prototype._destroy.call(this, err, function (err2) {
-    cb(err2);
-  });
-};
-
-function done(stream, er, data) {
-  if (er) return stream.emit('error', er);
-  if (data != null) // single equals check for both `null` and `undefined`
-    stream.push(data); // TODO(BridgeAR): Write a test for these two error cases
-  // if there's nothing in the write buffer, then that means
-  // that nothing more will ever be provided
-
-  if (stream._writableState.length) throw new ERR_TRANSFORM_WITH_LENGTH_0();
-  if (stream._transformState.transforming) throw new ERR_TRANSFORM_ALREADY_TRANSFORMING();
-  return stream.push(null);
-}
-},{"../errors":95,"./_stream_duplex":96,"inherits":80}],100:[function(require,module,exports){
-(function (process,global){(function (){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-// A bit simpler than readable streams.
-// Implement an async ._write(chunk, encoding, cb), and it'll handle all
-// the drain event emission and buffering.
-'use strict';
-
-module.exports = Writable;
-/* <replacement> */
-
-function WriteReq(chunk, encoding, cb) {
-  this.chunk = chunk;
-  this.encoding = encoding;
-  this.callback = cb;
-  this.next = null;
-} // It seems a linked list but it is not
-// there will be only 2 of these for each stream
-
-
-function CorkedRequest(state) {
-  var _this = this;
-
-  this.next = null;
-  this.entry = null;
-
-  this.finish = function () {
-    onCorkedFinish(_this, state);
-  };
-}
-/* </replacement> */
-
-/*<replacement>*/
-
-
-var Duplex;
-/*</replacement>*/
-
-Writable.WritableState = WritableState;
-/*<replacement>*/
-
-var internalUtil = {
-  deprecate: require('util-deprecate')
-};
-/*</replacement>*/
-
-/*<replacement>*/
-
-var Stream = require('./internal/streams/stream');
-/*</replacement>*/
-
-
-var Buffer = require('buffer').Buffer;
-
-var OurUint8Array = global.Uint8Array || function () {};
-
-function _uint8ArrayToBuffer(chunk) {
-  return Buffer.from(chunk);
-}
-
-function _isUint8Array(obj) {
-  return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
-}
-
-var destroyImpl = require('./internal/streams/destroy');
-
-var _require = require('./internal/streams/state'),
-    getHighWaterMark = _require.getHighWaterMark;
-
-var _require$codes = require('../errors').codes,
-    ERR_INVALID_ARG_TYPE = _require$codes.ERR_INVALID_ARG_TYPE,
-    ERR_METHOD_NOT_IMPLEMENTED = _require$codes.ERR_METHOD_NOT_IMPLEMENTED,
-    ERR_MULTIPLE_CALLBACK = _require$codes.ERR_MULTIPLE_CALLBACK,
-    ERR_STREAM_CANNOT_PIPE = _require$codes.ERR_STREAM_CANNOT_PIPE,
-    ERR_STREAM_DESTROYED = _require$codes.ERR_STREAM_DESTROYED,
-    ERR_STREAM_NULL_VALUES = _require$codes.ERR_STREAM_NULL_VALUES,
-    ERR_STREAM_WRITE_AFTER_END = _require$codes.ERR_STREAM_WRITE_AFTER_END,
-    ERR_UNKNOWN_ENCODING = _require$codes.ERR_UNKNOWN_ENCODING;
-
-var errorOrDestroy = destroyImpl.errorOrDestroy;
-
-require('inherits')(Writable, Stream);
-
-function nop() {}
-
-function WritableState(options, stream, isDuplex) {
-  Duplex = Duplex || require('./_stream_duplex');
-  options = options || {}; // Duplex streams are both readable and writable, but share
-  // the same options object.
-  // However, some cases require setting options to different
-  // values for the readable and the writable sides of the duplex stream,
-  // e.g. options.readableObjectMode vs. options.writableObjectMode, etc.
-
-  if (typeof isDuplex !== 'boolean') isDuplex = stream instanceof Duplex; // object stream flag to indicate whether or not this stream
-  // contains buffers or objects.
-
-  this.objectMode = !!options.objectMode;
-  if (isDuplex) this.objectMode = this.objectMode || !!options.writableObjectMode; // the point at which write() starts returning false
-  // Note: 0 is a valid value, means that we always return false if
-  // the entire buffer is not flushed immediately on write()
-
-  this.highWaterMark = getHighWaterMark(this, options, 'writableHighWaterMark', isDuplex); // if _final has been called
-
-  this.finalCalled = false; // drain event flag.
-
-  this.needDrain = false; // at the start of calling end()
-
-  this.ending = false; // when end() has been called, and returned
-
-  this.ended = false; // when 'finish' is emitted
-
-  this.finished = false; // has it been destroyed
-
-  this.destroyed = false; // should we decode strings into buffers before passing to _write?
-  // this is here so that some node-core streams can optimize string
-  // handling at a lower level.
-
-  var noDecode = options.decodeStrings === false;
-  this.decodeStrings = !noDecode; // Crypto is kind of old and crusty.  Historically, its default string
-  // encoding is 'binary' so we have to make this configurable.
-  // Everything else in the universe uses 'utf8', though.
-
-  this.defaultEncoding = options.defaultEncoding || 'utf8'; // not an actual buffer we keep track of, but a measurement
-  // of how much we're waiting to get pushed to some underlying
-  // socket or file.
-
-  this.length = 0; // a flag to see when we're in the middle of a write.
-
-  this.writing = false; // when true all writes will be buffered until .uncork() call
-
-  this.corked = 0; // a flag to be able to tell if the onwrite cb is called immediately,
-  // or on a later tick.  We set this to true at first, because any
-  // actions that shouldn't happen until "later" should generally also
-  // not happen before the first write call.
-
-  this.sync = true; // a flag to know if we're processing previously buffered items, which
-  // may call the _write() callback in the same tick, so that we don't
-  // end up in an overlapped onwrite situation.
-
-  this.bufferProcessing = false; // the callback that's passed to _write(chunk,cb)
-
-  this.onwrite = function (er) {
-    onwrite(stream, er);
-  }; // the callback that the user supplies to write(chunk,encoding,cb)
-
-
-  this.writecb = null; // the amount that is being written when _write is called.
-
-  this.writelen = 0;
-  this.bufferedRequest = null;
-  this.lastBufferedRequest = null; // number of pending user-supplied write callbacks
-  // this must be 0 before 'finish' can be emitted
-
-  this.pendingcb = 0; // emit prefinish if the only thing we're waiting for is _write cbs
-  // This is relevant for synchronous Transform streams
-
-  this.prefinished = false; // True if the error was already emitted and should not be thrown again
-
-  this.errorEmitted = false; // Should close be emitted on destroy. Defaults to true.
-
-  this.emitClose = options.emitClose !== false; // Should .destroy() be called after 'finish' (and potentially 'end')
-
-  this.autoDestroy = !!options.autoDestroy; // count buffered requests
-
-  this.bufferedRequestCount = 0; // allocate the first CorkedRequest, there is always
-  // one allocated and free to use, and we maintain at most two
-
-  this.corkedRequestsFree = new CorkedRequest(this);
-}
-
-WritableState.prototype.getBuffer = function getBuffer() {
-  var current = this.bufferedRequest;
-  var out = [];
-
-  while (current) {
-    out.push(current);
-    current = current.next;
-  }
-
-  return out;
-};
-
-(function () {
-  try {
-    Object.defineProperty(WritableState.prototype, 'buffer', {
-      get: internalUtil.deprecate(function writableStateBufferGetter() {
-        return this.getBuffer();
-      }, '_writableState.buffer is deprecated. Use _writableState.getBuffer ' + 'instead.', 'DEP0003')
-    });
-  } catch (_) {}
-})(); // Test _writableState for inheritance to account for Duplex streams,
-// whose prototype chain only points to Readable.
-
-
-var realHasInstance;
-
-if (typeof Symbol === 'function' && Symbol.hasInstance && typeof Function.prototype[Symbol.hasInstance] === 'function') {
-  realHasInstance = Function.prototype[Symbol.hasInstance];
-  Object.defineProperty(Writable, Symbol.hasInstance, {
-    value: function value(object) {
-      if (realHasInstance.call(this, object)) return true;
-      if (this !== Writable) return false;
-      return object && object._writableState instanceof WritableState;
-    }
-  });
-} else {
-  realHasInstance = function realHasInstance(object) {
-    return object instanceof this;
-  };
-}
-
-function Writable(options) {
-  Duplex = Duplex || require('./_stream_duplex'); // Writable ctor is applied to Duplexes, too.
-  // `realHasInstance` is necessary because using plain `instanceof`
-  // would return false, as no `_writableState` property is attached.
-  // Trying to use the custom `instanceof` for Writable here will also break the
-  // Node.js LazyTransform implementation, which has a non-trivial getter for
-  // `_writableState` that would lead to infinite recursion.
-  // Checking for a Stream.Duplex instance is faster here instead of inside
-  // the WritableState constructor, at least with V8 6.5
-
-  var isDuplex = this instanceof Duplex;
-  if (!isDuplex && !realHasInstance.call(Writable, this)) return new Writable(options);
-  this._writableState = new WritableState(options, this, isDuplex); // legacy.
-
-  this.writable = true;
-
-  if (options) {
-    if (typeof options.write === 'function') this._write = options.write;
-    if (typeof options.writev === 'function') this._writev = options.writev;
-    if (typeof options.destroy === 'function') this._destroy = options.destroy;
-    if (typeof options.final === 'function') this._final = options.final;
-  }
-
-  Stream.call(this);
-} // Otherwise people can pipe Writable streams, which is just wrong.
-
-
-Writable.prototype.pipe = function () {
-  errorOrDestroy(this, new ERR_STREAM_CANNOT_PIPE());
-};
-
-function writeAfterEnd(stream, cb) {
-  var er = new ERR_STREAM_WRITE_AFTER_END(); // TODO: defer error events consistently everywhere, not just the cb
-
-  errorOrDestroy(stream, er);
-  process.nextTick(cb, er);
-} // Checks that a user-supplied chunk is valid, especially for the particular
-// mode the stream is in. Currently this means that `null` is never accepted
-// and undefined/non-string values are only allowed in object mode.
-
-
-function validChunk(stream, state, chunk, cb) {
-  var er;
-
-  if (chunk === null) {
-    er = new ERR_STREAM_NULL_VALUES();
-  } else if (typeof chunk !== 'string' && !state.objectMode) {
-    er = new ERR_INVALID_ARG_TYPE('chunk', ['string', 'Buffer'], chunk);
-  }
-
-  if (er) {
-    errorOrDestroy(stream, er);
-    process.nextTick(cb, er);
-    return false;
-  }
-
-  return true;
-}
-
-Writable.prototype.write = function (chunk, encoding, cb) {
-  var state = this._writableState;
-  var ret = false;
-
-  var isBuf = !state.objectMode && _isUint8Array(chunk);
-
-  if (isBuf && !Buffer.isBuffer(chunk)) {
-    chunk = _uint8ArrayToBuffer(chunk);
-  }
-
-  if (typeof encoding === 'function') {
-    cb = encoding;
-    encoding = null;
-  }
-
-  if (isBuf) encoding = 'buffer';else if (!encoding) encoding = state.defaultEncoding;
-  if (typeof cb !== 'function') cb = nop;
-  if (state.ending) writeAfterEnd(this, cb);else if (isBuf || validChunk(this, state, chunk, cb)) {
-    state.pendingcb++;
-    ret = writeOrBuffer(this, state, isBuf, chunk, encoding, cb);
-  }
-  return ret;
-};
-
-Writable.prototype.cork = function () {
-  this._writableState.corked++;
-};
-
-Writable.prototype.uncork = function () {
-  var state = this._writableState;
-
-  if (state.corked) {
-    state.corked--;
-    if (!state.writing && !state.corked && !state.bufferProcessing && state.bufferedRequest) clearBuffer(this, state);
-  }
-};
-
-Writable.prototype.setDefaultEncoding = function setDefaultEncoding(encoding) {
-  // node::ParseEncoding() requires lower case.
-  if (typeof encoding === 'string') encoding = encoding.toLowerCase();
-  if (!(['hex', 'utf8', 'utf-8', 'ascii', 'binary', 'base64', 'ucs2', 'ucs-2', 'utf16le', 'utf-16le', 'raw'].indexOf((encoding + '').toLowerCase()) > -1)) throw new ERR_UNKNOWN_ENCODING(encoding);
-  this._writableState.defaultEncoding = encoding;
-  return this;
-};
-
-Object.defineProperty(Writable.prototype, 'writableBuffer', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState && this._writableState.getBuffer();
-  }
-});
-
-function decodeChunk(state, chunk, encoding) {
-  if (!state.objectMode && state.decodeStrings !== false && typeof chunk === 'string') {
-    chunk = Buffer.from(chunk, encoding);
-  }
-
-  return chunk;
-}
-
-Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState.highWaterMark;
-  }
-}); // if we're already writing something, then just put this
-// in the queue, and wait our turn.  Otherwise, call _write
-// If we return false, then we need a drain event, so set that flag.
-
-function writeOrBuffer(stream, state, isBuf, chunk, encoding, cb) {
-  if (!isBuf) {
-    var newChunk = decodeChunk(state, chunk, encoding);
-
-    if (chunk !== newChunk) {
-      isBuf = true;
-      encoding = 'buffer';
-      chunk = newChunk;
-    }
-  }
-
-  var len = state.objectMode ? 1 : chunk.length;
-  state.length += len;
-  var ret = state.length < state.highWaterMark; // we must ensure that previous needDrain will not be reset to false.
-
-  if (!ret) state.needDrain = true;
-
-  if (state.writing || state.corked) {
-    var last = state.lastBufferedRequest;
-    state.lastBufferedRequest = {
-      chunk: chunk,
-      encoding: encoding,
-      isBuf: isBuf,
-      callback: cb,
-      next: null
-    };
-
-    if (last) {
-      last.next = state.lastBufferedRequest;
-    } else {
-      state.bufferedRequest = state.lastBufferedRequest;
-    }
-
-    state.bufferedRequestCount += 1;
-  } else {
-    doWrite(stream, state, false, len, chunk, encoding, cb);
-  }
-
-  return ret;
-}
-
-function doWrite(stream, state, writev, len, chunk, encoding, cb) {
-  state.writelen = len;
-  state.writecb = cb;
-  state.writing = true;
-  state.sync = true;
-  if (state.destroyed) state.onwrite(new ERR_STREAM_DESTROYED('write'));else if (writev) stream._writev(chunk, state.onwrite);else stream._write(chunk, encoding, state.onwrite);
-  state.sync = false;
-}
-
-function onwriteError(stream, state, sync, er, cb) {
-  --state.pendingcb;
-
-  if (sync) {
-    // defer the callback if we are being called synchronously
-    // to avoid piling up things on the stack
-    process.nextTick(cb, er); // this can emit finish, and it will always happen
-    // after error
-
-    process.nextTick(finishMaybe, stream, state);
-    stream._writableState.errorEmitted = true;
-    errorOrDestroy(stream, er);
-  } else {
-    // the caller expect this to happen before if
-    // it is async
-    cb(er);
-    stream._writableState.errorEmitted = true;
-    errorOrDestroy(stream, er); // this can emit finish, but finish must
-    // always follow error
-
-    finishMaybe(stream, state);
-  }
-}
-
-function onwriteStateUpdate(state) {
-  state.writing = false;
-  state.writecb = null;
-  state.length -= state.writelen;
-  state.writelen = 0;
-}
-
-function onwrite(stream, er) {
-  var state = stream._writableState;
-  var sync = state.sync;
-  var cb = state.writecb;
-  if (typeof cb !== 'function') throw new ERR_MULTIPLE_CALLBACK();
-  onwriteStateUpdate(state);
-  if (er) onwriteError(stream, state, sync, er, cb);else {
-    // Check if we're actually ready to finish, but don't emit yet
-    var finished = needFinish(state) || stream.destroyed;
-
-    if (!finished && !state.corked && !state.bufferProcessing && state.bufferedRequest) {
-      clearBuffer(stream, state);
-    }
-
-    if (sync) {
-      process.nextTick(afterWrite, stream, state, finished, cb);
-    } else {
-      afterWrite(stream, state, finished, cb);
-    }
-  }
-}
-
-function afterWrite(stream, state, finished, cb) {
-  if (!finished) onwriteDrain(stream, state);
-  state.pendingcb--;
-  cb();
-  finishMaybe(stream, state);
-} // Must force callback to be called on nextTick, so that we don't
-// emit 'drain' before the write() consumer gets the 'false' return
-// value, and has a chance to attach a 'drain' listener.
-
-
-function onwriteDrain(stream, state) {
-  if (state.length === 0 && state.needDrain) {
-    state.needDrain = false;
-    stream.emit('drain');
-  }
-} // if there's something in the buffer waiting, then process it
-
-
-function clearBuffer(stream, state) {
-  state.bufferProcessing = true;
-  var entry = state.bufferedRequest;
-
-  if (stream._writev && entry && entry.next) {
-    // Fast case, write everything using _writev()
-    var l = state.bufferedRequestCount;
-    var buffer = new Array(l);
-    var holder = state.corkedRequestsFree;
-    holder.entry = entry;
-    var count = 0;
-    var allBuffers = true;
-
-    while (entry) {
-      buffer[count] = entry;
-      if (!entry.isBuf) allBuffers = false;
-      entry = entry.next;
-      count += 1;
-    }
-
-    buffer.allBuffers = allBuffers;
-    doWrite(stream, state, true, state.length, buffer, '', holder.finish); // doWrite is almost always async, defer these to save a bit of time
-    // as the hot path ends with doWrite
-
-    state.pendingcb++;
-    state.lastBufferedRequest = null;
-
-    if (holder.next) {
-      state.corkedRequestsFree = holder.next;
-      holder.next = null;
-    } else {
-      state.corkedRequestsFree = new CorkedRequest(state);
-    }
-
-    state.bufferedRequestCount = 0;
-  } else {
-    // Slow case, write chunks one-by-one
-    while (entry) {
-      var chunk = entry.chunk;
-      var encoding = entry.encoding;
-      var cb = entry.callback;
-      var len = state.objectMode ? 1 : chunk.length;
-      doWrite(stream, state, false, len, chunk, encoding, cb);
-      entry = entry.next;
-      state.bufferedRequestCount--; // if we didn't call the onwrite immediately, then
-      // it means that we need to wait until it does.
-      // also, that means that the chunk and cb are currently
-      // being processed, so move the buffer counter past them.
-
-      if (state.writing) {
-        break;
-      }
-    }
-
-    if (entry === null) state.lastBufferedRequest = null;
-  }
-
-  state.bufferedRequest = entry;
-  state.bufferProcessing = false;
-}
-
-Writable.prototype._write = function (chunk, encoding, cb) {
-  cb(new ERR_METHOD_NOT_IMPLEMENTED('_write()'));
-};
-
-Writable.prototype._writev = null;
-
-Writable.prototype.end = function (chunk, encoding, cb) {
-  var state = this._writableState;
-
-  if (typeof chunk === 'function') {
-    cb = chunk;
-    chunk = null;
-    encoding = null;
-  } else if (typeof encoding === 'function') {
-    cb = encoding;
-    encoding = null;
-  }
-
-  if (chunk !== null && chunk !== undefined) this.write(chunk, encoding); // .end() fully uncorks
-
-  if (state.corked) {
-    state.corked = 1;
-    this.uncork();
-  } // ignore unnecessary end() calls.
-
-
-  if (!state.ending) endWritable(this, state, cb);
-  return this;
-};
-
-Object.defineProperty(Writable.prototype, 'writableLength', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    return this._writableState.length;
-  }
-});
-
-function needFinish(state) {
-  return state.ending && state.length === 0 && state.bufferedRequest === null && !state.finished && !state.writing;
-}
-
-function callFinal(stream, state) {
-  stream._final(function (err) {
-    state.pendingcb--;
-
-    if (err) {
-      errorOrDestroy(stream, err);
-    }
-
-    state.prefinished = true;
-    stream.emit('prefinish');
-    finishMaybe(stream, state);
-  });
-}
-
-function prefinish(stream, state) {
-  if (!state.prefinished && !state.finalCalled) {
-    if (typeof stream._final === 'function' && !state.destroyed) {
-      state.pendingcb++;
-      state.finalCalled = true;
-      process.nextTick(callFinal, stream, state);
-    } else {
-      state.prefinished = true;
-      stream.emit('prefinish');
-    }
-  }
-}
-
-function finishMaybe(stream, state) {
-  var need = needFinish(state);
-
-  if (need) {
-    prefinish(stream, state);
-
-    if (state.pendingcb === 0) {
-      state.finished = true;
-      stream.emit('finish');
-
-      if (state.autoDestroy) {
-        // In case of duplex streams we need a way to detect
-        // if the readable side is ready for autoDestroy as well
-        var rState = stream._readableState;
-
-        if (!rState || rState.autoDestroy && rState.endEmitted) {
-          stream.destroy();
-        }
-      }
-    }
-  }
-
-  return need;
-}
-
-function endWritable(stream, state, cb) {
-  state.ending = true;
-  finishMaybe(stream, state);
-
-  if (cb) {
-    if (state.finished) process.nextTick(cb);else stream.once('finish', cb);
-  }
-
-  state.ended = true;
-  stream.writable = false;
-}
-
-function onCorkedFinish(corkReq, state, err) {
-  var entry = corkReq.entry;
-  corkReq.entry = null;
-
-  while (entry) {
-    var cb = entry.callback;
-    state.pendingcb--;
-    cb(err);
-    entry = entry.next;
-  } // reuse the free corkReq.
-
-
-  state.corkedRequestsFree.next = corkReq;
-}
-
-Object.defineProperty(Writable.prototype, 'destroyed', {
-  // making it explicit this property is not enumerable
-  // because otherwise some prototype manipulation in
-  // userland will fail
-  enumerable: false,
-  get: function get() {
-    if (this._writableState === undefined) {
-      return false;
-    }
-
-    return this._writableState.destroyed;
-  },
-  set: function set(value) {
-    // we ignore the value if the stream
-    // has not been initialized yet
-    if (!this._writableState) {
-      return;
-    } // backward compatibility, the user is explicitly
-    // managing destroyed
-
-
-    this._writableState.destroyed = value;
-  }
-});
-Writable.prototype.destroy = destroyImpl.destroy;
-Writable.prototype._undestroy = destroyImpl.undestroy;
-
-Writable.prototype._destroy = function (err, cb) {
-  cb(err);
-};
-}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../errors":95,"./_stream_duplex":96,"./internal/streams/destroy":103,"./internal/streams/state":107,"./internal/streams/stream":108,"_process":91,"buffer":75,"inherits":80,"util-deprecate":111}],101:[function(require,module,exports){
-(function (process){(function (){
-'use strict';
-
-var _Object$setPrototypeO;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var finished = require('./end-of-stream');
-
-var kLastResolve = Symbol('lastResolve');
-var kLastReject = Symbol('lastReject');
-var kError = Symbol('error');
-var kEnded = Symbol('ended');
-var kLastPromise = Symbol('lastPromise');
-var kHandlePromise = Symbol('handlePromise');
-var kStream = Symbol('stream');
-
-function createIterResult(value, done) {
-  return {
-    value: value,
-    done: done
-  };
-}
-
-function readAndResolve(iter) {
-  var resolve = iter[kLastResolve];
-
-  if (resolve !== null) {
-    var data = iter[kStream].read(); // we defer if data is null
-    // we can be expecting either 'end' or
-    // 'error'
-
-    if (data !== null) {
-      iter[kLastPromise] = null;
-      iter[kLastResolve] = null;
-      iter[kLastReject] = null;
-      resolve(createIterResult(data, false));
-    }
-  }
-}
-
-function onReadable(iter) {
-  // we wait for the next tick, because it might
-  // emit an error with process.nextTick
-  process.nextTick(readAndResolve, iter);
-}
-
-function wrapForNext(lastPromise, iter) {
-  return function (resolve, reject) {
-    lastPromise.then(function () {
-      if (iter[kEnded]) {
-        resolve(createIterResult(undefined, true));
-        return;
-      }
-
-      iter[kHandlePromise](resolve, reject);
-    }, reject);
-  };
-}
-
-var AsyncIteratorPrototype = Object.getPrototypeOf(function () {});
-var ReadableStreamAsyncIteratorPrototype = Object.setPrototypeOf((_Object$setPrototypeO = {
-  get stream() {
-    return this[kStream];
-  },
-
-  next: function next() {
-    var _this = this;
-
-    // if we have detected an error in the meanwhile
-    // reject straight away
-    var error = this[kError];
-
-    if (error !== null) {
-      return Promise.reject(error);
-    }
-
-    if (this[kEnded]) {
-      return Promise.resolve(createIterResult(undefined, true));
-    }
-
-    if (this[kStream].destroyed) {
-      // We need to defer via nextTick because if .destroy(err) is
-      // called, the error will be emitted via nextTick, and
-      // we cannot guarantee that there is no error lingering around
-      // waiting to be emitted.
-      return new Promise(function (resolve, reject) {
-        process.nextTick(function () {
-          if (_this[kError]) {
-            reject(_this[kError]);
-          } else {
-            resolve(createIterResult(undefined, true));
-          }
-        });
-      });
-    } // if we have multiple next() calls
-    // we will wait for the previous Promise to finish
-    // this logic is optimized to support for await loops,
-    // where next() is only called once at a time
-
-
-    var lastPromise = this[kLastPromise];
-    var promise;
-
-    if (lastPromise) {
-      promise = new Promise(wrapForNext(lastPromise, this));
-    } else {
-      // fast path needed to support multiple this.push()
-      // without triggering the next() queue
-      var data = this[kStream].read();
-
-      if (data !== null) {
-        return Promise.resolve(createIterResult(data, false));
-      }
-
-      promise = new Promise(this[kHandlePromise]);
-    }
-
-    this[kLastPromise] = promise;
-    return promise;
-  }
-}, _defineProperty(_Object$setPrototypeO, Symbol.asyncIterator, function () {
-  return this;
-}), _defineProperty(_Object$setPrototypeO, "return", function _return() {
-  var _this2 = this;
-
-  // destroy(err, cb) is a private API
-  // we can guarantee we have that here, because we control the
-  // Readable class this is attached to
-  return new Promise(function (resolve, reject) {
-    _this2[kStream].destroy(null, function (err) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(createIterResult(undefined, true));
-    });
-  });
-}), _Object$setPrototypeO), AsyncIteratorPrototype);
-
-var createReadableStreamAsyncIterator = function createReadableStreamAsyncIterator(stream) {
-  var _Object$create;
-
-  var iterator = Object.create(ReadableStreamAsyncIteratorPrototype, (_Object$create = {}, _defineProperty(_Object$create, kStream, {
-    value: stream,
-    writable: true
-  }), _defineProperty(_Object$create, kLastResolve, {
-    value: null,
-    writable: true
-  }), _defineProperty(_Object$create, kLastReject, {
-    value: null,
-    writable: true
-  }), _defineProperty(_Object$create, kError, {
-    value: null,
-    writable: true
-  }), _defineProperty(_Object$create, kEnded, {
-    value: stream._readableState.endEmitted,
-    writable: true
-  }), _defineProperty(_Object$create, kHandlePromise, {
-    value: function value(resolve, reject) {
-      var data = iterator[kStream].read();
-
-      if (data) {
-        iterator[kLastPromise] = null;
-        iterator[kLastResolve] = null;
-        iterator[kLastReject] = null;
-        resolve(createIterResult(data, false));
-      } else {
-        iterator[kLastResolve] = resolve;
-        iterator[kLastReject] = reject;
-      }
-    },
-    writable: true
-  }), _Object$create));
-  iterator[kLastPromise] = null;
-  finished(stream, function (err) {
-    if (err && err.code !== 'ERR_STREAM_PREMATURE_CLOSE') {
-      var reject = iterator[kLastReject]; // reject if we are waiting for data in the Promise
-      // returned by next() and store the error
-
-      if (reject !== null) {
-        iterator[kLastPromise] = null;
-        iterator[kLastResolve] = null;
-        iterator[kLastReject] = null;
-        reject(err);
-      }
-
-      iterator[kError] = err;
-      return;
-    }
-
-    var resolve = iterator[kLastResolve];
-
-    if (resolve !== null) {
-      iterator[kLastPromise] = null;
-      iterator[kLastResolve] = null;
-      iterator[kLastReject] = null;
-      resolve(createIterResult(undefined, true));
-    }
-
-    iterator[kEnded] = true;
-  });
-  stream.on('readable', onReadable.bind(null, iterator));
-  return iterator;
-};
-
-module.exports = createReadableStreamAsyncIterator;
-}).call(this)}).call(this,require('_process'))
-},{"./end-of-stream":104,"_process":91}],102:[function(require,module,exports){
-'use strict';
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var _require = require('buffer'),
-    Buffer = _require.Buffer;
-
-var _require2 = require('util'),
-    inspect = _require2.inspect;
-
-var custom = inspect && inspect.custom || 'inspect';
-
-function copyBuffer(src, target, offset) {
-  Buffer.prototype.copy.call(src, target, offset);
-}
-
-module.exports =
-/*#__PURE__*/
-function () {
-  function BufferList() {
-    _classCallCheck(this, BufferList);
-
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
-  }
-
-  _createClass(BufferList, [{
-    key: "push",
-    value: function push(v) {
-      var entry = {
-        data: v,
-        next: null
-      };
-      if (this.length > 0) this.tail.next = entry;else this.head = entry;
-      this.tail = entry;
-      ++this.length;
-    }
-  }, {
-    key: "unshift",
-    value: function unshift(v) {
-      var entry = {
-        data: v,
-        next: this.head
-      };
-      if (this.length === 0) this.tail = entry;
-      this.head = entry;
-      ++this.length;
-    }
-  }, {
-    key: "shift",
-    value: function shift() {
-      if (this.length === 0) return;
-      var ret = this.head.data;
-      if (this.length === 1) this.head = this.tail = null;else this.head = this.head.next;
-      --this.length;
-      return ret;
-    }
-  }, {
-    key: "clear",
-    value: function clear() {
-      this.head = this.tail = null;
-      this.length = 0;
-    }
-  }, {
-    key: "join",
-    value: function join(s) {
-      if (this.length === 0) return '';
-      var p = this.head;
-      var ret = '' + p.data;
-
-      while (p = p.next) {
-        ret += s + p.data;
-      }
-
-      return ret;
-    }
-  }, {
-    key: "concat",
-    value: function concat(n) {
-      if (this.length === 0) return Buffer.alloc(0);
-      var ret = Buffer.allocUnsafe(n >>> 0);
-      var p = this.head;
-      var i = 0;
-
-      while (p) {
-        copyBuffer(p.data, ret, i);
-        i += p.data.length;
-        p = p.next;
-      }
-
-      return ret;
-    } // Consumes a specified amount of bytes or characters from the buffered data.
-
-  }, {
-    key: "consume",
-    value: function consume(n, hasStrings) {
-      var ret;
-
-      if (n < this.head.data.length) {
-        // `slice` is the same for buffers and strings.
-        ret = this.head.data.slice(0, n);
-        this.head.data = this.head.data.slice(n);
-      } else if (n === this.head.data.length) {
-        // First chunk is a perfect match.
-        ret = this.shift();
-      } else {
-        // Result spans more than one buffer.
-        ret = hasStrings ? this._getString(n) : this._getBuffer(n);
-      }
-
-      return ret;
-    }
-  }, {
-    key: "first",
-    value: function first() {
-      return this.head.data;
-    } // Consumes a specified amount of characters from the buffered data.
-
-  }, {
-    key: "_getString",
-    value: function _getString(n) {
-      var p = this.head;
-      var c = 1;
-      var ret = p.data;
-      n -= ret.length;
-
-      while (p = p.next) {
-        var str = p.data;
-        var nb = n > str.length ? str.length : n;
-        if (nb === str.length) ret += str;else ret += str.slice(0, n);
-        n -= nb;
-
-        if (n === 0) {
-          if (nb === str.length) {
-            ++c;
-            if (p.next) this.head = p.next;else this.head = this.tail = null;
-          } else {
-            this.head = p;
-            p.data = str.slice(nb);
-          }
-
-          break;
-        }
-
-        ++c;
-      }
-
-      this.length -= c;
-      return ret;
-    } // Consumes a specified amount of bytes from the buffered data.
-
-  }, {
-    key: "_getBuffer",
-    value: function _getBuffer(n) {
-      var ret = Buffer.allocUnsafe(n);
-      var p = this.head;
-      var c = 1;
-      p.data.copy(ret);
-      n -= p.data.length;
-
-      while (p = p.next) {
-        var buf = p.data;
-        var nb = n > buf.length ? buf.length : n;
-        buf.copy(ret, ret.length - n, 0, nb);
-        n -= nb;
-
-        if (n === 0) {
-          if (nb === buf.length) {
-            ++c;
-            if (p.next) this.head = p.next;else this.head = this.tail = null;
-          } else {
-            this.head = p;
-            p.data = buf.slice(nb);
-          }
-
-          break;
-        }
-
-        ++c;
-      }
-
-      this.length -= c;
-      return ret;
-    } // Make sure the linked list only shows the minimal necessary information.
-
-  }, {
-    key: custom,
-    value: function value(_, options) {
-      return inspect(this, _objectSpread({}, options, {
-        // Only inspect one level.
-        depth: 0,
-        // It should not recurse.
-        customInspect: false
-      }));
-    }
-  }]);
-
-  return BufferList;
-}();
-},{"buffer":75,"util":74}],103:[function(require,module,exports){
-(function (process){(function (){
-'use strict'; // undocumented cb() API, needed for core, not for public API
-
-function destroy(err, cb) {
-  var _this = this;
-
-  var readableDestroyed = this._readableState && this._readableState.destroyed;
-  var writableDestroyed = this._writableState && this._writableState.destroyed;
-
-  if (readableDestroyed || writableDestroyed) {
-    if (cb) {
-      cb(err);
-    } else if (err) {
-      if (!this._writableState) {
-        process.nextTick(emitErrorNT, this, err);
-      } else if (!this._writableState.errorEmitted) {
-        this._writableState.errorEmitted = true;
-        process.nextTick(emitErrorNT, this, err);
-      }
-    }
-
-    return this;
-  } // we set destroyed to true before firing error callbacks in order
-  // to make it re-entrance safe in case destroy() is called within callbacks
-
-
-  if (this._readableState) {
-    this._readableState.destroyed = true;
-  } // if this is a duplex stream mark the writable part as destroyed as well
-
-
-  if (this._writableState) {
-    this._writableState.destroyed = true;
-  }
-
-  this._destroy(err || null, function (err) {
-    if (!cb && err) {
-      if (!_this._writableState) {
-        process.nextTick(emitErrorAndCloseNT, _this, err);
-      } else if (!_this._writableState.errorEmitted) {
-        _this._writableState.errorEmitted = true;
-        process.nextTick(emitErrorAndCloseNT, _this, err);
-      } else {
-        process.nextTick(emitCloseNT, _this);
-      }
-    } else if (cb) {
-      process.nextTick(emitCloseNT, _this);
-      cb(err);
-    } else {
-      process.nextTick(emitCloseNT, _this);
-    }
-  });
-
-  return this;
-}
-
-function emitErrorAndCloseNT(self, err) {
-  emitErrorNT(self, err);
-  emitCloseNT(self);
-}
-
-function emitCloseNT(self) {
-  if (self._writableState && !self._writableState.emitClose) return;
-  if (self._readableState && !self._readableState.emitClose) return;
-  self.emit('close');
-}
-
-function undestroy() {
-  if (this._readableState) {
-    this._readableState.destroyed = false;
-    this._readableState.reading = false;
-    this._readableState.ended = false;
-    this._readableState.endEmitted = false;
-  }
-
-  if (this._writableState) {
-    this._writableState.destroyed = false;
-    this._writableState.ended = false;
-    this._writableState.ending = false;
-    this._writableState.finalCalled = false;
-    this._writableState.prefinished = false;
-    this._writableState.finished = false;
-    this._writableState.errorEmitted = false;
-  }
-}
-
-function emitErrorNT(self, err) {
-  self.emit('error', err);
-}
-
-function errorOrDestroy(stream, err) {
-  // We have tests that rely on errors being emitted
-  // in the same tick, so changing this is semver major.
-  // For now when you opt-in to autoDestroy we allow
-  // the error to be emitted nextTick. In a future
-  // semver major update we should change the default to this.
-  var rState = stream._readableState;
-  var wState = stream._writableState;
-  if (rState && rState.autoDestroy || wState && wState.autoDestroy) stream.destroy(err);else stream.emit('error', err);
-}
-
-module.exports = {
-  destroy: destroy,
-  undestroy: undestroy,
-  errorOrDestroy: errorOrDestroy
-};
-}).call(this)}).call(this,require('_process'))
-},{"_process":91}],104:[function(require,module,exports){
-// Ported from https://github.com/mafintosh/end-of-stream with
-// permission from the author, Mathias Buus (@mafintosh).
-'use strict';
-
-var ERR_STREAM_PREMATURE_CLOSE = require('../../../errors').codes.ERR_STREAM_PREMATURE_CLOSE;
-
-function once(callback) {
-  var called = false;
-  return function () {
-    if (called) return;
-    called = true;
-
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    callback.apply(this, args);
-  };
-}
-
-function noop() {}
-
-function isRequest(stream) {
-  return stream.setHeader && typeof stream.abort === 'function';
-}
-
-function eos(stream, opts, callback) {
-  if (typeof opts === 'function') return eos(stream, null, opts);
-  if (!opts) opts = {};
-  callback = once(callback || noop);
-  var readable = opts.readable || opts.readable !== false && stream.readable;
-  var writable = opts.writable || opts.writable !== false && stream.writable;
-
-  var onlegacyfinish = function onlegacyfinish() {
-    if (!stream.writable) onfinish();
-  };
-
-  var writableEnded = stream._writableState && stream._writableState.finished;
-
-  var onfinish = function onfinish() {
-    writable = false;
-    writableEnded = true;
-    if (!readable) callback.call(stream);
-  };
-
-  var readableEnded = stream._readableState && stream._readableState.endEmitted;
-
-  var onend = function onend() {
-    readable = false;
-    readableEnded = true;
-    if (!writable) callback.call(stream);
-  };
-
-  var onerror = function onerror(err) {
-    callback.call(stream, err);
-  };
-
-  var onclose = function onclose() {
-    var err;
-
-    if (readable && !readableEnded) {
-      if (!stream._readableState || !stream._readableState.ended) err = new ERR_STREAM_PREMATURE_CLOSE();
-      return callback.call(stream, err);
-    }
-
-    if (writable && !writableEnded) {
-      if (!stream._writableState || !stream._writableState.ended) err = new ERR_STREAM_PREMATURE_CLOSE();
-      return callback.call(stream, err);
-    }
-  };
-
-  var onrequest = function onrequest() {
-    stream.req.on('finish', onfinish);
-  };
-
-  if (isRequest(stream)) {
-    stream.on('complete', onfinish);
-    stream.on('abort', onclose);
-    if (stream.req) onrequest();else stream.on('request', onrequest);
-  } else if (writable && !stream._writableState) {
-    // legacy streams
-    stream.on('end', onlegacyfinish);
-    stream.on('close', onlegacyfinish);
-  }
-
-  stream.on('end', onend);
-  stream.on('finish', onfinish);
-  if (opts.error !== false) stream.on('error', onerror);
-  stream.on('close', onclose);
-  return function () {
-    stream.removeListener('complete', onfinish);
-    stream.removeListener('abort', onclose);
-    stream.removeListener('request', onrequest);
-    if (stream.req) stream.req.removeListener('finish', onfinish);
-    stream.removeListener('end', onlegacyfinish);
-    stream.removeListener('close', onlegacyfinish);
-    stream.removeListener('finish', onfinish);
-    stream.removeListener('end', onend);
-    stream.removeListener('error', onerror);
-    stream.removeListener('close', onclose);
-  };
-}
-
-module.exports = eos;
-},{"../../../errors":95}],105:[function(require,module,exports){
-module.exports = function () {
-  throw new Error('Readable.from is not available in the browser')
-};
-
-},{}],106:[function(require,module,exports){
-// Ported from https://github.com/mafintosh/pump with
-// permission from the author, Mathias Buus (@mafintosh).
-'use strict';
-
-var eos;
-
-function once(callback) {
-  var called = false;
-  return function () {
-    if (called) return;
-    called = true;
-    callback.apply(void 0, arguments);
-  };
-}
-
-var _require$codes = require('../../../errors').codes,
-    ERR_MISSING_ARGS = _require$codes.ERR_MISSING_ARGS,
-    ERR_STREAM_DESTROYED = _require$codes.ERR_STREAM_DESTROYED;
-
-function noop(err) {
-  // Rethrow the error if it exists to avoid swallowing it
-  if (err) throw err;
-}
-
-function isRequest(stream) {
-  return stream.setHeader && typeof stream.abort === 'function';
-}
-
-function destroyer(stream, reading, writing, callback) {
-  callback = once(callback);
-  var closed = false;
-  stream.on('close', function () {
-    closed = true;
-  });
-  if (eos === undefined) eos = require('./end-of-stream');
-  eos(stream, {
-    readable: reading,
-    writable: writing
-  }, function (err) {
-    if (err) return callback(err);
-    closed = true;
-    callback();
-  });
-  var destroyed = false;
-  return function (err) {
-    if (closed) return;
-    if (destroyed) return;
-    destroyed = true; // request.destroy just do .end - .abort is what we want
-
-    if (isRequest(stream)) return stream.abort();
-    if (typeof stream.destroy === 'function') return stream.destroy();
-    callback(err || new ERR_STREAM_DESTROYED('pipe'));
-  };
-}
-
-function call(fn) {
-  fn();
-}
-
-function pipe(from, to) {
-  return from.pipe(to);
-}
-
-function popCallback(streams) {
-  if (!streams.length) return noop;
-  if (typeof streams[streams.length - 1] !== 'function') return noop;
-  return streams.pop();
-}
-
-function pipeline() {
-  for (var _len = arguments.length, streams = new Array(_len), _key = 0; _key < _len; _key++) {
-    streams[_key] = arguments[_key];
-  }
-
-  var callback = popCallback(streams);
-  if (Array.isArray(streams[0])) streams = streams[0];
-
-  if (streams.length < 2) {
-    throw new ERR_MISSING_ARGS('streams');
-  }
-
-  var error;
-  var destroys = streams.map(function (stream, i) {
-    var reading = i < streams.length - 1;
-    var writing = i > 0;
-    return destroyer(stream, reading, writing, function (err) {
-      if (!error) error = err;
-      if (err) destroys.forEach(call);
-      if (reading) return;
-      destroys.forEach(call);
-      callback(error);
-    });
-  });
-  return streams.reduce(pipe);
-}
-
-module.exports = pipeline;
-},{"../../../errors":95,"./end-of-stream":104}],107:[function(require,module,exports){
-'use strict';
-
-var ERR_INVALID_OPT_VALUE = require('../../../errors').codes.ERR_INVALID_OPT_VALUE;
-
-function highWaterMarkFrom(options, isDuplex, duplexKey) {
-  return options.highWaterMark != null ? options.highWaterMark : isDuplex ? options[duplexKey] : null;
-}
-
-function getHighWaterMark(state, options, duplexKey, isDuplex) {
-  var hwm = highWaterMarkFrom(options, isDuplex, duplexKey);
-
-  if (hwm != null) {
-    if (!(isFinite(hwm) && Math.floor(hwm) === hwm) || hwm < 0) {
-      var name = isDuplex ? duplexKey : 'highWaterMark';
-      throw new ERR_INVALID_OPT_VALUE(name, hwm);
-    }
-
-    return Math.floor(hwm);
-  } // Default value
-
-
-  return state.objectMode ? 16 : 16 * 1024;
-}
-
-module.exports = {
-  getHighWaterMark: getHighWaterMark
-};
-},{"../../../errors":95}],108:[function(require,module,exports){
-module.exports = require('events').EventEmitter;
-
-},{"events":77}],109:[function(require,module,exports){
+},{"events":78,"inherits":81,"readable-stream/lib/_stream_duplex.js":94,"readable-stream/lib/_stream_passthrough.js":95,"readable-stream/lib/_stream_readable.js":96,"readable-stream/lib/_stream_transform.js":97,"readable-stream/lib/_stream_writable.js":98,"readable-stream/lib/internal/streams/end-of-stream.js":102,"readable-stream/lib/internal/streams/pipeline.js":104}],110:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -34756,7 +34847,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":92}],110:[function(require,module,exports){
+},{"safe-buffer":107}],111:[function(require,module,exports){
 /** @license URI.js v4.4.1 (c) 2011 Gary Court. License: http://github.com/garycourt/uri-js */
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -36201,7 +36292,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 (function (global){(function (){
 
 /**
