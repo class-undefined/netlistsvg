@@ -1,7 +1,7 @@
 import Cell from './Cell';
-import {SigsByConstName} from './FlatModule';
+import { SigsByConstName } from './FlatModule';
 import Yosys from './YosysModel';
-import _ = require('lodash');
+import * as _ from 'lodash'
 import { ElkModel } from './elkGraph';
 
 export class Port {
@@ -31,20 +31,20 @@ export class Port {
     }
 
     public findConstants(sigsByConstantName: SigsByConstName,
-                         maxNum: number,
-                         constantCollector: Cell[]): number {
+        maxNum: number,
+        constantCollector: Cell[]): number {
         let constNameCollector = '';
         let constNumCollector: number[] = [];
         const portSigs: Yosys.Signals = this.value;
         portSigs.forEach((portSig, portSigIndex) => {
             // is constant?
             if (portSig === '0' || portSig === '1') {
-            maxNum += 1;
-            constNameCollector += portSig;
-            // replace the constant with new signal num
-            portSigs[portSigIndex] = maxNum;
-            constNumCollector.push(maxNum);
-            // string of constants ended before end of p.value
+                maxNum += 1;
+                constNameCollector += portSig;
+                // replace the constant with new signal num
+                portSigs[portSigIndex] = maxNum;
+                constNumCollector.push(maxNum);
+                // string of constants ended before end of p.value
             } else if (constNumCollector.length > 0) {
                 this.assignConstant(
                     constNameCollector,
@@ -130,10 +130,10 @@ export class Port {
     }
 
     private assignConstant(nameCollector: string,
-                           constants: number[],
-                           currIndex: number,
-                           signalsByConstantName: SigsByConstName,
-                           constantCollector: Cell[]) {
+        constants: number[],
+        currIndex: number,
+        signalsByConstantName: SigsByConstName,
+        constantCollector: Cell[]) {
         // we've been appending to nameCollector, so reverse to get const name
         const constName = nameCollector.split('').reverse().join('');
         // if the constant has already been used

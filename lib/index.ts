@@ -1,7 +1,8 @@
-'use strict';
+// 'use strict';
 
 import ELK = require('elkjs');
-import onml = require('onml');
+import * as onml from 'onml'
+// import * as ELK from 'elkjs'
 
 import { FlatModule } from './FlatModule';
 import Yosys from './YosysModel';

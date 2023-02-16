@@ -3,9 +3,8 @@ import { FlatModule, removeDups } from './FlatModule';
 import Cell from './Cell';
 import Skin from './Skin';
 
-import _ = require('lodash');
-import onml = require('onml');
-import assert = require('assert');
+import * as _ from 'lodash'
+import * as onml from 'onml'
 
 enum WireDirection {
     Up, Down, Left, Right,
@@ -72,24 +71,24 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
                 (e as ElkModel.ExtendedEdge).labels[0] !== undefined &&
                 (e as ElkModel.ExtendedEdge).labels[0].text !== undefined) {
                 const label = [
-                        ['rect',
-                            {
-                                x: e.labels[0].x + 1,
-                                y: e.labels[0].y - 1,
-                                width: (e.labels[0].text.length + 2) * 6 - 2,
-                                height: 9,
-                                class: netName,
-                                style: 'fill: white; stroke: none',
-                            },
-                        ], ['text',
-                            {
-                                x: e.labels[0].x,
-                                y: e.labels[0].y + 7,
-                                class: netName,
-                            },
-                            '/' + e.labels[0].text + '/',
-                        ],
-                    ];
+                    ['rect',
+                        {
+                            x: e.labels[0].x + 1,
+                            y: e.labels[0].y - 1,
+                            width: (e.labels[0].text.length + 2) * 6 - 2,
+                            height: 9,
+                            class: netName,
+                            style: 'fill: white; stroke: none',
+                        },
+                    ], ['text',
+                        {
+                            x: e.labels[0].x,
+                            y: e.labels[0].y + 7,
+                            class: netName,
+                        },
+                        '/' + e.labels[0].text + '/',
+                    ],
+                ];
                 if (labels !== undefined) {
                     labels = labels.concat(label);
                 } else {
@@ -114,6 +113,7 @@ export default function drawModule(g: ElkModel.Graph, module: FlatModule) {
         },
     });
     const elements: onml.Element[] = [styles, ...nodes, ...lines];
+    // @ts-ignore
     const ret: onml.Element = ['svg', svgAttrs, ...elements];
     return onml.s(ret);
 }
@@ -141,10 +141,10 @@ function which_dir(start: ElkModel.WirePoint, end: ElkModel.WirePoint): WireDire
 }
 
 function findBendNearDummy(
-        net: ElkModel.Edge[],
-        dummyIsSource: boolean,
-        dummyLoc: ElkModel.WirePoint): ElkModel.WirePoint {
-    const candidates = net.map( (edge) => {
+    net: ElkModel.Edge[],
+    dummyIsSource: boolean,
+    dummyLoc: ElkModel.WirePoint): ElkModel.WirePoint {
+    const candidates = net.map((edge) => {
         const bends = edge.sections[0].bendPoints || [null];
         if (dummyIsSource) {
             return _.first(bends);
@@ -211,7 +211,7 @@ export function removeDummyEdges(g: ElkModel.Graph) {
                 }
                 return section.startPoint;
             }
-        }).map( (pt) => {
+        }).map((pt) => {
             if (pt.x > newEnd.x) {
                 return WireDirection.Right;
             }

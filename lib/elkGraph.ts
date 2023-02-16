@@ -1,5 +1,5 @@
 import { FlatModule } from './FlatModule';
-import _ = require('lodash');
+import * as _ from 'lodash'
 
 export namespace ElkModel {
     interface WireNameLookup {
@@ -28,7 +28,7 @@ export namespace ElkModel {
     export interface Graph {
         id: string;
         children: Cell[];
-        edges: (Edge|ExtendedEdge)[];
+        edges: (Edge | ExtendedEdge)[];
         width?: number;
         height?: number;
     }
@@ -65,8 +65,8 @@ export namespace ElkModel {
     export interface ExtendedEdge {
         id: string;
         labels?: Label[];
-        sources: [ string ];
-        targets: [ string ];
+        sources: [string];
+        targets: [string];
         layoutOptions?: LayoutOptions;
     }
 
@@ -220,8 +220,10 @@ function route(sourcePorts, targetPorts, edges: ElkModel.Edge[], numWires) {
             };
             ElkModel.wireNameLookup[id] = targetPort.wire.netName;
             if (sourcePort.parentNode.type !== '$dff') {
-                edge.layoutOptions = { 'org.eclipse.elk.layered.priority.direction': 10,
-                                       'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
+                edge.layoutOptions = {
+                    'org.eclipse.elk.layered.priority.direction': 10,
+                    'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1)
+                };
             } else {
                 edge.layoutOptions = { 'org.eclipse.elk.edge.thickness': (numWires > 1 ? 2 : 1) };
             }

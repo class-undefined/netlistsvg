@@ -1,6 +1,6 @@
 
 import onml = require('onml');
-import _ = require('lodash');
+import * as _ from 'lodash'
 import { ElkModel } from './elkGraph';
 
 export namespace Skin {

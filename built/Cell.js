@@ -151,19 +151,19 @@ var Cell = /** @class */ (function () {
         this.inputPorts.forEach(function (port) {
             var isLateral = port.keyIn(lateralPids);
             if (isLateral || (template[1]['s:type'] === 'generic' && genericsLaterals)) {
-                FlatModule_1.addToDefaultDict(lateralsByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(lateralsByNet, port.valString(), port);
             }
             else {
-                FlatModule_1.addToDefaultDict(ridersByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(ridersByNet, port.valString(), port);
             }
         });
         this.outputPorts.forEach(function (port) {
             var isLateral = port.keyIn(lateralPids);
             if (isLateral || (template[1]['s:type'] === 'generic' && genericsLaterals)) {
-                FlatModule_1.addToDefaultDict(lateralsByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(lateralsByNet, port.valString(), port);
             }
             else {
-                FlatModule_1.addToDefaultDict(driversByNet, port.valString(), port);
+                (0, FlatModule_1.addToDefaultDict)(driversByNet, port.valString(), port);
             }
         });
     };

@@ -1,8 +1,10 @@
-'use strict';
+"use strict";
+// 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.render = exports.dumpLayout = void 0;
 var ELK = require("elkjs");
 var onml = require("onml");
+// import * as ELK from 'elkjs'
 var FlatModule_1 = require("./FlatModule");
 var Skin_1 = require("./Skin");
 var elkGraph_1 = require("./elkGraph");
@@ -25,7 +27,7 @@ function createFlatModule(skinData, yosysNetlist) {
 }
 function dumpLayout(skinData, yosysNetlist, prelayout, done) {
     var flatModule = createFlatModule(skinData, yosysNetlist);
-    var kgraph = elkGraph_1.buildElkGraph(flatModule);
+    var kgraph = (0, elkGraph_1.buildElkGraph)(flatModule);
     if (prelayout) {
         done(null, JSON.stringify(kgraph, null, 2));
         return;
@@ -41,20 +43,20 @@ function dumpLayout(skinData, yosysNetlist, prelayout, done) {
 exports.dumpLayout = dumpLayout;
 function render(skinData, yosysNetlist, done, elkData) {
     var flatModule = createFlatModule(skinData, yosysNetlist);
-    var kgraph = elkGraph_1.buildElkGraph(flatModule);
+    var kgraph = (0, elkGraph_1.buildElkGraph)(flatModule);
     var layoutProps = Skin_1.default.getProperties();
     var promise;
     // if we already have a layout then use it
     if (elkData) {
         promise = new Promise(function (resolve) {
-            drawModule_1.default(elkData, flatModule);
+            (0, drawModule_1.default)(elkData, flatModule);
             resolve();
         });
     }
     else {
         // otherwise use ELK to generate the layout
         promise = elk.layout(kgraph, { layoutOptions: layoutProps.layoutEngine })
-            .then(function (g) { return drawModule_1.default(g, flatModule); })
+            .then(function (g) { return (0, drawModule_1.default)(g, flatModule); })
             // tslint:disable-next-line:no-console
             .catch(function (e) { console.error(e); });
     }
